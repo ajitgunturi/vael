@@ -1,0 +1,28 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Flutter/Dart
+.dart_tool/
+.packages
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+*.iml
+
+# Internal docs & planning (local-only)
+CLAUDE.md
+docs/
+.claude/
+.planning/
+
+# Secrets
+*.env
+*.jks
+*.keystore
