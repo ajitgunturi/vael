@@ -1,0 +1,58 @@
+name: vael
+description: "Family finance app — local-first, zero-server, encrypted."
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.11.3
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+
+  # Database
+  drift: ^2.27.0
+  sqlite3_flutter_libs: ^0.5.32
+  sqlcipher_flutter_libs: ^0.6.5
+
+  # State management
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
+
+  # Crypto
+  pointycastle: ^3.9.1
+  flutter_secure_storage: ^9.2.4
+
+  # Auth & sync
+  google_sign_in: ^6.2.2
+  googleapis: ^14.0.0
+  googleapis_auth: ^1.6.0
+
+  # Charts
+  fl_chart: ^0.70.2
+
+  # Utilities
+  uuid: ^4.5.1
+  path_provider: ^2.1.5
+  path: ^1.9.1
+  collection: ^1.19.1
+  intl: ^0.20.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+  # Code generation
+  drift_dev: ^2.27.0
+  build_runner: ^2.4.15
+  riverpod_generator: ^2.6.4
+  custom_lint: ^0.7.5
+  riverpod_lint: ^2.6.4
+
+  # Testing
+  mockito: ^5.4.5
+
+flutter:
+  uses-material-design: true
