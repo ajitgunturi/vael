@@ -37,8 +37,7 @@ class DashboardScreen extends ConsumerWidget {
         actions: [
           _ScopeToggle(
             scope: scope,
-            onChanged: (s) =>
-                ref.read(dashboardScopeProvider.notifier).state = s,
+            onChanged: (s) => ref.read(dashboardScopeProvider.notifier).set(s),
           ),
         ],
       ),
