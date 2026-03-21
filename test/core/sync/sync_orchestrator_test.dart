@@ -258,7 +258,7 @@ void main() {
 
     tearDown(() => db.close());
 
-    ManifestV2 _makeV2Manifest() => ManifestV2(
+    ManifestV2 makeV2Manifest() => ManifestV2(
       familyId: 'family-001',
       owner: ManifestOwner(userId: 'u-admin', email: 'admin@test.com'),
       members: {
@@ -275,7 +275,7 @@ void main() {
     );
 
     test('initialize reads and caches V2 manifest', () async {
-      await cloudStorage.writeManifest(_makeV2Manifest().toJson());
+      await cloudStorage.writeManifest(makeV2Manifest().toJson());
 
       final orchestrator = SyncOrchestrator(
         db: db,
@@ -326,7 +326,7 @@ void main() {
     });
 
     test('push updates lastSyncAt for current user in manifest', () async {
-      await cloudStorage.writeManifest(_makeV2Manifest().toJson());
+      await cloudStorage.writeManifest(makeV2Manifest().toJson());
 
       final orchestrator = SyncOrchestrator(
         db: db,
@@ -357,13 +357,13 @@ void main() {
     });
 
     test('pull updates lastSyncAt for current user in manifest', () async {
-      final manifest = _makeV2Manifest();
+      final manifest = makeV2Manifest();
       await cloudStorage.writeManifest(manifest.toJson());
 
       // Simulate another device having pushed data
       final aes = AesGcm();
       final fek = await keyStorage.getFek('family-001');
-      final changesetData =
+      const changesetData =
           '{"device_id":"device-X","sequence":1,"timestamp":"2026-03-21T10:00:00.000Z","operations":[{"op":"INSERT","table":"accounts","id":"acc-001","data":{"name":"Savings"}}]}';
       final encrypted = aes.encrypt(
         Uint8List.fromList(changesetData.codeUnits),
@@ -393,7 +393,7 @@ void main() {
     });
 
     test('detects FEK generation change and invokes callback', () async {
-      var manifest = _makeV2Manifest();
+      final manifest = makeV2Manifest();
       await cloudStorage.writeManifest(manifest.toJson());
 
       final orchestrator = SyncOrchestrator(
@@ -425,7 +425,7 @@ void main() {
     });
 
     test('getManifestStatus returns member info', () async {
-      final manifest = _makeV2Manifest();
+      final manifest = makeV2Manifest();
       await cloudStorage.writeManifest(manifest.toJson());
 
       final orchestrator = SyncOrchestrator(
