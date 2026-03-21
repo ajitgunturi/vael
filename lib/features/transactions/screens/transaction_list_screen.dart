@@ -84,7 +84,8 @@ class TransactionListScreen extends ConsumerWidget {
   static Color amountColor(String kind) {
     if (_incomeKinds.contains(kind)) return ColorTokens.positive;
     if (_expenseKinds.contains(kind)) return ColorTokens.negative;
-    return ColorTokens.neutral; // transfer
+    // ignore: deprecated_member_use
+    return ColorTokens.neutralStatic; // transfer
   }
 }
 

@@ -48,7 +48,8 @@ class BudgetScreen extends ConsumerWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.pie_chart_outline, size: 48, color: ColorTokens.neutral),
+          // ignore: deprecated_member_use
+          Icon(Icons.pie_chart_outline, size: 48, color: ColorTokens.neutralStatic),
           SizedBox(height: 16),
           Text('No budgets set'),
           SizedBox(height: 8),

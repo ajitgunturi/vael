@@ -8,19 +8,21 @@ class AdaptiveScaffold extends StatelessWidget {
     required this.selectedIndex,
     required this.onDestinationSelected,
     required this.body,
+    this.onSettingsTap,
   });
 
   final int selectedIndex;
   final ValueChanged<int> onDestinationSelected;
   final Widget body;
+  final VoidCallback? onSettingsTap;
 
+  /// 5 primary destinations (Settings removed — moved to AppBar gear icon).
   static const destinations = <NavigationDestinationData>[
     NavigationDestinationData(icon: Icons.dashboard, label: 'Dashboard'),
     NavigationDestinationData(icon: Icons.account_balance, label: 'Accounts'),
     NavigationDestinationData(icon: Icons.receipt_long, label: 'Transactions'),
     NavigationDestinationData(icon: Icons.pie_chart, label: 'Budget'),
     NavigationDestinationData(icon: Icons.flag, label: 'Goals'),
-    NavigationDestinationData(icon: Icons.settings, label: 'Settings'),
   ];
 
   @override
@@ -40,8 +42,22 @@ class AdaptiveScaffold extends StatelessWidget {
     );
   }
 
+  PreferredSizeWidget _appBar() {
+    return AppBar(
+      actions: [
+        if (onSettingsTap != null)
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: onSettingsTap,
+            tooltip: 'Settings',
+          ),
+      ],
+    );
+  }
+
   Widget _buildCompact() {
     return Scaffold(
+      appBar: _appBar(),
       body: body,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: selectedIndex,
@@ -57,6 +73,7 @@ class AdaptiveScaffold extends StatelessWidget {
 
   Widget _buildMedium() {
     return Scaffold(
+      appBar: _appBar(),
       body: Row(
         children: [
           NavigationRail(
@@ -80,6 +97,7 @@ class AdaptiveScaffold extends StatelessWidget {
 
   Widget _buildExpanded() {
     return Scaffold(
+      appBar: _appBar(),
       body: Row(
         children: [
           SizedBox(

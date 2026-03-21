@@ -245,7 +245,8 @@ class _GoalTile extends StatelessWidget {
       'completed' => (label: 'Completed', color: ColorTokens.positive),
       'onTrack' => (label: 'On Track', color: ColorTokens.positive),
       'atRisk' => (label: 'At Risk', color: ColorTokens.negative),
-      _ => (label: 'Active', color: ColorTokens.neutral),
+      // ignore: deprecated_member_use
+      _ => (label: 'Active', color: ColorTokens.neutralStatic),
     };
   }
 }

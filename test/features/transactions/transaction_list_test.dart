@@ -106,7 +106,8 @@ void main() {
       expect(TransactionListScreen.amountColor('expense'),
           ColorTokens.negative);
       expect(TransactionListScreen.amountColor('transfer'),
-          ColorTokens.neutral);
+          // ignore: deprecated_member_use
+          ColorTokens.neutralStatic);
     });
 
     testWidgets('shows empty state when no transactions', (tester) async {
