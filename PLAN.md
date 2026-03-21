@@ -134,6 +134,47 @@ Vael is a greenfield Flutter family finance app being ported from a Java/Postgre
 - Transaction cascade verified end-to-end (7 cascade tests)
 - 90%+ coverage on `core/financial/`
 
+### Phase 2 Retroactive E2E Simulator Tests
+
+> Gaps identified against existing E2E coverage (29 feature + 23 journey tests). These fill missing CRUD editing/deletion, Goals, and Loans flows.
+
+**2.E2E.1 — Goals Flow** (~4 tests)
+- `integration_test/goals_flow_test.dart`
+  - Create goal via form (name, target amount, target date) → verify list display
+  - Goal progress: seed goal with linked SIP transactions → verify progress bar and status (ON_TRACK/AT_RISK)
+  - Edit goal: modify target amount → verify recalculated required SIP
+  - Goal completion: seed goal at 100%+ → verify COMPLETED status badge
+- Both iPhone + iPad Pro
+
+**2.E2E.2 — Account Edit + Delete Flow** (~3 tests)
+- `integration_test/account_edit_delete_test.dart`
+  - Edit account: tap existing account → modify name → save → verify updated name in list
+  - Soft delete account: delete → verify removed from list, balance excluded from net worth
+  - Account type variety: create wallet, credit card, investment accounts → verify type icons
+- Both iPhone + iPad Pro
+
+**2.E2E.3 — Transaction Edit + Delete Journey** (~3 tests)
+- `integration_test/journey_transaction_edit_delete_test.dart`
+  - Edit transaction amount → verify account balance recalculated (old amount reversed, new applied)
+  - Delete transaction → verify balance cascade reversal on Accounts and Dashboard
+  - Transfer edit: modify transfer amount → verify both accounts updated
+- Both iPhone + iPad Pro
+
+**2.E2E.4 — Loan Detail + Amortization Journey** (~3 tests)
+- `integration_test/journey_loan_detail_test.dart`
+  - View amortization table for seeded loan → verify EMI split display (principal vs interest)
+  - Prepayment simulation: enter prepayment amount → verify interest saved + tenure reduction
+  - Loan summary card: outstanding principal, rate, remaining tenure
+- Both iPhone + iPad Pro
+- *(Previously deferred from Phase 3 simulator tests)*
+
+**2.E2E.5 — Form Validation** (~3 tests)
+- `integration_test/form_validation_test.dart`
+  - Account form: submit empty name → verify error message
+  - Transaction form: submit zero amount → verify validation error
+  - Budget form: submit negative limit → verify rejection
+- Both iPhone + iPad Pro
+
 ---
 
 ## Phase 2.5: UX Implementation (Week 5.5-6)
@@ -253,6 +294,45 @@ Bridges the gap between Phase 2's functional-but-stock-M3 screens and the full d
 - Dashboard matches `UI_DESIGN.md` §2.2 wireframe
 - No regressions on Phase 2 screens
 
+### Phase 2.5 Retroactive E2E Simulator Tests
+
+> Design system and UX improvements that are testable via simulator.
+
+**2.5.E2E.1 — Dark Mode Toggle** (~3 tests)
+- `integration_test/dark_mode_flow_test.dart`
+  - Toggle dark mode via Settings gear → verify background color changes to dark surface
+  - Verify amount colors (green/red) render correctly in dark mode
+  - Toggle back to light → verify restoration
+- Both iPhone + iPad Pro
+
+**2.5.E2E.2 — Dashboard Chart + Savings Rate** (~3 tests)
+- `integration_test/journey_dashboard_charts_test.dart`
+  - Seed 6 months of balance snapshots → navigate to Dashboard → verify net worth chart widget renders (LineChart present)
+  - Savings rate badge: seed income ₹1L, expenses ₹60K → verify green badge (40%)
+  - Savings rate warning: seed income ₹1L, expenses ₹95K → verify red badge (5%)
+- Both iPhone + iPad Pro
+
+**2.5.E2E.3 — Transaction Search + Filters** (~3 tests)
+- `integration_test/transaction_filter_test.dart`
+  - Seed 10 transactions with varied kinds → search by description text → verify filtered results
+  - Filter by kind (EXPENSE only) → verify only expense transactions visible
+  - Clear filter → verify all transactions return
+- Both iPhone + iPad Pro
+
+**2.5.E2E.4 — Empty States + Pull-to-Refresh** (~3 tests)
+- `integration_test/empty_state_refresh_test.dart`
+  - Fresh app with no data → verify EmptyState widget on each tab (Accounts, Transactions, Budget)
+  - Add account → pull-to-refresh on Accounts tab → verify account still present (no data loss)
+  - Empty budget tab → verify CTA button navigates to budget form
+- Both iPhone + iPad Pro
+
+**2.5.E2E.5 — Adaptive Layout Breakpoints** (~3 tests)
+- `integration_test/adaptive_layout_test.dart`
+  - Phone size (400dp): verify BottomNavigationBar visible, no NavigationRail
+  - Tablet size (iPad Pro): verify NavigationRail visible, no BottomNavigationBar
+  - Verify Settings gear icon accessible on both layouts
+- iPhone + iPad Pro (validates the breakpoint difference)
+
 ### Cross-Phase Design System Directive
 
 **All future UI work (Phases 3-5) MUST use the design system from this phase:**
@@ -338,6 +418,44 @@ Bridges the gap between Phase 2's functional-but-stock-M3 screens and the full d
 - Conflict resolution with deterministic clocks
 - 90%+ coverage on `core/crypto/`, `core/sync/`
 
+### Phase 3 + 3.5 Retroactive E2E Simulator Tests
+
+> Crypto internals are unit-tested. E2E tests here cover the UI-facing flows: passphrase setup, sync status, and admin backup dashboard.
+
+**3.E2E.1 — Passphrase Setup Flow** (~3 tests)
+- `integration_test/passphrase_setup_test.dart`
+  - Enter passphrase + confirm → verify success indicator and navigation to next step
+  - Mismatched passphrase confirmation → verify error message
+  - Passphrase visibility toggle (eye icon) → verify text obscured/revealed
+- Both iPhone + iPad Pro
+
+**3.E2E.2 — Sync Status Screen** (~3 tests)
+- `integration_test/sync_status_test.dart`
+  - Navigate to Settings → Sync Status → verify device ID, last sync timestamp display
+  - Pending changes indicator: seed unsynced changelog entries → verify pending count shown
+  - Manual sync button: tap → verify loading state appears
+- Both iPhone + iPad Pro
+
+**3.E2E.3 — Passphrase Change Flow** (~2 tests)
+- `integration_test/passphrase_change_test.dart`
+  - Enter current passphrase → enter new → confirm → verify success
+  - Wrong current passphrase → verify error message
+- Both iPhone + iPad Pro
+
+**3.5.E2E.1 — Admin Backup Dashboard** (~3 tests)
+- `integration_test/admin_backup_dashboard_test.dart`
+  - Admin views member list → verify member names, roles, sync status columns
+  - Remove member: tap remove → confirm dialog → verify member removed from list
+  - Ownership transfer: tap transfer → confirm → verify role swap in UI
+- Both iPhone + iPad Pro
+- **Note**: Requires mock Drive permission service (no real Google Drive in simulator)
+
+**3.5.E2E.2 — Member Invite + Join Journey** (~2 tests)
+- `integration_test/journey_member_invite_test.dart`
+  - Admin enters member email → verify invite sent confirmation
+  - New member enters passphrase → verify FEK unwrap success → data loads
+- Both iPhone + iPad Pro
+
 ---
 
 ## Phase 4: Advanced Features (Weeks 9-11)
@@ -401,14 +519,69 @@ Bridges the gap between Phase 2's functional-but-stock-M3 screens and the full d
 - **Green**: `lib/core/migration/{pg_dump_parser,migration_orchestrator}.dart`
 - Fixture: `test/fixtures/storely_sample.sql`
 
+### Phase 4 E2E Simulator Tests
+
+> Extends `SimulatorTestApp` and `e2e_helpers.dart`. All tests run on both iPhone and iPad Pro. Add new seed helpers as needed (e.g., `seedRecurringRule`, `seedInvestmentHolding`, `seedScenario`).
+
+**4.E2E.1 — Recurring Rules Flow** (~5 tests)
+- `integration_test/recurring_flow_test.dart`
+  - Create recurring rule via form (monthly salary, ₹50,000)
+  - Verify rule appears in list with human-readable frequency
+  - Pause toggle: tap pause → verify visual state change
+  - Trigger engine manually → verify generated transaction appears in Transactions tab
+  - Escalation: create rule with 10% annual escalation → verify next-year amount
+- **Depends on**: 4.2
+
+**4.E2E.2 — Projection & Scenario Journey** (~4 tests)
+- `integration_test/journey_projection_test.dart`
+  - Seed salary income + expense rules + loan → navigate to Projections → verify 60-month chart renders
+  - Toggle between Conservative/Moderate/Aggressive → verify chart updates with different endpoint values
+  - Deficit warning: seed scenario where expenses exceed income at month 36 → verify deficit badge
+  - Scenario sandbox: create "Buy Car" scenario → overlay on projection → verify divergence point
+- **Depends on**: 4.4, 4.10
+
+**4.E2E.3 — Investment Holdings Flow** (~4 tests)
+- `integration_test/investment_flow_test.dart`
+  - Create investment holding (PPF bucket, ₹5,00,000)
+  - Verify portfolio summary displays correct total
+  - Edit holding: update value → verify summary recalculates
+  - Link investment to goal → verify linked goal badge on investment card
+- **Depends on**: 4.5
+
+**4.E2E.4 — Statement Import Journey** (~4 tests)
+- `integration_test/journey_import_test.dart`
+  - Load fixture CSV → preview screen shows correct row count and parsed amounts
+  - Categorize: assign category to uncategorized row → verify category chip updates
+  - Commit: import transactions → navigate to Transactions tab → verify imported rows appear
+  - Duplicate detection: re-import same file → verify duplicate warning with skip option
+- **Depends on**: 4.7
+
+**4.E2E.5 — Planning Insights + Reconciliation Journey** (~4 tests)
+- `integration_test/journey_planning_insights_test.dart`
+  - Seed 3 months of overspent budgets → navigate to insights → verify "severe drift" badge
+  - Seed at-risk goal (behind SIP schedule) → verify at-risk flag on dashboard
+  - Balance reconciliation: seed account with mismatched balance vs txn sum → trigger reconciliation → verify discrepancy logged and snapshot created
+  - Post-reconciliation: verify corrected balance on Accounts screen
+- **Depends on**: 4.8, 4.9
+
+**4.E2E.6 — Cross-Feature Consistency: Recurring → Projection → Budget** (~3 tests)
+- `integration_test/journey_recurring_projection_test.dart`
+  - Create recurring expense rule → run engine → verify new transactions cascade to budget actuals
+  - Navigate to Projections → verify recurring rules reflected in 60-month forecast
+  - Modify recurring rule amount → re-run → verify projection chart updates accordingly
+- **Depends on**: 4.2, 4.4
+
 ### Phase 4 Parallelization
 4.1/4.2, 4.5, 4.6/4.7, 4.8, 4.9, 4.11, 4.12 are all independent. 4.3 needs 4.1. 4.10 needs 4.3.
+E2E tests run after their feature dependencies: 4.E2E.1 after 4.2; 4.E2E.2 after 4.4+4.10; 4.E2E.3 after 4.5; 4.E2E.4 after 4.7; 4.E2E.5 after 4.8+4.9; 4.E2E.6 after 4.2+4.4.
 
 ### Phase 4 Exit Criteria
 - Recurring rules generate transactions idempotently
 - 60-month projection with 3 scenarios
 - Statement import with dedup
 - 90%+ coverage on `core/financial/`, `core/imports/`
+- All E2E simulator tests green on both iPhone and iPad Pro
+- Cross-feature cascade verified: recurring rule → transaction → budget → projection pipeline
 
 ---
 
@@ -436,10 +609,52 @@ Bridges the gap between Phase 2's functional-but-stock-M3 screens and the full d
 - `.github/workflows/ci.yml` (analyze, test, build on PR)
 - `.github/workflows/release.yml` (Fastlane → App Store, Play Store, Mac App Store)
 
+### Phase 5 E2E Simulator Tests
+
+> Final E2E layer — validates end-to-end user journeys that span the entire app lifecycle. Extends SimulatorTestApp with onboarding/settings screens. All tests run on both iPhone and iPad Pro.
+
+**5.E2E.1 — Onboarding Journey** (~5 tests)
+- `integration_test/journey_onboarding_test.dart`
+  - Fresh app launch → onboarding screen appears (not dashboard)
+  - Sign-In → Create Family → set passphrase → arrives at empty dashboard
+  - Join Family flow: enter passphrase → FEK unwraps → data loads on dashboard
+  - Optional migration: select Storely import during onboarding → verify data appears post-import
+  - Back navigation: pressing back from passphrase returns to family selection (no data loss)
+- Both iPhone + iPad Pro
+- **Depends on**: 5.1
+
+**5.E2E.2 — Settings & Family Management Flow** (~4 tests)
+- `integration_test/settings_flow_test.dart`
+  - Navigate to Settings via gear icon → verify all sections render (theme, sync, passphrase, about)
+  - Theme toggle: switch dark → verify dark mode activates immediately
+  - Passphrase change: enter old → new → confirm → verify success feedback
+  - Family management: view member list → verify roles displayed → navigate back
+- Both iPhone + iPad Pro
+- **Depends on**: 5.2, 5.3
+
+**5.E2E.3 — Full App Lifecycle Journey** (~4 tests)
+- `integration_test/journey_full_lifecycle_test.dart`
+  - Golden path: seed family → add accounts → add transactions → set budget → create goal → create recurring rule → view projection → verify all screens consistent
+  - Deletion cascade: delete an account → verify transactions removed from list, budget actuals updated, dashboard net worth recalculated
+  - 100-transaction stress: seed 100 transactions → navigate all tabs → verify no crashes, dashboard loads within 3s
+  - Multi-tab consistency: add transaction on Transactions tab → immediately switch to Dashboard → verify net worth updated without refresh
+- Both iPhone + iPad Pro
+- **Depends on**: all prior phases
+
+**5.E2E.4 — Accessibility E2E** (~3 tests)
+- `integration_test/accessibility_test.dart`
+  - All interactive elements have semantic labels (check via `find.bySemanticsLabel`)
+  - Money amounts use `liveRegion` semantics for screen reader announcements
+  - Tab navigation order follows visual layout (Dashboard → Accounts → Transactions → Budget → Goals)
+- Both iPhone + iPad Pro
+- **Depends on**: 5.4
+
 ### Phase 5 Exit Criteria
 - Full onboarding flow functional
 - CI green on all platforms
 - Accessibility audit passing
+- All E2E simulator tests green: onboarding journey, settings flow, full lifecycle, accessibility
+- Total E2E test count target: ~110+ across all phases (52 existing + ~16 Phase 2 retro + ~15 Phase 2.5 retro + ~13 Phase 3/3.5 retro + ~24 Phase 4 + ~16 Phase 5)
 
 ---
 
@@ -463,3 +678,6 @@ Bridges the gap between Phase 2's functional-but-stock-M3 screens and the full d
 | Cascade integrity | Create/edit/delete chain verifying balance→budget→dashboard consistency |
 | Performance | 10k transaction insert → dashboard < 2s |
 | Security | SQLCipher DB unreadable without passphrase; Drive files are opaque |
+| E2E feature flows | Simulator tests on both iPhone + iPad Pro — per-screen CRUD, navigation, form validation |
+| E2E journey tests | Simulator tests on both iPhone + iPad Pro — cross-feature cascades, multi-tab consistency |
+| E2E lifecycle | Full app lifecycle on both devices: onboarding → daily use → data integrity across all features |

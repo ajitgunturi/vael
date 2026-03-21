@@ -7,6 +7,10 @@ import 'package:vael/shared/utils/formatters.dart';
 
 export '../simulator_test_app.dart' show seedTestFamily, kTestFamilyId, kTestUserId, SimulatorTestApp;
 
+/// Hard ceiling for any single E2E test. Prevents CI from hanging
+/// if a provider never emits or an animation loop is unbreakable.
+const kTestTimeout = Timeout(Duration(seconds: 30));
+
 /// Pumps frames for [duration] then tries to settle with a short timeout.
 /// Unlike raw `pumpAndSettle`, this won't hang on infinite animations
 /// (CircularProgressIndicator, shimmer, etc.) — it gives async providers
@@ -162,6 +166,30 @@ Future<void> seedBudget(
     limitAmount: Value(limitAmount),
     year: Value(year),
     month: Value(month),
+  ));
+}
+
+/// Seed a goal row.
+Future<void> seedGoal(
+  AppDatabase db, {
+  required String id,
+  required String name,
+  required int targetAmount,
+  required DateTime targetDate,
+  int currentSavings = 0,
+  String status = 'active',
+  String? familyId,
+}) async {
+  final fid = familyId ?? 'sim_family';
+  await db.into(db.goals).insert(GoalsCompanion(
+    id: Value(id),
+    name: Value(name),
+    targetAmount: Value(targetAmount),
+    targetDate: Value(targetDate),
+    currentSavings: Value(currentSavings),
+    status: Value(status),
+    familyId: Value(fid),
+    createdAt: Value(DateTime.now()),
   ));
 }
 

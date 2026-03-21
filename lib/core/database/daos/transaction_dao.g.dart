@@ -9,4 +9,20 @@ mixin _$TransactionDaoMixin on DatabaseAccessor<AppDatabase> {
   $UsersTable get users => attachedDatabase.users;
   $AccountsTable get accounts => attachedDatabase.accounts;
   $TransactionsTable get transactions => attachedDatabase.transactions;
+  TransactionDaoManager get managers => TransactionDaoManager(this);
+}
+
+class TransactionDaoManager {
+  final _$TransactionDaoMixin _db;
+  TransactionDaoManager(this._db);
+  $$FamiliesTableTableManager get families =>
+      $$FamiliesTableTableManager(_db.attachedDatabase, _db.families);
+  $$CategoriesTableTableManager get categories =>
+      $$CategoriesTableTableManager(_db.attachedDatabase, _db.categories);
+  $$UsersTableTableManager get users =>
+      $$UsersTableTableManager(_db.attachedDatabase, _db.users);
+  $$AccountsTableTableManager get accounts =>
+      $$AccountsTableTableManager(_db.attachedDatabase, _db.accounts);
+  $$TransactionsTableTableManager get transactions =>
+      $$TransactionsTableTableManager(_db.attachedDatabase, _db.transactions);
 }

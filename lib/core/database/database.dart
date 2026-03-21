@@ -7,7 +7,9 @@ import 'tables/budgets.dart';
 import 'tables/categories.dart';
 import 'tables/families.dart';
 import 'tables/goals.dart';
+import 'tables/investment_holdings.dart';
 import 'tables/loan_details.dart';
+import 'tables/recurring_rules.dart';
 import 'tables/sync_changelog.dart';
 import 'tables/sync_state.dart';
 import 'tables/transactions.dart';
@@ -27,6 +29,8 @@ part 'database.g.dart';
     Goals,
     Budgets,
     LoanDetails,
+    InvestmentHoldings,
+    RecurringRules,
     SyncChangelog,
     SyncStateTable,
   ],
@@ -35,5 +39,5 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e);
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 6;
 }
