@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'shared/theme/app_theme.dart';
+
 class VaelApp extends StatelessWidget {
   const VaelApp({super.key});
 
@@ -7,13 +9,10 @@ class VaelApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Vael',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
-        useMaterial3: true,
-      ),
-      home: const Scaffold(
-        body: Center(child: Text('Vael')),
-      ),
+      theme: AppTheme.light(),
+      darkTheme: AppTheme.dark(),
+      themeMode: ThemeMode.system,
+      home: const Scaffold(body: Center(child: Text('Vael'))),
     );
   }
 }

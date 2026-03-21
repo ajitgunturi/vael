@@ -62,51 +62,59 @@ Vael is a greenfield Flutter family finance app being ported from a Java/Postgre
 
 ---
 
-## Phase 2: Core Features (Weeks 3-5)
+## Phase 2: Core Features (Weeks 3-5) — COMPLETE ✅
 
-### 2.1 — Riverpod Provider Architecture
+> **293 tests, all green. Committed: 318f93a**
+
+### 2.1 — Riverpod Provider Architecture ✅ (11 tests)
 - **Red**: `test/core/providers/account_providers_test.dart` — stream from DAO, rebuild on change, netWorthProvider filters by visibility
 - **Green**: `lib/core/providers/{account,database}_providers.dart`
-- Establish convention: StreamProvider for DB entities, FutureProvider for one-shot computations
+- Established convention: StreamProvider for DB entities, FutureProvider for one-shot computations
 - **Depends on**: 1.6
 
-### 2.2 — Dashboard Aggregation Logic
+### 2.2 — Dashboard Aggregation Logic ✅ (16 tests)
 - **Red**: `test/core/financial/dashboard_aggregation_test.dart` — net worth (assets-liabilities-CC), account grouping, family vs personal scope, monthly summary
 - **Red**: `test/features/dashboard/dashboard_providers_test.dart` — combined provider, scope toggle
 - **Green**: `lib/core/financial/dashboard_aggregation.dart`, `lib/features/dashboard/providers/dashboard_providers.dart`
 - **Depends on**: 1.7, 2.1
 
-### 2.3 — Account CRUD UI
+### 2.3 — Account CRUD UI ✅ (13 tests)
 - **Red**: `test/features/accounts/{account_list_screen,account_form}_test.dart` — grouped list, balance formatting, visibility badge, form validation, CRUD
-- **Green**: `lib/features/accounts/{screens,providers,widgets}/`
-- Extract `lib/shared/widgets/currency_input.dart` for reuse
+- **Green**: `lib/features/accounts/{screens,providers}/`
+- Extracted `lib/shared/widgets/currency_input.dart` for reuse
 - **Depends on**: 2.1, 1.9
 
-### 2.4 — Transaction CRUD UI
-- **Red**: `test/features/transactions/{transaction_list,transaction_form,transaction_cascade}_test.dart` — date/category filters, kind selector, TRANSFER dual-picker, cascade tests (create/edit/delete -> balance updates)
-- **Green**: `lib/features/transactions/{screens,providers,widgets}/`
+### 2.4 — Transaction CRUD UI ✅ (25 tests)
+- **Red**: `test/features/transactions/{transaction_list,transaction_form,transaction_cascade}_test.dart` — kind selector, TRANSFER dual-picker, cascade tests (create → balance updates), Indian number formatting
+- **Green**: `lib/features/transactions/{screens,providers}/`
 - **Depends on**: 2.1, 2.3, 1.7
 
-### 2.5 — Budget Logic and UI
-- **Red**: `test/core/financial/budget_summary_test.dart` — actuals by group, remaining/overspent, unbudgeted groups, expense-only filter, shared-accounts-only
-- **Red**: `test/features/budgets/budget_screen_test.dart` — groups with bars, overspent highlighting, inline limit editing
+### 2.5 — Budget Logic and UI ✅ (20 tests)
+- **Red**: `test/core/financial/budget_summary_test.dart` (9) — actuals by group, remaining/overspent, unbudgeted groups, expense-only filter, shared-accounts-only, MISSING group for uncategorized
+- **Red**: `test/core/database/daos/budget_dao_test.dart` (5) — CRUD, month filtering, family isolation
+- **Red**: `test/features/budgets/budget_screen_test.dart` (6) — groups with bars, overspent highlighting, Indian notation, empty state
 - **Green**: `lib/core/financial/budget_summary.dart`, `lib/features/budgets/{screens,providers}/`, `lib/core/database/{daos/budget_dao,tables/budgets}.dart`
+- Schema bumped to v3
 - **Depends on**: 2.4, 1.6
 
-### 2.6 — Goals Logic and UI
-- **Red**: `test/core/financial/goal_tracking_test.dart` — inflation-adjusted target, required SIP, status inference, investment linking
-- **Red**: `test/features/goals/goal_screen_test.dart` — cards with progress bars, status badges, form
-- **Green**: `lib/core/financial/goal_tracking.dart`, `lib/features/goals/{screens,providers}/`, `lib/core/database/{daos/goal_dao,tables/goals}.dart`
+### 2.6 — Goals Logic and DAO ✅ (21 tests)
+- **Red**: `test/core/financial/goal_tracking_test.dart` (15) — inflation-adjusted target, required SIP, status inference (active/onTrack/atRisk/completed)
+- **Red**: `test/core/database/daos/goal_dao_test.dart` (6) — CRUD, status filtering, progress updates
+- **Green**: `lib/core/financial/goal_tracking.dart`, `lib/core/database/{daos/goal_dao,tables/goals}.dart`
+- Schema bumped to v2
 - **Depends on**: 1.3, 2.1
 
-### 2.7 — Loan Detail and Amortization UI
-- **Red**: `test/features/loans/{loan_detail,emi_payment}_test.dart` — summary, amortization table, prepayment simulation, EMI split (principal+interest)
+### 2.7 — Loan Detail and Amortization UI ✅ (14 tests)
+- **Red**: `test/core/database/daos/loan_dao_test.dart` (5) — CRUD, outstanding update, family isolation
+- **Red**: `test/features/loans/loan_detail_test.dart` (5) — summary card, EMI split bar, amortization table, not-found state, remaining tenure
+- **Red**: `test/features/loans/prepayment_simulation_test.dart` (4) — tenure reduction, interest saved, zero prepayment no-op, early > late savings
 - **Green**: `lib/features/loans/{screens,providers}/`, `lib/core/database/{daos/loan_dao,tables/loan_details}.dart`
+- Schema bumped to v4
 - **Depends on**: 1.4, 2.4
 
-### 2.8 — Dashboard UI
-- **Red**: `test/features/dashboard/dashboard_screen_test.dart` — net worth card, monthly summary, goals section, upcoming, scope toggle, adaptive layout
-- **Green**: `lib/features/dashboard/{screens,widgets}/`
+### 2.8 — Dashboard UI ✅ (8 tests)
+- **Red**: `test/features/dashboard/dashboard_screen_test.dart` — net worth card (signed, colored), monthly summary (income/expenses/net savings), goals section with progress bars, scope toggle (Family/Personal), negative net worth in red, hidden goals when empty
+- **Green**: `lib/features/dashboard/screens/dashboard_screen.dart`
 - **Depends on**: 2.2, 2.6, 1.9
 
 ### Phase 2 Dependency Graph
@@ -121,14 +129,146 @@ Vael is a greenfield Flutter family finance app being ported from a Java/Postgre
 2.8 (Dashboard UI) ← 2.2, 2.6, 1.9
 ```
 
-### Phase 2 Exit Criteria
+### Phase 2 Exit Criteria ✅
 - All core screens functional on phone + tablet layouts
-- Transaction cascade verified end-to-end
+- Transaction cascade verified end-to-end (7 cascade tests)
 - 90%+ coverage on `core/financial/`
 
 ---
 
+## Phase 2.5: UX Implementation (Week 5.5-6)
+
+> **Implements `docs/UI_DESIGN.md` design system. Target: ~395 tests.**
+
+Bridges the gap between Phase 2's functional-but-stock-M3 screens and the full design spec in `docs/UI_DESIGN.md`. All future UI work (Phases 3-5) inherits the design system established here.
+
+### Wave 1: Design System Foundation
+
+**2.5.1 — Semantic ColorTokens (dark-aware)** (~8 tests)
+- **Red**: `test/shared/theme/color_tokens_test.dart` — light/dark return correct hex, WCAG AA contrast on all text/surface pairs, regression on old statics
+- **Green**: `lib/shared/theme/color_tokens.dart` — `ColorTokens.of(BuildContext)` returning full token set from `UI_DESIGN.md` §1.1 (surface, text, semantic, action, chart tokens)
+- Keep existing `static const` fields as deprecated aliases for backward compat
+
+**2.5.2 — Inter Font + Card Style + Spacing Tokens** (~8 tests)
+- **Red**: `test/shared/theme/app_theme_test.dart` — font family, tabular figures, card radius 12, spacing values
+- **Green**: `lib/shared/theme/app_theme.dart` (updated), NEW `lib/shared/theme/text_styles.dart`, NEW `lib/shared/theme/spacing.dart`
+- Add `google_fonts` to pubspec. Inter type scale from `UI_DESIGN.md` §1.3, spacing/radius from §1.4
+- Card: 12dp radius, `surfaceContainer` fill, `outline` border, no shadows
+
+**2.5.3 — Dark Mode Wiring** (~3 tests)
+- **Red**: `test/app_test.dart` — uses AppTheme.light(), AppTheme.dark(), ThemeMode.system
+- **Green**: `lib/app.dart` — wire themes, integrate AdaptiveScaffold as home
+- **Depends on**: 2.5.1, 2.5.2
+
+**2.5.4 — 5-Item Bottom Nav** (~4 tests, updates existing)
+- **Red**: Update `test/shared/layout/adaptive_scaffold_test.dart` — 5 items, Settings absent
+- **Green**: `lib/shared/layout/adaptive_scaffold.dart` — remove Settings destination, add AppBar gear icon
+- **Depends on**: 2.5.3
+
+**2.5.5 — Skeleton Loading Widget** (~4 tests)
+- **Red**: `test/shared/widgets/skeleton_loading_test.dart` — renders, dimensions, theme color, animation
+- **Green**: NEW `lib/shared/widgets/skeleton_loading.dart` — `SkeletonBox` + `SkeletonCard` with shimmer (1500ms linear loop per spec §1.5)
+
+### Wave 2: Dashboard Redesign
+
+**2.5.6 — BalanceSnapshotDao + Net Worth History** (~8 tests)
+- **Red**: `test/core/database/daos/balance_snapshot_dao_test.dart`, `test/core/financial/dashboard_aggregation_test.dart` (additions)
+- **Green**: NEW `lib/core/database/daos/balance_snapshot_dao.dart`, `lib/core/financial/dashboard_aggregation.dart` (add `computeNetWorthHistory()`)
+- **Depends on**: 1.5
+
+**2.5.7 — Expanded DashboardData + Savings Rate** (~5 tests)
+- **Red**: `test/features/dashboard/dashboard_providers_test.dart` (additions) — savings rate edge cases, new fields
+- **Green**: `lib/features/dashboard/providers/dashboard_providers.dart`, `lib/core/financial/dashboard_aggregation.dart` (add `computeSavingsRate()`)
+- **Depends on**: 2.5.6
+
+**2.5.8 — Hero Net Worth Card** (~4 tests)
+- **Red**: `test/features/dashboard/dashboard_screen_test.dart` (updates) — large amount, delta display
+- **Green**: `lib/features/dashboard/screens/dashboard_screen.dart` — hero layout per `UI_DESIGN.md` §2.2
+- **Depends on**: 2.5.7, 2.5.1
+
+**2.5.9 — Compact Income/Expense Tiles** (~3 tests)
+- Replace `_MonthlySummaryCard` with side-by-side `Row` of three compact cards
+- **Depends on**: 2.5.8
+
+**2.5.10 — Quick Actions Row** (~3 tests)
+- "Add Transaction" and "View Accounts" tonal buttons on dashboard
+- **Depends on**: 2.5.8
+
+**2.5.11 — Savings Rate Badge** (~3 tests)
+- Chip: green ≥20%, amber 10-20%, red <10%
+- **Depends on**: 2.5.7
+
+**2.5.12 — Net Worth Trend Line Chart** (~4 tests)
+- **Red**: `test/features/dashboard/net_worth_chart_test.dart`
+- **Green**: NEW `lib/features/dashboard/widgets/net_worth_chart.dart` — fl_chart `LineChart`, 6 months, chart tokens from spec
+- **Depends on**: 2.5.7
+
+### Wave 3: Screen Improvements
+
+**2.5.13 — Transaction List Grouping + Search + Filters** (~10 tests)
+- **Red**: `test/core/financial/transaction_grouping_test.dart`, `test/features/transactions/transaction_list_screen_test.dart` (updates)
+- **Green**: NEW `lib/core/financial/transaction_grouping.dart`, `lib/features/transactions/screens/transaction_list_screen.dart` (updated)
+- Groups: "Today", "Yesterday", "dd MMM". Provider-level grouping. SearchBar + FilterChips.
+- **Depends on**: 2.5.1
+
+**2.5.14 — Budget Screen Interactivity** (~6 tests)
+- **Green**: `lib/features/budgets/screens/budget_screen.dart` (updated), NEW `lib/features/budgets/screens/budget_form_screen.dart`
+- FAB to create, tappable cards to edit, remaining amount display
+- **Depends on**: 2.5.1
+
+**2.5.15 — Budget Donut Chart** (~4 tests)
+- **Green**: NEW `lib/features/budgets/widgets/budget_donut_chart.dart` — fl_chart `PieChart` per category group
+- **Depends on**: 2.5.14
+
+**2.5.16 — Account Type Icons + Balance Coloring** (~5 tests)
+- **Green**: `lib/features/accounts/screens/account_list_screen.dart` (updated), NEW `lib/shared/utils/account_icons.dart`
+- Icons per type, balance red for liabilities
+- **Depends on**: 2.5.1
+
+**2.5.17 — Amortization Table Pagination** (~4 tests)
+- Show first 12 rows, "Show More" to expand
+- **Depends on**: 2.5.1
+
+### Wave 4: Polish
+
+**2.5.18 — Card Tap Feedback + Navigation** (~3 tests)
+- InkWell on all dashboard cards, navigate to detail screens
+
+**2.5.19 — Standardized Empty States** (~4 tests)
+- NEW `lib/shared/widgets/empty_state.dart` — reusable across all screens
+
+**2.5.20 — Pull-to-Refresh** (~3 tests)
+- RefreshIndicator on all list screens, `ref.invalidate()` on refresh
+
+**2.5.21 — Page Transitions** (~2 tests)
+- NEW `lib/shared/layout/page_transitions.dart` — 300ms easeInOutCubic per spec §1.5
+
+**2.5.22 — Live Currency Formatting** (~4 tests)
+- Update `lib/shared/widgets/currency_input.dart` — Indian comma formatting as user types
+
+### Phase 2.5 Exit Criteria
+- All ~395 tests green
+- Widget tests at 3 breakpoints (400dp, 750dp, 1200dp)
+- WCAG AA contrast verified for all dark-mode token pairs
+- Dashboard matches `UI_DESIGN.md` §2.2 wireframe
+- No regressions on Phase 2 screens
+
+### Cross-Phase Design System Directive
+
+**All future UI work (Phases 3-5) MUST use the design system from this phase:**
+- Color: `ColorTokens.of(context)` — never raw hex in widgets
+- Typography: Inter font, spec type scale, tabular figures for money
+- Cards: 12dp radius, surfaceContainer fill, outline border, no shadows
+- Spacing: `Spacing.xs/sm/md/lg/xl/xxl` constants
+- Loading: Shimmer skeletons via `SkeletonBox`/`SkeletonCard`, never spinners
+- Empty: `EmptyState` widget, never bare text
+- Nav: 5-item adaptive scaffold + AppBar actions for overflow
+
+---
+
 ## Phase 3: Encryption + Sync (Weeks 6-8)
+
+> **Note**: All UI screens in this phase (3.5, 3.16) use the design system from Phase 2.5.
 
 ### Crypto Track (sequential)
 
@@ -202,6 +342,8 @@ Vael is a greenfield Flutter family finance app being ported from a Java/Postgre
 
 ## Phase 4: Advanced Features (Weeks 9-11)
 
+> **Note**: All UI screens in this phase (4.2, 4.4, 4.5, 4.7, 4.10) use the design system from Phase 2.5. Follow `UI_DESIGN.md` wireframes with established tokens.
+
 ### 4.1 — Recurring Rules (Schema + Engine)
 - **Red**: DAO tests (float frequency, pause/resume, escalation) + engine tests (monthly/annual/biweekly generation, escalation, idempotency)
 - **Green**: `lib/core/database/{tables/recurring_rules,daos/recurring_rule_dao}.dart`, `lib/core/financial/recurring_engine.dart`
@@ -272,17 +414,20 @@ Vael is a greenfield Flutter family finance app being ported from a Java/Postgre
 
 ## Phase 5: Polish + Distribution (Weeks 12-14)
 
+> **Note**: All UI screens use the design system from Phase 2.5. WCAG AA contrast already verified by Phase 2.5 color token tests. Theme toggle already wired.
+
 ### 5.1 — Onboarding Flow
 - Sign-In → Create/Join Family → Passphrase → Optional Migration → Dashboard
+- Use `EmptyState`, `SkeletonBox`, design system cards/spacing
 
 ### 5.2 — Family Management UI
 - Member list, role management, invite instructions
 
 ### 5.3 — Settings Screen
-- Theme, sync status, passphrase change, manual backup, about
+- Theme toggle (already wired in 2.5.3), sync status, passphrase change, manual backup, about
 
 ### 5.4 — Accessibility
-- Semantic labels, dynamic type, WCAG AA contrast, screen reader tests
+- Semantic labels, dynamic type, screen reader tests (WCAG AA contrast already covered by Phase 2.5)
 
 ### 5.5 — Edge Case & Integration Tests
 - Offline sync round-trip, cascade integrity (account→txn→budget→dashboard), 10k transaction performance

@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Ensure common tool paths are available (homebrew, FVM, user local)
+export PATH="$HOME/fvm/versions/stable/bin:/opt/homebrew/bin:$HOME/.pub-cache/bin:$PATH"
+
+echo "==> Pre-commit: format check"
+dart format --set-exit-if-changed lib test
+echo ""
+
+echo "==> Pre-commit: static analysis"
+flutter analyze --no-fatal-infos
+echo ""
+
+echo "==> Pre-commit: running tests"
+flutter test
+echo ""
+
+echo "==> All pre-commit checks passed."

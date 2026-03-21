@@ -19,18 +19,26 @@ void main() {
 
   /// Seeds minimal family + user rows so foreign keys are satisfied.
   Future<void> _seedFamily(String familyId) async {
-    await db.into(db.families).insert(FamiliesCompanion.insert(
-          id: familyId,
-          name: 'Family $familyId',
-          createdAt: DateTime(2025),
-        ));
-    await db.into(db.users).insert(UsersCompanion.insert(
-          id: 'user_$familyId',
-          email: '$familyId@test.com',
-          displayName: 'User $familyId',
-          role: 'admin',
-          familyId: familyId,
-        ));
+    await db
+        .into(db.families)
+        .insert(
+          FamiliesCompanion.insert(
+            id: familyId,
+            name: 'Family $familyId',
+            createdAt: DateTime(2025),
+          ),
+        );
+    await db
+        .into(db.users)
+        .insert(
+          UsersCompanion.insert(
+            id: 'user_$familyId',
+            email: '$familyId@test.com',
+            displayName: 'User $familyId',
+            role: 'admin',
+            familyId: familyId,
+          ),
+        );
   }
 
   Future<void> _insertAccount({
@@ -38,70 +46,73 @@ void main() {
     required String familyId,
     int balance = 0,
   }) async {
-    await db.into(db.accounts).insert(AccountsCompanion(
-          id: Value(id),
-          name: Value('Account $id'),
-          type: const Value('savings'),
-          balance: Value(balance),
-          visibility: const Value('shared'),
-          familyId: Value(familyId),
-          userId: Value('user_$familyId'),
-        ));
+    await db
+        .into(db.accounts)
+        .insert(
+          AccountsCompanion(
+            id: Value(id),
+            name: Value('Account $id'),
+            type: const Value('savings'),
+            balance: Value(balance),
+            visibility: const Value('shared'),
+            familyId: Value(familyId),
+            userId: Value('user_$familyId'),
+          ),
+        );
   }
 
   Future<int> _getBalance(String accountId) async {
-    final row = await (db.select(db.accounts)
-          ..where((a) => a.id.equals(accountId)))
-        .getSingle();
+    final row = await (db.select(
+      db.accounts,
+    )..where((a) => a.id.equals(accountId))).getSingle();
     return row.balance;
   }
 
   group('BalanceRules.computeDelta', () {
     test('income returns positive fromDelta', () {
-      final result =
-          BalanceRules.computeDelta(kind: 'income', amount: 50000);
+      final result = BalanceRules.computeDelta(kind: 'income', amount: 50000);
       expect(result.fromDelta, 50000);
       expect(result.toDelta, isNull);
     });
 
     test('salary returns positive fromDelta', () {
-      final result =
-          BalanceRules.computeDelta(kind: 'salary', amount: 50000);
+      final result = BalanceRules.computeDelta(kind: 'salary', amount: 50000);
       expect(result.fromDelta, 50000);
       expect(result.toDelta, isNull);
     });
 
     test('dividend returns positive fromDelta', () {
-      final result =
-          BalanceRules.computeDelta(kind: 'dividend', amount: 50000);
+      final result = BalanceRules.computeDelta(kind: 'dividend', amount: 50000);
       expect(result.fromDelta, 50000);
       expect(result.toDelta, isNull);
     });
 
     test('expense returns negative fromDelta', () {
-      final result =
-          BalanceRules.computeDelta(kind: 'expense', amount: 30000);
+      final result = BalanceRules.computeDelta(kind: 'expense', amount: 30000);
       expect(result.fromDelta, -30000);
       expect(result.toDelta, isNull);
     });
 
     test('emiPayment returns negative fromDelta', () {
-      final result =
-          BalanceRules.computeDelta(kind: 'emiPayment', amount: 30000);
+      final result = BalanceRules.computeDelta(
+        kind: 'emiPayment',
+        amount: 30000,
+      );
       expect(result.fromDelta, -30000);
       expect(result.toDelta, isNull);
     });
 
     test('insurancePremium returns negative fromDelta', () {
-      final result =
-          BalanceRules.computeDelta(kind: 'insurancePremium', amount: 30000);
+      final result = BalanceRules.computeDelta(
+        kind: 'insurancePremium',
+        amount: 30000,
+      );
       expect(result.fromDelta, -30000);
       expect(result.toDelta, isNull);
     });
 
     test('transfer returns negative fromDelta and positive toDelta', () {
-      final result =
-          BalanceRules.computeDelta(kind: 'transfer', amount: 40000);
+      final result = BalanceRules.computeDelta(kind: 'transfer', amount: 40000);
       expect(result.fromDelta, -40000);
       expect(result.toDelta, 40000);
     });

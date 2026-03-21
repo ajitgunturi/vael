@@ -1,37 +1,73 @@
 import 'package:flutter/material.dart';
 
+import 'color_tokens.dart';
+import 'spacing.dart';
+import 'text_styles.dart';
+
 /// Centralized theme configuration for Vael.
 ///
-/// Both light and dark themes use Material 3 with an indigo seed color.
-/// WCAG AA contrast compliance is validated by tests.
+/// Uses custom color tokens from `UI_DESIGN.md` §1.1,
+/// Inter font from §1.3, and card/spacing from §1.4.
 class AppTheme {
   AppTheme._();
 
-  static const _seed = Colors.indigo;
-
-  /// Light theme — Material 3, indigo seed.
+  /// Light theme — full design system.
   static ThemeData light() {
-    final colorScheme = ColorScheme.fromSeed(
-      seedColor: _seed,
-      brightness: Brightness.light,
-    );
-    return ThemeData(
-      useMaterial3: true,
-      colorScheme: colorScheme,
-      brightness: Brightness.light,
-    );
+    final tokens = ColorTokens.light();
+    final textTheme = AppTextStyles.textTheme();
+    return _build(tokens, textTheme, Brightness.light);
   }
 
-  /// Dark theme — Material 3, indigo seed.
+  /// Dark theme — full design system.
   static ThemeData dark() {
-    final colorScheme = ColorScheme.fromSeed(
-      seedColor: _seed,
-      brightness: Brightness.dark,
+    final tokens = ColorTokens.dark();
+    final textTheme = AppTextStyles.textTheme();
+    return _build(tokens, textTheme, Brightness.dark);
+  }
+
+  static ThemeData _build(
+    ColorTokens tokens,
+    TextTheme textTheme,
+    Brightness brightness,
+  ) {
+    final colorScheme = ColorScheme(
+      brightness: brightness,
+      primary: tokens.primary,
+      onPrimary: tokens.onPrimary,
+      primaryContainer: tokens.primaryContainer,
+      onPrimaryContainer: tokens.onPrimaryContainer,
+      secondary: tokens.secondary,
+      onSecondary: tokens.onPrimary, // reuse
+      secondaryContainer: tokens.primaryContainer,
+      onSecondaryContainer: tokens.onPrimaryContainer,
+      surface: tokens.surface,
+      onSurface: tokens.onSurface,
+      onSurfaceVariant: tokens.onSurfaceVariant,
+      error: tokens.expense,
+      onError: Colors.white,
+      outline: tokens.outline,
+      outlineVariant: tokens.outlineVariant,
+      inverseSurface: tokens.inverseSurface,
+      onInverseSurface: tokens.inverseOnSurface,
+      surfaceDim: tokens.surfaceDim,
+      surfaceContainer: tokens.surfaceContainer,
+      surfaceContainerHigh: tokens.surfaceContainerHigh,
+      surfaceContainerHighest: tokens.surfaceContainerHighest,
     );
+
     return ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
-      brightness: Brightness.dark,
+      brightness: brightness,
+      textTheme: textTheme,
+      cardTheme: CardThemeData(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(Spacing.cardRadius),
+          side: BorderSide(color: tokens.outline),
+        ),
+        elevation: 0,
+        color: tokens.surfaceContainer,
+      ),
     );
   }
 }

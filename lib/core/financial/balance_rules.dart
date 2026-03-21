@@ -61,12 +61,14 @@ class BalanceService {
 
     await _db.transaction(() async {
       // Update fromAccount balance.
-      final fromRows = await (
-        _db.update(_db.accounts)
-          ..where((a) => a.id.equals(fromAccountId))
-      ).write(AccountsCompanion.custom(
-        balance: _db.accounts.balance + Variable<int>(deltas.fromDelta),
-      ));
+      final fromRows =
+          await (_db.update(
+            _db.accounts,
+          )..where((a) => a.id.equals(fromAccountId))).write(
+            AccountsCompanion.custom(
+              balance: _db.accounts.balance + Variable<int>(deltas.fromDelta),
+            ),
+          );
 
       if (fromRows == 0) {
         throw StateError('fromAccount $fromAccountId not found');
@@ -80,12 +82,14 @@ class BalanceService {
           );
         }
 
-        final toRows = await (
-          _db.update(_db.accounts)
-            ..where((a) => a.id.equals(toAccountId))
-        ).write(AccountsCompanion.custom(
-          balance: _db.accounts.balance + Variable<int>(deltas.toDelta!),
-        ));
+        final toRows =
+            await (_db.update(
+              _db.accounts,
+            )..where((a) => a.id.equals(toAccountId))).write(
+              AccountsCompanion.custom(
+                balance: _db.accounts.balance + Variable<int>(deltas.toDelta!),
+              ),
+            );
 
         if (toRows == 0) {
           throw StateError('toAccount $toAccountId not found');

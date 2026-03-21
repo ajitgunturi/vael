@@ -10,7 +10,7 @@ class Money implements Comparable<Money> {
 
   /// Creates Money from major (rupees) and optional minor (paise) units.
   const Money.fromMajor(int rupees, [int paise = 0])
-      : paise = rupees * 100 + paise;
+    : paise = rupees * 100 + paise;
 
   static const Money zero = Money(0);
 

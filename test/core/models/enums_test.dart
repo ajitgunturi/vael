@@ -8,14 +8,17 @@ void main() {
     });
 
     test('should contain all expected values', () {
-      expect(AccountType.values, containsAll([
-        AccountType.savings,
-        AccountType.current,
-        AccountType.creditCard,
-        AccountType.loan,
-        AccountType.investment,
-        AccountType.wallet,
-      ]));
+      expect(
+        AccountType.values,
+        containsAll([
+          AccountType.savings,
+          AccountType.current,
+          AccountType.creditCard,
+          AccountType.loan,
+          AccountType.investment,
+          AccountType.wallet,
+        ]),
+      );
     });
 
     test('should be lookable by name', () {
@@ -31,15 +34,18 @@ void main() {
     });
 
     test('should contain all expected values', () {
-      expect(TransactionKind.values, containsAll([
-        TransactionKind.income,
-        TransactionKind.salary,
-        TransactionKind.expense,
-        TransactionKind.transfer,
-        TransactionKind.emiPayment,
-        TransactionKind.insurancePremium,
-        TransactionKind.dividend,
-      ]));
+      expect(
+        TransactionKind.values,
+        containsAll([
+          TransactionKind.income,
+          TransactionKind.salary,
+          TransactionKind.expense,
+          TransactionKind.transfer,
+          TransactionKind.emiPayment,
+          TransactionKind.insurancePremium,
+          TransactionKind.dividend,
+        ]),
+      );
     });
 
     test('should be lookable by name', () {
@@ -55,13 +61,16 @@ void main() {
     });
 
     test('should contain all expected values', () {
-      expect(CategoryGroup.values, containsAll([
-        CategoryGroup.essential,
-        CategoryGroup.nonEssential,
-        CategoryGroup.investments,
-        CategoryGroup.homeExpenses,
-        CategoryGroup.missing,
-      ]));
+      expect(
+        CategoryGroup.values,
+        containsAll([
+          CategoryGroup.essential,
+          CategoryGroup.nonEssential,
+          CategoryGroup.investments,
+          CategoryGroup.homeExpenses,
+          CategoryGroup.missing,
+        ]),
+      );
     });
 
     test('should be lookable by name', () {
@@ -77,11 +86,14 @@ void main() {
     });
 
     test('should contain all expected values', () {
-      expect(Visibility.values, containsAll([
-        Visibility.private_,
-        Visibility.shared,
-        Visibility.familyWide,
-      ]));
+      expect(
+        Visibility.values,
+        containsAll([
+          Visibility.private_,
+          Visibility.shared,
+          Visibility.familyWide,
+        ]),
+      );
     });
 
     test('should be lookable by name', () {
@@ -97,16 +109,19 @@ void main() {
     });
 
     test('should contain all expected values', () {
-      expect(BucketType.values, containsAll([
-        BucketType.mutualFunds,
-        BucketType.stocks,
-        BucketType.ppf,
-        BucketType.epf,
-        BucketType.nps,
-        BucketType.fixedDeposit,
-        BucketType.bonds,
-        BucketType.policy,
-      ]));
+      expect(
+        BucketType.values,
+        containsAll([
+          BucketType.mutualFunds,
+          BucketType.stocks,
+          BucketType.ppf,
+          BucketType.epf,
+          BucketType.nps,
+          BucketType.fixedDeposit,
+          BucketType.bonds,
+          BucketType.policy,
+        ]),
+      );
     });
 
     test('should be lookable by name', () {
@@ -122,10 +137,7 @@ void main() {
     });
 
     test('should contain all expected values', () {
-      expect(UserRole.values, containsAll([
-        UserRole.admin,
-        UserRole.member,
-      ]));
+      expect(UserRole.values, containsAll([UserRole.admin, UserRole.member]));
     });
 
     test('should be lookable by name', () {
@@ -141,12 +153,15 @@ void main() {
     });
 
     test('should contain all expected values', () {
-      expect(GoalStatus.values, containsAll([
-        GoalStatus.active,
-        GoalStatus.onTrack,
-        GoalStatus.atRisk,
-        GoalStatus.completed,
-      ]));
+      expect(
+        GoalStatus.values,
+        containsAll([
+          GoalStatus.active,
+          GoalStatus.onTrack,
+          GoalStatus.atRisk,
+          GoalStatus.completed,
+        ]),
+      );
     });
 
     test('should be lookable by name', () {

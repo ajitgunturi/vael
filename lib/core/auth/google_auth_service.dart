@@ -18,13 +18,11 @@ class GoogleAuthService {
   GoogleSignInAccount? _currentAccount;
 
   GoogleAuthService({GoogleSignIn? googleSignIn})
-      : _googleSignIn = googleSignIn ??
-            GoogleSignIn(
-              scopes: [
-                'email',
-                'https://www.googleapis.com/auth/drive.file',
-              ],
-            );
+    : _googleSignIn =
+          googleSignIn ??
+          GoogleSignIn(
+            scopes: ['email', 'https://www.googleapis.com/auth/drive.file'],
+          );
 
   /// Whether a user is currently signed in.
   bool get isSignedIn => _currentAccount != null;

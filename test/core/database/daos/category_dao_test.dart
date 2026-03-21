@@ -18,11 +18,15 @@ void main() {
   });
 
   Future<void> _seedFamily(String familyId) async {
-    await db.into(db.families).insert(FamiliesCompanion.insert(
-          id: familyId,
-          name: 'Family $familyId',
-          createdAt: DateTime(2025),
-        ));
+    await db
+        .into(db.families)
+        .insert(
+          FamiliesCompanion.insert(
+            id: familyId,
+            name: 'Family $familyId',
+            createdAt: DateTime(2025),
+          ),
+        );
   }
 
   Future<void> _insertCategory({
@@ -31,13 +35,17 @@ void main() {
     required String type,
     String groupName = 'essential',
   }) async {
-    await db.into(db.categories).insert(CategoriesCompanion(
-          id: Value(id),
-          name: Value('Category $id'),
-          groupName: Value(groupName),
-          type: Value(type),
-          familyId: Value(familyId),
-        ));
+    await db
+        .into(db.categories)
+        .insert(
+          CategoriesCompanion(
+            id: Value(id),
+            name: Value('Category $id'),
+            groupName: Value(groupName),
+            type: Value(type),
+            familyId: Value(familyId),
+          ),
+        );
   }
 
   group('CategoryDao', () {

@@ -1,12 +1,5 @@
 /// Account classification within the family ledger.
-enum AccountType {
-  savings,
-  current,
-  creditCard,
-  loan,
-  investment,
-  wallet,
-}
+enum AccountType { savings, current, creditCard, loan, investment, wallet }
 
 /// Semantic kind of a monetary transaction.
 enum TransactionKind {
@@ -31,11 +24,7 @@ enum CategoryGroup {
 /// Controls which family members can see a record.
 ///
 /// [private_] uses a trailing underscore to avoid the Dart reserved keyword.
-enum Visibility {
-  private_,
-  shared,
-  familyWide,
-}
+enum Visibility { private_, shared, familyWide }
 
 /// Classification of investment buckets (India-native asset types).
 enum BucketType {
@@ -50,15 +39,7 @@ enum BucketType {
 }
 
 /// Role within a family vault.
-enum UserRole {
-  admin,
-  member,
-}
+enum UserRole { admin, member }
 
 /// Tracks progress state of a financial goal.
-enum GoalStatus {
-  active,
-  onTrack,
-  atRisk,
-  completed,
-}
+enum GoalStatus { active, onTrack, atRisk, completed }

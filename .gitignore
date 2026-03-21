@@ -16,13 +16,36 @@ build/
 .flutter-plugins-dependencies
 *.iml
 
+# Generated code (rebuild with `make build-runner`)
+# Note: *.g.dart files ARE committed — they're needed to build without codegen
+
+# Coverage
+coverage/
+lcov.info
+
 # Internal docs & planning (local-only)
 CLAUDE.md
-docs/
 .claude/
 .planning/
 
-# Secrets
+# Secrets & credentials
 *.env
+*.env.*
 *.jks
 *.keystore
+*.p12
+*.pem
+*.key
+google-services.json
+GoogleService-Info.plist
+service-account.json
+credentials.json
+
+# Platform signing
+android/app/*.jks
+android/key.properties
+ios/Runner/*.mobileprovision
+ios/Runner/*.p12
+
+# Local state (not for version control)
+STATE.md
