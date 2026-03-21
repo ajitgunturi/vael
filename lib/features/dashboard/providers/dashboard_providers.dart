@@ -5,10 +5,19 @@ import '../../../core/database/daos/transaction_dao.dart';
 import '../../../core/financial/dashboard_aggregation.dart';
 import '../../../core/providers/database_providers.dart';
 
+/// Notifier for toggling between family-wide and personal dashboard scope.
+class DashboardScopeNotifier extends Notifier<DashboardScope> {
+  @override
+  DashboardScope build() => DashboardScope.family;
+
+  void set(DashboardScope scope) => state = scope;
+}
+
 /// Toggle between family-wide and personal dashboard scope.
-final dashboardScopeProvider = StateProvider<DashboardScope>(
-  (ref) => DashboardScope.family,
-);
+final dashboardScopeProvider =
+    NotifierProvider<DashboardScopeNotifier, DashboardScope>(
+      DashboardScopeNotifier.new,
+    );
 
 /// Combined dashboard data: grouped accounts, net worth, monthly summary,
 /// savings rate, and net worth history for chart.

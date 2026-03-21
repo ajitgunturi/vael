@@ -8,6 +8,9 @@ class NotSignedInException implements Exception {
   String toString() => 'NotSignedInException: No active Google session.';
 }
 
+/// Scopes Vael requires for Google Drive sync.
+const driveScopes = ['https://www.googleapis.com/auth/drive.file'];
+
 /// Thin wrapper around [GoogleSignIn] that exposes only the surface area
 /// Vael needs: sign-in, sign-out, auth headers for Drive, and session state.
 ///
@@ -18,11 +21,7 @@ class GoogleAuthService {
   GoogleSignInAccount? _currentAccount;
 
   GoogleAuthService({GoogleSignIn? googleSignIn})
-    : _googleSignIn =
-          googleSignIn ??
-          GoogleSignIn(
-            scopes: ['email', 'https://www.googleapis.com/auth/drive.file'],
-          );
+    : _googleSignIn = googleSignIn ?? GoogleSignIn.instance;
 
   /// Whether a user is currently signed in.
   bool get isSignedIn => _currentAccount != null;
@@ -32,17 +31,26 @@ class GoogleAuthService {
   /// Returns a [GoogleAuthResult] on success, or `null` if the user cancels.
   /// Throws on unexpected platform errors.
   Future<GoogleAuthResult?> signIn() async {
-    final account = await _googleSignIn.signIn();
-    if (account == null) return null;
+    final GoogleSignInAccount account;
+    try {
+      account = await _googleSignIn.authenticate(scopeHint: driveScopes);
+    } on GoogleSignInException catch (e) {
+      if (e.code == GoogleSignInExceptionCode.canceled) return null;
+      rethrow;
+    }
 
     _currentAccount = account;
-    final auth = await account.authentication;
+
+    // Request authorization for Drive scope to obtain an access token.
+    final authz = await account.authorizationClient.authorizeScopes(
+      driveScopes,
+    );
 
     return GoogleAuthResult(
       email: account.email,
       displayName: account.displayName ?? '',
       avatarUrl: account.photoUrl,
-      accessToken: auth.accessToken ?? '',
+      accessToken: authz.accessToken,
     );
   }
 
@@ -59,6 +67,10 @@ class GoogleAuthService {
   Future<Map<String, String>> getAuthHeaders() async {
     final account = _currentAccount;
     if (account == null) throw NotSignedInException();
-    return await account.authHeaders;
+    final headers = await account.authorizationClient.authorizationHeaders(
+      driveScopes,
+    );
+    if (headers == null) throw NotSignedInException();
+    return headers;
   }
 }

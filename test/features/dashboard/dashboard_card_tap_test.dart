@@ -30,7 +30,7 @@ void main() {
         dashboardDataProvider(
           'fam_a',
         ).overrideWith((_) => Stream.value(_fakeData())),
-        dashboardScopeProvider.overrideWith((ref) => DashboardScope.family),
+        dashboardScopeProvider.overrideWith(DashboardScopeNotifier.new),
       ],
       child: MaterialApp(
         theme: AppTheme.light(),

@@ -62,7 +62,7 @@ void main() {
     return ProviderScope(
       overrides: [
         dashboardDataProvider('fam_a').overrideWith((_) => Stream.value(data)),
-        dashboardScopeProvider.overrideWith((ref) => scope),
+        dashboardScopeProvider.overrideWith(DashboardScopeNotifier.new),
       ],
       child: MaterialApp(
         theme: AppTheme.light(),

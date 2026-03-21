@@ -97,12 +97,14 @@ void main() {
     });
 
     test('can be toggled to personal and back', () {
-      container.read(dashboardScopeProvider.notifier).state =
-          DashboardScope.personal;
+      container
+          .read(dashboardScopeProvider.notifier)
+          .set(DashboardScope.personal);
       expect(container.read(dashboardScopeProvider), DashboardScope.personal);
 
-      container.read(dashboardScopeProvider.notifier).state =
-          DashboardScope.family;
+      container
+          .read(dashboardScopeProvider.notifier)
+          .set(DashboardScope.family);
       expect(container.read(dashboardScopeProvider), DashboardScope.family);
     });
   });

@@ -7,19 +7,49 @@ import 'package:vael/core/auth/google_auth_service.dart';
 // Manual mocks — avoids mockito code-gen while staying dependency-injectable.
 // ---------------------------------------------------------------------------
 
+class MockGoogleSignInClientAuthorization
+    implements GoogleSignInClientAuthorization {
+  @override
+  final String accessToken;
+
+  MockGoogleSignInClientAuthorization({this.accessToken = 'mock-access-token'});
+}
+
+class MockGoogleSignInAuthorizationClient
+    implements GoogleSignInAuthorizationClient {
+  final String accessToken;
+  final Map<String, String>? _headers;
+
+  MockGoogleSignInAuthorizationClient({
+    this.accessToken = 'mock-access-token',
+    Map<String, String>? headers,
+  }) : _headers = headers;
+
+  @override
+  Future<GoogleSignInClientAuthorization?> authorizationForScopes(
+    List<String> scopes,
+  ) async => MockGoogleSignInClientAuthorization(accessToken: accessToken);
+
+  @override
+  Future<GoogleSignInClientAuthorization> authorizeScopes(
+    List<String> scopes,
+  ) async => MockGoogleSignInClientAuthorization(accessToken: accessToken);
+
+  @override
+  Future<Map<String, String>?> authorizationHeaders(
+    List<String> scopes, {
+    bool promptIfNecessary = false,
+  }) async => _headers ?? {'Authorization': 'Bearer $accessToken'};
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
+
 class MockGoogleSignInAuthentication implements GoogleSignInAuthentication {
   @override
-  final String? accessToken;
-  @override
   final String? idToken;
-  @override
-  final String? serverAuthCode;
 
-  MockGoogleSignInAuthentication({
-    this.accessToken = 'mock-access-token',
-    this.idToken,
-    this.serverAuthCode,
-  });
+  MockGoogleSignInAuthentication({this.idToken});
 }
 
 class MockGoogleSignInAccount implements GoogleSignInAccount {
@@ -31,32 +61,27 @@ class MockGoogleSignInAccount implements GoogleSignInAccount {
   final String id;
   @override
   final String? photoUrl;
-  @override
-  final String? serverAuthCode;
 
-  final MockGoogleSignInAuthentication _auth;
-  final Map<String, String> _authHeaders;
+  final MockGoogleSignInAuthorizationClient _authzClient;
 
   MockGoogleSignInAccount({
     this.email = 'test@example.com',
     this.displayName = 'Test User',
     this.id = '123',
     this.photoUrl = 'https://photo.url/avatar.png',
-    this.serverAuthCode,
-    MockGoogleSignInAuthentication? auth,
+    String accessToken = 'mock-access-token',
     Map<String, String>? authHeaders,
-  }) : _auth = auth ?? MockGoogleSignInAuthentication(),
-       _authHeaders =
-           authHeaders ?? {'Authorization': 'Bearer mock-access-token'};
+  }) : _authzClient = MockGoogleSignInAuthorizationClient(
+         accessToken: accessToken,
+         headers: authHeaders,
+       );
 
   @override
-  Future<GoogleSignInAuthentication> get authentication async => _auth;
+  GoogleSignInAuthentication get authentication =>
+      MockGoogleSignInAuthentication();
 
   @override
-  Future<Map<String, String>> get authHeaders async => _authHeaders;
-
-  @override
-  Future<void> clearAuthCache() async {}
+  GoogleSignInAuthorizationClient get authorizationClient => _authzClient;
 }
 
 class MockGoogleSignIn implements GoogleSignIn {
@@ -66,56 +91,56 @@ class MockGoogleSignIn implements GoogleSignIn {
   String? errorMessage;
 
   @override
-  Future<GoogleSignInAccount?> signIn() async {
+  Future<GoogleSignInAccount> authenticate({
+    List<String> scopeHint = const <String>[],
+  }) async {
     if (shouldThrowOnSignIn) {
       throw Exception(errorMessage ?? 'Sign-in failed');
     }
-    return accountToReturn;
+    if (accountToReturn == null) {
+      throw const GoogleSignInException(
+        code: GoogleSignInExceptionCode.canceled,
+      );
+    }
+    return accountToReturn!;
   }
 
   @override
-  Future<GoogleSignInAccount?> signOut() async {
+  Future<void> signOut() async {
     signOutCalled = true;
-    return null;
   }
 
   // --- Stubs for the rest of the GoogleSignIn interface ---
 
   @override
-  Future<GoogleSignInAccount?> signInSilently({
-    bool suppressErrors = true,
-    bool reAuthenticate = false,
-  }) async => null;
+  Future<GoogleSignInAccount?>? attemptLightweightAuthentication({
+    bool reportAllExceptions = false,
+  }) => null;
 
   @override
-  Future<GoogleSignInAccount?> disconnect() async => null;
+  Future<void> disconnect() async {}
 
   @override
-  Future<bool> isSignedIn() async => accountToReturn != null;
+  Future<void> initialize({
+    String? clientId,
+    String? serverClientId,
+    String? nonce,
+    String? hostedDomain,
+  }) async {}
 
   @override
-  Future<bool> canAccessScopes(
-    List<String> scopes, {
-    String? accessToken,
-  }) async => true;
+  bool supportsAuthenticate() => true;
 
   @override
-  Future<bool> requestScopes(List<String> scopes) async => true;
+  bool authorizationRequiresUserInteraction() => false;
 
   @override
-  GoogleSignInAccount? get currentUser => accountToReturn;
+  Stream<GoogleSignInAuthenticationEvent> get authenticationEvents =>
+      const Stream.empty();
 
   @override
-  Stream<GoogleSignInAccount?> get onCurrentUserChanged => const Stream.empty();
-
-  @override
-  String? get serverClientId => null;
-
-  @override
-  bool get forceCodeForRefreshToken => false;
-
-  @override
-  List<String> get scopes => ['email'];
+  GoogleSignInAuthorizationClient get authorizationClient =>
+      MockGoogleSignInAuthorizationClient();
 
   @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
@@ -172,7 +197,7 @@ void main() {
         email: 'ajit@example.com',
         displayName: 'Ajit',
         photoUrl: 'https://photo.url/avatar.png',
-        auth: MockGoogleSignInAuthentication(accessToken: 'real-token'),
+        accessToken: 'real-token',
       );
 
       final result = await service.signIn();
