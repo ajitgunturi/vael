@@ -2,10 +2,10 @@ import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vael/core/crypto/aes_gcm.dart';
-import 'package:vael/core/sync/drive_client_interface.dart';
+import 'package:vael/core/sync/cloud_storage_interface.dart';
 import 'package:vael/core/sync/snapshot_manager.dart';
 
-class MockDriveClient implements DriveClientInterface {
+class MockCloudStorage implements CloudStorageInterface {
   Uint8List? uploadedSnapshot;
   Uint8List? storedSnapshot;
 
@@ -23,7 +23,7 @@ class MockDriveClient implements DriveClientInterface {
   @override
   Future<Uint8List> downloadFile(String fileId) async => Uint8List(0);
   @override
-  Future<List<DriveFileEntry>> listChangesets({DateTime? after}) async => [];
+  Future<List<CloudFileEntry>> listChangesets({DateTime? after}) async => [];
   @override
   Future<Map<String, dynamic>?> readManifest() async => null;
   @override
@@ -33,14 +33,14 @@ class MockDriveClient implements DriveClientInterface {
 void main() {
   group('SnapshotManager', () {
     late SnapshotManager snapshotManager;
-    late MockDriveClient driveClient;
+    late MockCloudStorage cloudStorage;
     late Uint8List fek;
 
     setUp(() {
-      driveClient = MockDriveClient();
+      cloudStorage = MockCloudStorage();
       fek = Uint8List.fromList(List.generate(32, (i) => i));
       snapshotManager = SnapshotManager(
-        driveClient: driveClient,
+        cloudStorage: cloudStorage,
         aesGcm: AesGcm(),
         fek: fek,
       );
@@ -52,10 +52,10 @@ void main() {
         final dbBytes = Uint8List.fromList(List.generate(1024, (i) => i % 256));
 
         await snapshotManager.uploadSnapshot(dbBytes);
-        expect(driveClient.uploadedSnapshot, isNotNull);
+        expect(cloudStorage.uploadedSnapshot, isNotNull);
 
         // Uploaded data should be encrypted (different from raw)
-        expect(driveClient.uploadedSnapshot, isNot(equals(dbBytes)));
+        expect(cloudStorage.uploadedSnapshot, isNot(equals(dbBytes)));
 
         final restored = await snapshotManager.downloadSnapshot();
         expect(restored, isNotNull);
@@ -69,7 +69,7 @@ void main() {
       await snapshotManager.uploadSnapshot(dbBytes);
 
       // Encrypted: IV(12) + ciphertext(5) + tag(16) = 33 bytes
-      expect(driveClient.uploadedSnapshot!.length, 12 + 5 + 16);
+      expect(cloudStorage.uploadedSnapshot!.length, 12 + 5 + 16);
     });
 
     test('returns null when no snapshot exists', () async {
@@ -83,7 +83,7 @@ void main() {
 
       final wrongFek = Uint8List.fromList(List.generate(32, (i) => i + 99));
       final wrongManager = SnapshotManager(
-        driveClient: driveClient,
+        cloudStorage: cloudStorage,
         aesGcm: AesGcm(),
         fek: wrongFek,
       );

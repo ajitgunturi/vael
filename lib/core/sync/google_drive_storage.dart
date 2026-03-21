@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'drive_client_interface.dart';
+import 'cloud_storage_interface.dart';
 
 /// Abstraction over the raw Google Drive API for testability.
 abstract class DriveApiAdapter {
@@ -10,14 +10,14 @@ abstract class DriveApiAdapter {
   Future<void> uploadFile(String name, Uint8List data, {String? parentId});
   Future<void> updateFile(String fileId, Uint8List data);
   Future<Uint8List> downloadFile(String fileId);
-  Future<List<DriveFileEntry>> listFiles(
+  Future<List<CloudFileEntry>> listFiles(
     String parentId, {
     DateTime? modifiedAfter,
   });
   Future<String?> findFile(String name, {String? parentId});
 }
 
-/// Google Drive client implementing the sync folder structure.
+/// Google Drive [CloudStorageInterface] implementation.
 ///
 /// Folder layout:
 /// ```
@@ -26,10 +26,10 @@ abstract class DriveApiAdapter {
 /// ├── changesets/*.enc
 /// └── snapshots/latest.enc
 /// ```
-class DriveClient implements DriveClientInterface {
+class GoogleDriveStorage implements CloudStorageInterface {
   final DriveApiAdapter api;
 
-  DriveClient({required this.api});
+  GoogleDriveStorage({required this.api});
 
   @override
   Future<void> uploadChangeset(String fileName, Uint8List data) async {
@@ -43,7 +43,7 @@ class DriveClient implements DriveClientInterface {
   }
 
   @override
-  Future<List<DriveFileEntry>> listChangesets({DateTime? after}) async {
+  Future<List<CloudFileEntry>> listChangesets({DateTime? after}) async {
     final folderId = await api.findFolder(
       'changesets',
       parentId: await _vaelFolderId(),

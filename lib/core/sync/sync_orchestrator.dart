@@ -6,7 +6,7 @@ import '../database/database.dart';
 import '../database/daos/sync_changelog_dao.dart';
 import '../database/daos/sync_state_dao.dart';
 import 'changeset_serializer.dart';
-import 'drive_client_interface.dart';
+import 'cloud_storage_interface.dart';
 import 'snapshot_manager.dart';
 import 'sync_pull.dart';
 import 'sync_push.dart';
@@ -38,7 +38,7 @@ class SyncOrchestrator {
   final AppDatabase db;
   final SyncChangelogDao changelogDao;
   final SyncStateDao stateDao;
-  final DriveClientInterface driveClient;
+  final CloudStorageInterface cloudStorage;
   final KeyStorage keyStorage;
   final String familyId;
   final String deviceId;
@@ -48,7 +48,7 @@ class SyncOrchestrator {
     required this.db,
     required this.changelogDao,
     required this.stateDao,
-    required this.driveClient,
+    required this.cloudStorage,
     required this.keyStorage,
     required this.familyId,
     required this.deviceId,
@@ -66,7 +66,7 @@ class SyncOrchestrator {
     final push = SyncPush(
       changelogDao: changelogDao,
       stateDao: stateDao,
-      driveClient: driveClient,
+      cloudStorage: cloudStorage,
       serializer: ChangesetSerializer(),
       aesGcm: AesGcm(),
       fek: fek,
@@ -80,7 +80,7 @@ class SyncOrchestrator {
     final fek = await _requireFek();
     final pull = SyncPull(
       stateDao: stateDao,
-      driveClient: driveClient,
+      cloudStorage: cloudStorage,
       serializer: ChangesetSerializer(),
       aesGcm: AesGcm(),
       fek: fek,
@@ -94,7 +94,7 @@ class SyncOrchestrator {
   Future<void> createSnapshot(Uint8List dbBytes) async {
     final fek = await _requireFek();
     final manager = SnapshotManager(
-      driveClient: driveClient,
+      cloudStorage: cloudStorage,
       aesGcm: AesGcm(),
       fek: fek,
     );

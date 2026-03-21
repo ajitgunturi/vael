@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:vael/core/sync/drive_client.dart';
-import 'package:vael/core/sync/drive_client_interface.dart';
+import 'package:vael/core/sync/cloud_storage_interface.dart';
+import 'package:vael/core/sync/google_drive_storage.dart';
 
-/// In-memory mock of the Google Drive API for testing DriveClient logic.
+/// In-memory mock of the Google Drive API for testing GoogleDriveStorage logic.
 class MockDriveApi implements DriveApiAdapter {
   final files = <String, MockFile>{};
   String? vaelFolderId = 'folder-vael';
@@ -65,7 +65,7 @@ class MockDriveApi implements DriveApiAdapter {
   }
 
   @override
-  Future<List<DriveFileEntry>> listFiles(
+  Future<List<CloudFileEntry>> listFiles(
     String parentId, {
     DateTime? modifiedAfter,
   }) async {
@@ -76,7 +76,7 @@ class MockDriveApi implements DriveApiAdapter {
           (f) => modifiedAfter == null || f.modifiedTime.isAfter(modifiedAfter),
         )
         .map(
-          (f) => DriveFileEntry(
+          (f) => CloudFileEntry(
             id: f.name,
             name: f.name,
             modifiedTime: f.modifiedTime,
@@ -109,18 +109,18 @@ class MockFile {
 }
 
 void main() {
-  group('DriveClient', () {
-    late DriveClient driveClient;
+  group('GoogleDriveStorage', () {
+    late GoogleDriveStorage storage;
     late MockDriveApi mockApi;
 
     setUp(() {
       mockApi = MockDriveApi();
-      driveClient = DriveClient(api: mockApi);
+      storage = GoogleDriveStorage(api: mockApi);
     });
 
     test('uploads changeset to changesets folder', () async {
       final data = Uint8List.fromList([1, 2, 3]);
-      await driveClient.uploadChangeset('test.enc', data);
+      await storage.uploadChangeset('test.enc', data);
 
       expect(mockApi.files, contains('test.enc'));
     });
@@ -137,7 +137,7 @@ void main() {
         parentId: 'folder-changesets',
       );
 
-      final entries = await driveClient.listChangesets();
+      final entries = await storage.listChangesets();
       expect(entries, hasLength(2));
     });
 
@@ -145,13 +145,13 @@ void main() {
       final data = Uint8List.fromList([10, 20, 30]);
       mockApi.files['cs1.enc'] = MockFile(name: 'cs1.enc', data: data);
 
-      final downloaded = await driveClient.downloadFile('cs1.enc');
+      final downloaded = await storage.downloadFile('cs1.enc');
       expect(downloaded, equals(data));
     });
 
     test('uploads snapshot to snapshots folder', () async {
       final data = Uint8List.fromList(List.generate(100, (i) => i));
-      await driveClient.uploadSnapshot(data);
+      await storage.uploadSnapshot(data);
 
       expect(mockApi.files, contains('latest.enc'));
     });
@@ -164,12 +164,12 @@ void main() {
         parentId: 'folder-snapshots',
       );
 
-      final downloaded = await driveClient.downloadSnapshot();
+      final downloaded = await storage.downloadSnapshot();
       expect(downloaded, equals(data));
     });
 
     test('returns null when no snapshot exists', () async {
-      final result = await driveClient.downloadSnapshot();
+      final result = await storage.downloadSnapshot();
       expect(result, isNull);
     });
 
@@ -181,19 +181,19 @@ void main() {
         parentId: 'folder-meta',
       );
 
-      final result = await driveClient.readManifest();
+      final result = await storage.readManifest();
       expect(result, isNotNull);
       expect(result!['family_id'], 'f-001');
     });
 
     test('returns null manifest when none exists', () async {
-      final result = await driveClient.readManifest();
+      final result = await storage.readManifest();
       expect(result, isNull);
     });
 
     test('writes manifest JSON', () async {
       final manifest = {'family_id': 'f-001', 'wrapped_fek': 'abc123'};
-      await driveClient.writeManifest(manifest);
+      await storage.writeManifest(manifest);
 
       expect(mockApi.files, contains('manifest.json'));
     });
@@ -201,7 +201,7 @@ void main() {
     test('handles API errors gracefully', () async {
       mockApi.shouldFail = true;
 
-      expect(() => driveClient.listChangesets(), throwsException);
+      expect(() => storage.listChangesets(), throwsException);
     });
   });
 }

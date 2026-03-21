@@ -5,13 +5,13 @@ import '../crypto/aes_gcm.dart';
 import '../database/daos/sync_changelog_dao.dart';
 import '../database/daos/sync_state_dao.dart';
 import 'changeset_serializer.dart';
-import 'drive_client_interface.dart';
+import 'cloud_storage_interface.dart';
 
-/// Pushes unsynced local changes to Google Drive as encrypted changesets.
+/// Pushes unsynced local changes to cloud storage as encrypted changesets.
 class SyncPush {
   final SyncChangelogDao changelogDao;
   final SyncStateDao stateDao;
-  final DriveClientInterface driveClient;
+  final CloudStorageInterface cloudStorage;
   final ChangesetSerializer serializer;
   final AesGcm aesGcm;
   final Uint8List fek;
@@ -20,7 +20,7 @@ class SyncPush {
   SyncPush({
     required this.changelogDao,
     required this.stateDao,
-    required this.driveClient,
+    required this.cloudStorage,
     required this.serializer,
     required this.aesGcm,
     required this.fek,
@@ -73,7 +73,7 @@ class SyncPush {
     final fileName =
         '${timestamp}_${deviceId}_${'$sequence'.padLeft(3, '0')}.enc';
 
-    await driveClient.uploadChangeset(fileName, encrypted);
+    await cloudStorage.uploadChangeset(fileName, encrypted);
 
     await changelogDao.markSynced(entries.map((e) => e.id).toList(), fileName);
     await stateDao.recordPush(deviceId, DateTime.now().toUtc());

@@ -1,16 +1,16 @@
 import 'dart:typed_data';
 
 import '../crypto/aes_gcm.dart';
-import 'drive_client_interface.dart';
+import 'cloud_storage_interface.dart';
 
 /// Manages full database snapshot upload/download with encryption.
 class SnapshotManager {
-  final DriveClientInterface driveClient;
+  final CloudStorageInterface cloudStorage;
   final AesGcm aesGcm;
   final Uint8List fek;
 
   SnapshotManager({
-    required this.driveClient,
+    required this.cloudStorage,
     required this.aesGcm,
     required this.fek,
   });
@@ -18,12 +18,12 @@ class SnapshotManager {
   /// Encrypts and uploads a full database snapshot.
   Future<void> uploadSnapshot(Uint8List dbBytes) async {
     final encrypted = aesGcm.encrypt(dbBytes, fek);
-    await driveClient.uploadSnapshot(encrypted);
+    await cloudStorage.uploadSnapshot(encrypted);
   }
 
   /// Downloads and decrypts a snapshot. Returns null if none exists.
   Future<Uint8List?> downloadSnapshot() async {
-    final encrypted = await driveClient.downloadSnapshot();
+    final encrypted = await cloudStorage.downloadSnapshot();
     if (encrypted == null) return null;
     return aesGcm.decrypt(encrypted, fek);
   }

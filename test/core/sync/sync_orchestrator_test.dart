@@ -10,20 +10,20 @@ import 'package:vael/core/crypto/key_storage.dart';
 import 'package:vael/core/database/database.dart';
 import 'package:vael/core/database/daos/sync_changelog_dao.dart';
 import 'package:vael/core/database/daos/sync_state_dao.dart';
-import 'package:vael/core/sync/drive_client_interface.dart';
+import 'package:vael/core/sync/cloud_storage_interface.dart';
 import 'package:vael/core/sync/sync_orchestrator.dart';
 
-class InMemoryDriveClient implements DriveClientInterface {
+class InMemoryCloudStorage implements CloudStorageInterface {
   final uploads = <String, Uint8List>{};
   Uint8List? snapshot;
   Map<String, dynamic>? manifest;
-  final _changesetFiles = <DriveFileEntry>[];
+  final _changesetFiles = <CloudFileEntry>[];
 
   @override
   Future<void> uploadChangeset(String fileName, Uint8List data) async {
     uploads[fileName] = data;
     _changesetFiles.add(
-      DriveFileEntry(
+      CloudFileEntry(
         id: fileName,
         name: fileName,
         modifiedTime: DateTime.now().toUtc(),
@@ -37,7 +37,7 @@ class InMemoryDriveClient implements DriveClientInterface {
   }
 
   @override
-  Future<List<DriveFileEntry>> listChangesets({DateTime? after}) async {
+  Future<List<CloudFileEntry>> listChangesets({DateTime? after}) async {
     if (after == null) return _changesetFiles;
     return _changesetFiles.where((f) => f.modifiedTime.isAfter(after)).toList();
   }
@@ -63,13 +63,13 @@ void main() {
   group('SyncOrchestrator', () {
     late AppDatabase db;
     late SyncOrchestrator orchestrator;
-    late InMemoryDriveClient driveClient;
+    late InMemoryCloudStorage cloudStorage;
     late KeyStorage keyStorage;
     late CryptoOrchestrator cryptoOrchestrator;
 
     setUp(() async {
       db = AppDatabase(NativeDatabase.memory());
-      driveClient = InMemoryDriveClient();
+      cloudStorage = InMemoryCloudStorage();
       keyStorage = KeyStorage(storage: InMemorySecureStorage());
 
       final kd = KeyDerivation();
@@ -91,14 +91,14 @@ void main() {
         db: db,
         changelogDao: SyncChangelogDao(db),
         stateDao: SyncStateDao(db),
-        driveClient: driveClient,
+        cloudStorage: cloudStorage,
         keyStorage: keyStorage,
         familyId: 'family-001',
         deviceId: 'device-A',
       );
 
       // Store manifest on Drive
-      await driveClient.writeManifest({
+      await cloudStorage.writeManifest({
         'family_id': 'family-001',
         'wrapped_fek': setup.wrappedFek.toList(),
         'salt': setup.salt.toList(),
@@ -115,7 +115,7 @@ void main() {
       expect(state, isNotNull);
     });
 
-    test('push sends encrypted changesets to Drive', () async {
+    test('push sends encrypted changesets to cloud storage', () async {
       await orchestrator.initialize();
 
       final changelogDao = SyncChangelogDao(db);
@@ -129,7 +129,7 @@ void main() {
 
       await orchestrator.push();
 
-      expect(driveClient.uploads, isNotEmpty);
+      expect(cloudStorage.uploads, isNotEmpty);
     });
 
     test('full push-pull cycle between two devices', () async {
@@ -155,7 +155,7 @@ void main() {
         db: db2,
         changelogDao: SyncChangelogDao(db2),
         stateDao: SyncStateDao(db2),
-        driveClient: driveClient,
+        cloudStorage: cloudStorage,
         keyStorage: keyStorage,
         familyId: 'family-001',
         deviceId: 'device-B',
@@ -177,9 +177,9 @@ void main() {
 
       await orchestrator.createSnapshot(dbBytes);
 
-      expect(driveClient.snapshot, isNotNull);
+      expect(cloudStorage.snapshot, isNotNull);
       // Snapshot is encrypted — different from raw
-      expect(driveClient.snapshot, isNot(equals(dbBytes)));
+      expect(cloudStorage.snapshot, isNot(equals(dbBytes)));
     });
 
     test('sync status reports correct state', () async {

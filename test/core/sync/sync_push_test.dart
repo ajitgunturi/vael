@@ -8,10 +8,10 @@ import 'package:vael/core/database/database.dart';
 import 'package:vael/core/database/daos/sync_changelog_dao.dart';
 import 'package:vael/core/database/daos/sync_state_dao.dart';
 import 'package:vael/core/sync/changeset_serializer.dart';
-import 'package:vael/core/sync/drive_client_interface.dart';
+import 'package:vael/core/sync/cloud_storage_interface.dart';
 import 'package:vael/core/sync/sync_push.dart';
 
-class MockDriveClient implements DriveClientInterface {
+class MockCloudStorage implements CloudStorageInterface {
   final uploads = <String, Uint8List>{};
   bool shouldFail = false;
 
@@ -25,7 +25,7 @@ class MockDriveClient implements DriveClientInterface {
   Future<Uint8List> downloadFile(String fileId) async => Uint8List(0);
 
   @override
-  Future<List<DriveFileEntry>> listChangesets({DateTime? after}) async => [];
+  Future<List<CloudFileEntry>> listChangesets({DateTime? after}) async => [];
 
   @override
   Future<void> uploadSnapshot(Uint8List data) async {}
@@ -45,7 +45,7 @@ void main() {
     late AppDatabase db;
     late SyncChangelogDao changelogDao;
     late SyncStateDao stateDao;
-    late MockDriveClient driveClient;
+    late MockCloudStorage cloudStorage;
     late SyncPush syncPush;
     late Uint8List fek;
 
@@ -53,13 +53,13 @@ void main() {
       db = AppDatabase(NativeDatabase.memory());
       changelogDao = SyncChangelogDao(db);
       stateDao = SyncStateDao(db);
-      driveClient = MockDriveClient();
+      cloudStorage = MockCloudStorage();
       fek = Uint8List.fromList(List.generate(32, (i) => i));
 
       syncPush = SyncPush(
         changelogDao: changelogDao,
         stateDao: stateDao,
-        driveClient: driveClient,
+        cloudStorage: cloudStorage,
         serializer: ChangesetSerializer(),
         aesGcm: AesGcm(),
         fek: fek,
@@ -82,7 +82,7 @@ void main() {
       await syncPush.push();
 
       // One file uploaded
-      expect(driveClient.uploads, hasLength(1));
+      expect(cloudStorage.uploads, hasLength(1));
 
       // Entries marked as synced
       final unsynced = await changelogDao.getUnsyncedEntries();
@@ -101,7 +101,7 @@ void main() {
 
       await syncPush.push();
 
-      final uploaded = driveClient.uploads.values.first;
+      final uploaded = cloudStorage.uploads.values.first;
       // Should NOT be valid JSON — it's encrypted
       expect(() => jsonDecode(utf8.decode(uploaded)), throwsFormatException);
     });
@@ -118,7 +118,7 @@ void main() {
 
       await syncPush.push();
 
-      final uploaded = driveClient.uploads.values.first;
+      final uploaded = cloudStorage.uploads.values.first;
       final decrypted = AesGcm().decrypt(uploaded, fek);
       final changeset = ChangesetSerializer().deserialize(
         utf8.decode(decrypted),
@@ -144,8 +144,8 @@ void main() {
       await syncPush.push();
 
       // Single upload with 5 operations
-      expect(driveClient.uploads, hasLength(1));
-      final uploaded = driveClient.uploads.values.first;
+      expect(cloudStorage.uploads, hasLength(1));
+      final uploaded = cloudStorage.uploads.values.first;
       final decrypted = AesGcm().decrypt(uploaded, fek);
       final changeset = ChangesetSerializer().deserialize(
         utf8.decode(decrypted),
@@ -157,7 +157,7 @@ void main() {
       await stateDao.initDevice('device-A');
       await syncPush.push();
 
-      expect(driveClient.uploads, isEmpty);
+      expect(cloudStorage.uploads, isEmpty);
     });
 
     test('increments push sequence in sync state', () async {
@@ -186,7 +186,7 @@ void main() {
         timestamp: DateTime.utc(2026, 3, 20),
       );
 
-      driveClient.shouldFail = true;
+      cloudStorage.shouldFail = true;
 
       expect(() => syncPush.push(), throwsException);
 
@@ -206,7 +206,7 @@ void main() {
 
       await syncPush.push();
 
-      final fileName = driveClient.uploads.keys.first;
+      final fileName = cloudStorage.uploads.keys.first;
       expect(fileName, contains('device-A'));
       expect(fileName, endsWith('.enc'));
     });
