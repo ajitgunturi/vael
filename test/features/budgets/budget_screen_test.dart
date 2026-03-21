@@ -72,7 +72,8 @@ void main() {
       ]));
       await tester.pumpAndSettle();
 
-      expect(find.textContaining('50,000'), findsOneWidget);
+      // "50,000" appears in spend line and remaining line.
+      expect(find.textContaining('50,000'), findsWidgets);
       expect(find.textContaining('1,00,000'), findsOneWidget);
     });
 

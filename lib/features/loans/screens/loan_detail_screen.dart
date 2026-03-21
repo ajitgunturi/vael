@@ -164,13 +164,27 @@ class _EmiSplitCard extends StatelessWidget {
   }
 }
 
-class _AmortizationTable extends StatelessWidget {
+class _AmortizationTable extends StatefulWidget {
   const _AmortizationTable({required this.schedule});
 
   final List<AmortizationRow> schedule;
 
+  static const int pageSize = 12;
+
+  @override
+  State<_AmortizationTable> createState() => _AmortizationTableState();
+}
+
+class _AmortizationTableState extends State<_AmortizationTable> {
+  bool _expanded = false;
+
   @override
   Widget build(BuildContext context) {
+    final showAll = _expanded || widget.schedule.length <= _AmortizationTable.pageSize;
+    final visibleRows = showAll
+        ? widget.schedule
+        : widget.schedule.take(_AmortizationTable.pageSize).toList();
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -191,7 +205,7 @@ class _AmortizationTable extends StatelessWidget {
                   DataColumn(label: Text('Interest'), numeric: true),
                   DataColumn(label: Text('Outstanding'), numeric: true),
                 ],
-                rows: schedule.map((r) {
+                rows: visibleRows.map((r) {
                   return DataRow(cells: [
                     DataCell(Text('${r.month}')),
                     DataCell(Text('₹${formatIndianNumber(r.emi ~/ 100)}')),
@@ -203,6 +217,16 @@ class _AmortizationTable extends StatelessWidget {
                 }).toList(),
               ),
             ),
+            if (!showAll)
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Center(
+                  child: TextButton(
+                    onPressed: () => setState(() => _expanded = true),
+                    child: const Text('Show More'),
+                  ),
+                ),
+              ),
           ],
         ),
       ),

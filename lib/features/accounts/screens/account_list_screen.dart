@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/database/database.dart';
 import '../../../core/financial/dashboard_aggregation.dart';
+import '../../../shared/theme/color_tokens.dart';
+import '../../../shared/theme/spacing.dart';
+import '../../../shared/utils/account_icons.dart';
 import '../../../shared/utils/formatters.dart';
 import '../providers/account_ui_providers.dart';
 import 'account_form_screen.dart';
@@ -116,17 +119,24 @@ class _AccountTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colors = ColorTokens.of(context);
     final balanceRupees = account.balance ~/ 100;
     final formatted = '₹${formatIndianNumber(balanceRupees)}';
     final visLabel = _visibilityLabel(account.visibility);
+    final isLiability = AccountIcons.isLiability(account.type);
 
     return ListTile(
+      leading: Icon(
+        AccountIcons.iconFor(account.type),
+        color: colors.onSurfaceVariant,
+      ),
       title: Text(account.name),
       subtitle: Text(visLabel),
       trailing: Text(
         formatted,
         style: theme.textTheme.bodyLarge?.copyWith(
           fontWeight: FontWeight.w600,
+          color: isLiability ? colors.expense : null,
         ),
       ),
     );

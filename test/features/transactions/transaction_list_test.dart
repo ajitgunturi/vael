@@ -139,7 +139,8 @@ void main() {
       await tester.pumpWidget(buildTestApp(transactions: txns));
       await tester.pumpAndSettle();
 
-      expect(find.textContaining('15 Mar 2025'), findsOneWidget);
+      // Date appears in both the group header and the tile subtitle.
+      expect(find.textContaining('15 Mar 2025'), findsWidgets);
     });
   });
 }
