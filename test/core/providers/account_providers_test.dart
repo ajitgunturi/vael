@@ -14,9 +14,7 @@ void main() {
   setUp(() {
     db = AppDatabase(NativeDatabase.memory());
     container = ProviderContainer(
-      overrides: [
-        databaseProvider.overrideWithValue(db),
-      ],
+      overrides: [databaseProvider.overrideWithValue(db)],
     );
   });
 
@@ -26,18 +24,26 @@ void main() {
   });
 
   Future<void> _seedFamily(String familyId) async {
-    await db.into(db.families).insert(FamiliesCompanion.insert(
-          id: familyId,
-          name: 'Family $familyId',
-          createdAt: DateTime(2025),
-        ));
-    await db.into(db.users).insert(UsersCompanion.insert(
-          id: 'user_$familyId',
-          email: '$familyId@test.com',
-          displayName: 'User $familyId',
-          role: 'admin',
-          familyId: familyId,
-        ));
+    await db
+        .into(db.families)
+        .insert(
+          FamiliesCompanion.insert(
+            id: familyId,
+            name: 'Family $familyId',
+            createdAt: DateTime(2025),
+          ),
+        );
+    await db
+        .into(db.users)
+        .insert(
+          UsersCompanion.insert(
+            id: 'user_$familyId',
+            email: '$familyId@test.com',
+            displayName: 'User $familyId',
+            role: 'admin',
+            familyId: familyId,
+          ),
+        );
   }
 
   Future<void> _insertAccount({
@@ -48,16 +54,20 @@ void main() {
     String visibility = 'shared',
     DateTime? deletedAt,
   }) async {
-    await db.into(db.accounts).insert(AccountsCompanion(
-          id: Value(id),
-          name: Value('Account $id'),
-          type: Value(type),
-          balance: Value(balance),
-          visibility: Value(visibility),
-          familyId: Value(familyId),
-          userId: Value('user_$familyId'),
-          deletedAt: Value(deletedAt),
-        ));
+    await db
+        .into(db.accounts)
+        .insert(
+          AccountsCompanion(
+            id: Value(id),
+            name: Value('Account $id'),
+            type: Value(type),
+            balance: Value(balance),
+            visibility: Value(visibility),
+            familyId: Value(familyId),
+            userId: Value('user_$familyId'),
+            deletedAt: Value(deletedAt),
+          ),
+        );
   }
 
   group('databaseProvider', () {
@@ -81,10 +91,7 @@ void main() {
       await _insertAccount(id: 'acc_2', familyId: 'fam_a');
 
       // Read the stream provider
-      final sub = container.listen(
-        accountsProvider('fam_a'),
-        (_, __) {},
-      );
+      final sub = container.listen(accountsProvider('fam_a'), (_, __) {});
 
       // Allow the stream to emit
       await Future<void>.delayed(Duration.zero);
@@ -103,10 +110,7 @@ void main() {
         deletedAt: DateTime(2025, 6, 1),
       );
 
-      final sub = container.listen(
-        accountsProvider('fam_a'),
-        (_, __) {},
-      );
+      final sub = container.listen(accountsProvider('fam_a'), (_, __) {});
 
       await Future<void>.delayed(Duration.zero);
 
@@ -120,12 +124,9 @@ void main() {
       await _insertAccount(id: 'acc_1', familyId: 'fam_a');
 
       final emissions = <List<Account>>[];
-      container.listen(
-        accountsProvider('fam_a'),
-        (_, next) {
-          if (next.hasValue) emissions.add(next.value!);
-        },
-      );
+      container.listen(accountsProvider('fam_a'), (_, next) {
+        if (next.hasValue) emissions.add(next.value!);
+      });
 
       // Wait for first emission
       await Future<void>.delayed(Duration.zero);
@@ -146,10 +147,7 @@ void main() {
       await _insertAccount(id: 'acc_1', familyId: 'fam_a');
       await _insertAccount(id: 'acc_2', familyId: 'fam_b');
 
-      final sub = container.listen(
-        accountsProvider('fam_a'),
-        (_, __) {},
-      );
+      final sub = container.listen(accountsProvider('fam_a'), (_, __) {});
 
       await Future<void>.delayed(Duration.zero);
 
@@ -160,53 +158,52 @@ void main() {
   });
 
   group('netWorthProvider', () {
-    test('computes assets minus liabilities for shared/familyWide accounts',
-        () async {
-      await _seedFamily('fam_a');
+    test(
+      'computes assets minus liabilities for shared/familyWide accounts',
+      () async {
+        await _seedFamily('fam_a');
 
-      // Assets
-      await _insertAccount(
-        id: 'savings_1',
-        familyId: 'fam_a',
-        type: 'savings',
-        balance: 500000, // ₹5,000
-        visibility: 'shared',
-      );
-      await _insertAccount(
-        id: 'invest_1',
-        familyId: 'fam_a',
-        type: 'investment',
-        balance: 1000000, // ₹10,000
-        visibility: 'familyWide',
-      );
+        // Assets
+        await _insertAccount(
+          id: 'savings_1',
+          familyId: 'fam_a',
+          type: 'savings',
+          balance: 500000, // ₹5,000
+          visibility: 'shared',
+        );
+        await _insertAccount(
+          id: 'invest_1',
+          familyId: 'fam_a',
+          type: 'investment',
+          balance: 1000000, // ₹10,000
+          visibility: 'familyWide',
+        );
 
-      // Liabilities
-      await _insertAccount(
-        id: 'cc_1',
-        familyId: 'fam_a',
-        type: 'creditCard',
-        balance: 200000, // ₹2,000
-        visibility: 'shared',
-      );
-      await _insertAccount(
-        id: 'loan_1',
-        familyId: 'fam_a',
-        type: 'loan',
-        balance: 300000, // ₹3,000
-        visibility: 'shared',
-      );
+        // Liabilities
+        await _insertAccount(
+          id: 'cc_1',
+          familyId: 'fam_a',
+          type: 'creditCard',
+          balance: 200000, // ₹2,000
+          visibility: 'shared',
+        );
+        await _insertAccount(
+          id: 'loan_1',
+          familyId: 'fam_a',
+          type: 'loan',
+          balance: 300000, // ₹3,000
+          visibility: 'shared',
+        );
 
-      final sub = container.listen(
-        netWorthProvider('fam_a'),
-        (_, __) {},
-      );
+        final sub = container.listen(netWorthProvider('fam_a'), (_, __) {});
 
-      await Future<void>.delayed(Duration.zero);
+        await Future<void>.delayed(Duration.zero);
 
-      final state = sub.read();
-      // Net worth = (500000 + 1000000) - (200000 + 300000) = 1000000
-      expect(state.value, 1000000);
-    });
+        final state = sub.read();
+        // Net worth = (500000 + 1000000) - (200000 + 300000) = 1000000
+        expect(state.value, 1000000);
+      },
+    );
 
     test('excludes private accounts from family net worth', () async {
       await _seedFamily('fam_a');
@@ -226,10 +223,7 @@ void main() {
         visibility: 'private_',
       );
 
-      final sub = container.listen(
-        netWorthProvider('fam_a'),
-        (_, __) {},
-      );
+      final sub = container.listen(netWorthProvider('fam_a'), (_, __) {});
 
       await Future<void>.delayed(Duration.zero);
 
@@ -241,10 +235,7 @@ void main() {
     test('returns zero when no accounts exist', () async {
       await _seedFamily('fam_a');
 
-      final sub = container.listen(
-        netWorthProvider('fam_a'),
-        (_, __) {},
-      );
+      final sub = container.listen(netWorthProvider('fam_a'), (_, __) {});
 
       await Future<void>.delayed(Duration.zero);
 
@@ -271,10 +262,7 @@ void main() {
         deletedAt: DateTime(2025, 6, 1),
       );
 
-      final sub = container.listen(
-        netWorthProvider('fam_a'),
-        (_, __) {},
-      );
+      final sub = container.listen(netWorthProvider('fam_a'), (_, __) {});
 
       await Future<void>.delayed(Duration.zero);
 
@@ -300,10 +288,7 @@ void main() {
         visibility: 'shared',
       );
 
-      final sub = container.listen(
-        netWorthProvider('fam_a'),
-        (_, __) {},
-      );
+      final sub = container.listen(netWorthProvider('fam_a'), (_, __) {});
 
       await Future<void>.delayed(Duration.zero);
 

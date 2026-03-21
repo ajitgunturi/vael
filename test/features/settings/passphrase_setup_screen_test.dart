@@ -4,13 +4,9 @@ import 'package:vael/features/settings/screens/passphrase_setup_screen.dart';
 
 void main() {
   group('PassphraseSetupScreen', () {
-    Widget buildScreen({
-      void Function(String passphrase)? onSetup,
-    }) {
+    Widget buildScreen({void Function(String passphrase)? onSetup}) {
       return MaterialApp(
-        home: PassphraseSetupScreen(
-          onSetup: onSetup ?? (_) {},
-        ),
+        home: PassphraseSetupScreen(onSetup: onSetup ?? (_) {}),
       );
     }
 
@@ -40,21 +36,22 @@ void main() {
       await tester.tap(find.text('Continue'));
       await tester.pump();
 
-      expect(find.text('Passphrase must be at least 8 characters'),
-          findsOneWidget);
+      expect(
+        find.text('Passphrase must be at least 8 characters'),
+        findsOneWidget,
+      );
     });
 
-    testWidgets('calls onSetup when valid passphrase confirmed',
-        (tester) async {
+    testWidgets('calls onSetup when valid passphrase confirmed', (
+      tester,
+    ) async {
       String? capturedPassphrase;
-      await tester.pumpWidget(buildScreen(
-        onSetup: (p) => capturedPassphrase = p,
-      ));
+      await tester.pumpWidget(
+        buildScreen(onSetup: (p) => capturedPassphrase = p),
+      );
 
-      await tester.enterText(
-          find.byType(TextField).first, 'strong-passphrase');
-      await tester.enterText(
-          find.byType(TextField).last, 'strong-passphrase');
+      await tester.enterText(find.byType(TextField).first, 'strong-passphrase');
+      await tester.enterText(find.byType(TextField).last, 'strong-passphrase');
       await tester.tap(find.text('Continue'));
       await tester.pump();
 
@@ -72,8 +69,9 @@ void main() {
       await tester.tap(find.byIcon(Icons.visibility_off).first);
       await tester.pump();
 
-      final textFieldAfter =
-          tester.widget<TextField>(find.byType(TextField).first);
+      final textFieldAfter = tester.widget<TextField>(
+        find.byType(TextField).first,
+      );
       expect(textFieldAfter.obscureText, false);
     });
   });

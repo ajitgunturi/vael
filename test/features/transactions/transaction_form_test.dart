@@ -22,18 +22,26 @@ void main() {
   });
 
   Future<void> _seedFamily(String familyId) async {
-    await db.into(db.families).insert(FamiliesCompanion.insert(
-          id: familyId,
-          name: 'Test Family',
-          createdAt: DateTime(2025),
-        ));
-    await db.into(db.users).insert(UsersCompanion.insert(
-          id: 'user_$familyId',
-          email: '$familyId@test.com',
-          displayName: 'User',
-          role: 'admin',
-          familyId: familyId,
-        ));
+    await db
+        .into(db.families)
+        .insert(
+          FamiliesCompanion.insert(
+            id: familyId,
+            name: 'Test Family',
+            createdAt: DateTime(2025),
+          ),
+        );
+    await db
+        .into(db.users)
+        .insert(
+          UsersCompanion.insert(
+            id: 'user_$familyId',
+            email: '$familyId@test.com',
+            displayName: 'User',
+            role: 'admin',
+            familyId: familyId,
+          ),
+        );
   }
 
   Future<void> _insertAccount({
@@ -42,15 +50,19 @@ void main() {
     required String name,
     int balance = 0,
   }) async {
-    await db.into(db.accounts).insert(AccountsCompanion(
-          id: Value(id),
-          name: Value(name),
-          type: const Value('savings'),
-          balance: Value(balance),
-          visibility: const Value('shared'),
-          familyId: Value(familyId),
-          userId: Value('user_$familyId'),
-        ));
+    await db
+        .into(db.accounts)
+        .insert(
+          AccountsCompanion(
+            id: Value(id),
+            name: Value(name),
+            type: const Value('savings'),
+            balance: Value(balance),
+            visibility: const Value('shared'),
+            familyId: Value(familyId),
+            userId: Value('user_$familyId'),
+          ),
+        );
   }
 
   Widget buildDirectForm({
@@ -62,8 +74,7 @@ void main() {
       overrides: [
         databaseProvider.overrideWithValue(db),
         // Override the stream provider to avoid drift timer issues
-        accountsProvider(familyId)
-            .overrideWith((_) => Stream.value(accounts)),
+        accountsProvider(familyId).overrideWith((_) => Stream.value(accounts)),
       ],
       child: MaterialApp(
         home: Scaffold(
@@ -71,10 +82,8 @@ void main() {
             builder: (context) => ElevatedButton(
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute<void>(
-                  builder: (_) => TransactionFormScreen(
-                    familyId: familyId,
-                    userId: userId,
-                  ),
+                  builder: (_) =>
+                      TransactionFormScreen(familyId: familyId, userId: userId),
                 ),
               ),
               child: const Text('Open Form'),
@@ -86,8 +95,9 @@ void main() {
   }
 
   group('TransactionFormScreen', () {
-    testWidgets('shows form fields for kind, amount, description, date',
-        (tester) async {
+    testWidgets('shows form fields for kind, amount, description, date', (
+      tester,
+    ) async {
       await _seedFamily('fam_a');
       await _insertAccount(id: 'acc_1', familyId: 'fam_a', name: 'Savings');
 
@@ -137,8 +147,9 @@ void main() {
       expect(find.text('Amount is required'), findsOneWidget);
     });
 
-    testWidgets('shows To Account picker when Transfer is selected',
-        (tester) async {
+    testWidgets('shows To Account picker when Transfer is selected', (
+      tester,
+    ) async {
       await _seedFamily('fam_a');
       await _insertAccount(id: 'acc_1', familyId: 'fam_a', name: 'Savings');
       await _insertAccount(id: 'acc_2', familyId: 'fam_a', name: 'Wallet');
@@ -170,8 +181,9 @@ void main() {
       expect(find.text('To Account'), findsOneWidget);
     });
 
-    testWidgets('creates transaction and updates account balance',
-        (tester) async {
+    testWidgets('creates transaction and updates account balance', (
+      tester,
+    ) async {
       await _seedFamily('fam_a');
       await _insertAccount(
         id: 'acc_1',
@@ -196,7 +208,9 @@ void main() {
 
       // Enter amount (expense of ₹2,000)
       await tester.enterText(
-          find.widgetWithText(TextFormField, 'Amount'), '2000');
+        find.widgetWithText(TextFormField, 'Amount'),
+        '2000',
+      );
 
       // Save
       await tester.runAsync(() async {

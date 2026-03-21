@@ -8,9 +8,7 @@ void main() {
   Widget buildApp(List<({DateTime date, int netWorth})> history) {
     return MaterialApp(
       theme: AppTheme.light(),
-      home: Scaffold(
-        body: NetWorthChart(history: history),
-      ),
+      home: Scaffold(body: NetWorthChart(history: history)),
     );
   }
 

@@ -56,10 +56,7 @@ Budget _budget({
   );
 }
 
-Account _account({
-  required String id,
-  String visibility = 'shared',
-}) {
+Account _account({required String id, String visibility = 'shared'}) {
   return Account(
     id: id,
     name: 'Account $id',
@@ -110,10 +107,11 @@ void main() {
           _tx(id: 'tx3', amount: 100000, kind: 'transfer', categoryId: 'c1'),
           _tx(id: 'tx4', amount: 30000, kind: 'emiPayment', categoryId: 'c1'),
           _tx(
-              id: 'tx5',
-              amount: 15000,
-              kind: 'insurancePremium',
-              categoryId: 'c1'),
+            id: 'tx5',
+            amount: 15000,
+            kind: 'insurancePremium',
+            categoryId: 'c1',
+          ),
         ];
 
         final actuals = BudgetSummary.computeActualsByGroup(
@@ -157,17 +155,19 @@ void main() {
         ];
         final transactions = [
           _tx(
-              id: 'tx1',
-              amount: 200000,
-              kind: 'expense',
-              categoryId: 'c1',
-              accountId: 'acc_1'),
+            id: 'tx1',
+            amount: 200000,
+            kind: 'expense',
+            categoryId: 'c1',
+            accountId: 'acc_1',
+          ),
           _tx(
-              id: 'tx2',
-              amount: 100000,
-              kind: 'expense',
-              categoryId: 'c1',
-              accountId: 'acc_priv'),
+            id: 'tx2',
+            amount: 100000,
+            kind: 'expense',
+            categoryId: 'c1',
+            accountId: 'acc_priv',
+          ),
         ];
 
         final actuals = BudgetSummary.computeActualsByGroup(
@@ -201,10 +201,12 @@ void main() {
     group('buildSummary', () {
       test('computes remaining and overspent for budgeted groups', () {
         final budgets = [
+          _budget(id: 'b1', categoryGroup: 'ESSENTIAL', limitAmount: 1000000),
           _budget(
-              id: 'b1', categoryGroup: 'ESSENTIAL', limitAmount: 1000000),
-          _budget(
-              id: 'b2', categoryGroup: 'NON_ESSENTIAL', limitAmount: 200000),
+            id: 'b2',
+            categoryGroup: 'NON_ESSENTIAL',
+            limitAmount: 200000,
+          ),
         ];
         final actuals = {'ESSENTIAL': 800000, 'NON_ESSENTIAL': 250000};
 
@@ -213,39 +215,45 @@ void main() {
           actualsByGroup: actuals,
         );
 
-        final essential = rows.firstWhere((r) => r.categoryGroup == 'ESSENTIAL');
+        final essential = rows.firstWhere(
+          (r) => r.categoryGroup == 'ESSENTIAL',
+        );
         expect(essential.limitAmount, 1000000);
         expect(essential.actualSpent, 800000);
         expect(essential.remaining, 200000);
         expect(essential.isOverspent, false);
 
-        final nonEssential =
-            rows.firstWhere((r) => r.categoryGroup == 'NON_ESSENTIAL');
+        final nonEssential = rows.firstWhere(
+          (r) => r.categoryGroup == 'NON_ESSENTIAL',
+        );
         expect(nonEssential.limitAmount, 200000);
         expect(nonEssential.actualSpent, 250000);
         expect(nonEssential.remaining, -50000);
         expect(nonEssential.isOverspent, true);
       });
 
-      test('adds unbudgeted groups with actuals as overspent with zero limit',
-          () {
-        final budgets = [
-          _budget(id: 'b1', categoryGroup: 'ESSENTIAL', limitAmount: 500000),
-        ];
-        final actuals = {'ESSENTIAL': 300000, 'INVESTMENTS': 100000};
+      test(
+        'adds unbudgeted groups with actuals as overspent with zero limit',
+        () {
+          final budgets = [
+            _budget(id: 'b1', categoryGroup: 'ESSENTIAL', limitAmount: 500000),
+          ];
+          final actuals = {'ESSENTIAL': 300000, 'INVESTMENTS': 100000};
 
-        final rows = BudgetSummary.buildSummary(
-          budgets: budgets,
-          actualsByGroup: actuals,
-        );
+          final rows = BudgetSummary.buildSummary(
+            budgets: budgets,
+            actualsByGroup: actuals,
+          );
 
-        expect(rows, hasLength(2));
-        final investments =
-            rows.firstWhere((r) => r.categoryGroup == 'INVESTMENTS');
-        expect(investments.limitAmount, 0);
-        expect(investments.actualSpent, 100000);
-        expect(investments.isOverspent, true);
-      });
+          expect(rows, hasLength(2));
+          final investments = rows.firstWhere(
+            (r) => r.categoryGroup == 'INVESTMENTS',
+          );
+          expect(investments.limitAmount, 0);
+          expect(investments.actualSpent, 100000);
+          expect(investments.isOverspent, true);
+        },
+      );
 
       test('budgeted group with no actuals shows full remaining', () {
         final budgets = [

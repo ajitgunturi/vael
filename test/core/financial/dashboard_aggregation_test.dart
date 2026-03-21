@@ -16,18 +16,26 @@ void main() {
   });
 
   Future<void> _seedFamily(String familyId) async {
-    await db.into(db.families).insert(FamiliesCompanion.insert(
-          id: familyId,
-          name: 'Family $familyId',
-          createdAt: DateTime(2025),
-        ));
-    await db.into(db.users).insert(UsersCompanion.insert(
-          id: 'user_$familyId',
-          email: '$familyId@test.com',
-          displayName: 'User $familyId',
-          role: 'admin',
-          familyId: familyId,
-        ));
+    await db
+        .into(db.families)
+        .insert(
+          FamiliesCompanion.insert(
+            id: familyId,
+            name: 'Family $familyId',
+            createdAt: DateTime(2025),
+          ),
+        );
+    await db
+        .into(db.users)
+        .insert(
+          UsersCompanion.insert(
+            id: 'user_$familyId',
+            email: '$familyId@test.com',
+            displayName: 'User $familyId',
+            role: 'admin',
+            familyId: familyId,
+          ),
+        );
   }
 
   Future<Account> _insertAccount({
@@ -49,9 +57,9 @@ void main() {
       deletedAt: Value(deletedAt),
     );
     await db.into(db.accounts).insert(companion);
-    return (await (db.select(db.accounts)
-              ..where((a) => a.id.equals(id)))
-            .getSingle());
+    return (await (db.select(
+      db.accounts,
+    )..where((a) => a.id.equals(id))).getSingle());
   }
 
   Future<void> _insertTransaction({
@@ -63,43 +71,85 @@ void main() {
     required DateTime date,
     String? toAccountId,
   }) async {
-    await db.into(db.transactions).insert(TransactionsCompanion(
-          id: Value(id),
-          amount: Value(amount),
-          date: Value(date),
-          kind: Value(kind),
-          accountId: Value(accountId),
-          toAccountId: Value(toAccountId),
-          familyId: Value(familyId),
-        ));
+    await db
+        .into(db.transactions)
+        .insert(
+          TransactionsCompanion(
+            id: Value(id),
+            amount: Value(amount),
+            date: Value(date),
+            kind: Value(kind),
+            accountId: Value(accountId),
+            toAccountId: Value(toAccountId),
+            familyId: Value(familyId),
+          ),
+        );
   }
 
   group('AccountGrouping', () {
-    test('groups accounts into banking, investments, loans, creditCards',
-        () async {
-      await _seedFamily('fam_a');
+    test(
+      'groups accounts into banking, investments, loans, creditCards',
+      () async {
+        await _seedFamily('fam_a');
 
-      final accounts = <Account>[];
-      accounts.add(await _insertAccount(
-          id: 'sav', familyId: 'fam_a', type: 'savings', balance: 100000));
-      accounts.add(await _insertAccount(
-          id: 'cur', familyId: 'fam_a', type: 'current', balance: 200000));
-      accounts.add(await _insertAccount(
-          id: 'inv', familyId: 'fam_a', type: 'investment', balance: 500000));
-      accounts.add(await _insertAccount(
-          id: 'wal', familyId: 'fam_a', type: 'wallet', balance: 50000));
-      accounts.add(await _insertAccount(
-          id: 'cc', familyId: 'fam_a', type: 'creditCard', balance: 75000));
-      accounts.add(await _insertAccount(
-          id: 'loan', familyId: 'fam_a', type: 'loan', balance: 1000000));
+        final accounts = <Account>[];
+        accounts.add(
+          await _insertAccount(
+            id: 'sav',
+            familyId: 'fam_a',
+            type: 'savings',
+            balance: 100000,
+          ),
+        );
+        accounts.add(
+          await _insertAccount(
+            id: 'cur',
+            familyId: 'fam_a',
+            type: 'current',
+            balance: 200000,
+          ),
+        );
+        accounts.add(
+          await _insertAccount(
+            id: 'inv',
+            familyId: 'fam_a',
+            type: 'investment',
+            balance: 500000,
+          ),
+        );
+        accounts.add(
+          await _insertAccount(
+            id: 'wal',
+            familyId: 'fam_a',
+            type: 'wallet',
+            balance: 50000,
+          ),
+        );
+        accounts.add(
+          await _insertAccount(
+            id: 'cc',
+            familyId: 'fam_a',
+            type: 'creditCard',
+            balance: 75000,
+          ),
+        );
+        accounts.add(
+          await _insertAccount(
+            id: 'loan',
+            familyId: 'fam_a',
+            type: 'loan',
+            balance: 1000000,
+          ),
+        );
 
-      final grouped = DashboardAggregation.groupAccounts(accounts);
+        final grouped = DashboardAggregation.groupAccounts(accounts);
 
-      expect(grouped.banking, hasLength(3)); // savings, current, wallet
-      expect(grouped.investments, hasLength(1));
-      expect(grouped.loans, hasLength(1));
-      expect(grouped.creditCards, hasLength(1));
-    });
+        expect(grouped.banking, hasLength(3)); // savings, current, wallet
+        expect(grouped.investments, hasLength(1));
+        expect(grouped.loans, hasLength(1));
+        expect(grouped.creditCards, hasLength(1));
+      },
+    );
 
     test('empty accounts yields empty groups', () {
       final grouped = DashboardAggregation.groupAccounts([]);
@@ -116,14 +166,38 @@ void main() {
       await _seedFamily('fam_a');
 
       final accounts = <Account>[];
-      accounts.add(await _insertAccount(
-          id: 'sav', familyId: 'fam_a', type: 'savings', balance: 500000));
-      accounts.add(await _insertAccount(
-          id: 'inv', familyId: 'fam_a', type: 'investment', balance: 1000000));
-      accounts.add(await _insertAccount(
-          id: 'cc', familyId: 'fam_a', type: 'creditCard', balance: 200000));
-      accounts.add(await _insertAccount(
-          id: 'loan', familyId: 'fam_a', type: 'loan', balance: 300000));
+      accounts.add(
+        await _insertAccount(
+          id: 'sav',
+          familyId: 'fam_a',
+          type: 'savings',
+          balance: 500000,
+        ),
+      );
+      accounts.add(
+        await _insertAccount(
+          id: 'inv',
+          familyId: 'fam_a',
+          type: 'investment',
+          balance: 1000000,
+        ),
+      );
+      accounts.add(
+        await _insertAccount(
+          id: 'cc',
+          familyId: 'fam_a',
+          type: 'creditCard',
+          balance: 200000,
+        ),
+      );
+      accounts.add(
+        await _insertAccount(
+          id: 'loan',
+          familyId: 'fam_a',
+          type: 'loan',
+          balance: 300000,
+        ),
+      );
 
       final netWorth = DashboardAggregation.computeNetWorth(accounts);
 
@@ -140,40 +214,48 @@ void main() {
     test('computes income, expenses, and net savings for a month', () async {
       await _seedFamily('fam_a');
       await _insertAccount(
-          id: 'acc_1', familyId: 'fam_a', type: 'savings', balance: 0);
+        id: 'acc_1',
+        familyId: 'fam_a',
+        type: 'savings',
+        balance: 0,
+      );
 
       final transactions = <Transaction>[];
       // Income
       await _insertTransaction(
-          id: 'tx1',
-          familyId: 'fam_a',
-          accountId: 'acc_1',
-          amount: 5000000,
-          kind: 'salary',
-          date: DateTime(2025, 3, 1));
+        id: 'tx1',
+        familyId: 'fam_a',
+        accountId: 'acc_1',
+        amount: 5000000,
+        kind: 'salary',
+        date: DateTime(2025, 3, 1),
+      );
       await _insertTransaction(
-          id: 'tx2',
-          familyId: 'fam_a',
-          accountId: 'acc_1',
-          amount: 100000,
-          kind: 'dividend',
-          date: DateTime(2025, 3, 15));
+        id: 'tx2',
+        familyId: 'fam_a',
+        accountId: 'acc_1',
+        amount: 100000,
+        kind: 'dividend',
+        date: DateTime(2025, 3, 15),
+      );
 
       // Expenses
       await _insertTransaction(
-          id: 'tx3',
-          familyId: 'fam_a',
-          accountId: 'acc_1',
-          amount: 2000000,
-          kind: 'expense',
-          date: DateTime(2025, 3, 5));
+        id: 'tx3',
+        familyId: 'fam_a',
+        accountId: 'acc_1',
+        amount: 2000000,
+        kind: 'expense',
+        date: DateTime(2025, 3, 5),
+      );
       await _insertTransaction(
-          id: 'tx4',
-          familyId: 'fam_a',
-          accountId: 'acc_1',
-          amount: 500000,
-          kind: 'emiPayment',
-          date: DateTime(2025, 3, 10));
+        id: 'tx4',
+        familyId: 'fam_a',
+        accountId: 'acc_1',
+        amount: 500000,
+        kind: 'emiPayment',
+        date: DateTime(2025, 3, 10),
+      );
 
       // Fetch transactions for the month
       final txns = await db.select(db.transactions).get();
@@ -188,18 +270,27 @@ void main() {
     test('transfers are excluded from income/expense totals', () async {
       await _seedFamily('fam_a');
       await _insertAccount(
-          id: 'acc_1', familyId: 'fam_a', type: 'savings', balance: 0);
+        id: 'acc_1',
+        familyId: 'fam_a',
+        type: 'savings',
+        balance: 0,
+      );
       await _insertAccount(
-          id: 'acc_2', familyId: 'fam_a', type: 'savings', balance: 0);
+        id: 'acc_2',
+        familyId: 'fam_a',
+        type: 'savings',
+        balance: 0,
+      );
 
       await _insertTransaction(
-          id: 'tx1',
-          familyId: 'fam_a',
-          accountId: 'acc_1',
-          toAccountId: 'acc_2',
-          amount: 1000000,
-          kind: 'transfer',
-          date: DateTime(2025, 3, 1));
+        id: 'tx1',
+        familyId: 'fam_a',
+        accountId: 'acc_1',
+        toAccountId: 'acc_2',
+        amount: 1000000,
+        kind: 'transfer',
+        date: DateTime(2025, 3, 1),
+      );
 
       final txns = await db.select(db.transactions).get();
       final summary = DashboardAggregation.monthlySummary(txns);
@@ -220,15 +311,20 @@ void main() {
     test('insurancePremium counts as expense', () async {
       await _seedFamily('fam_a');
       await _insertAccount(
-          id: 'acc_1', familyId: 'fam_a', type: 'savings', balance: 0);
+        id: 'acc_1',
+        familyId: 'fam_a',
+        type: 'savings',
+        balance: 0,
+      );
 
       await _insertTransaction(
-          id: 'tx1',
-          familyId: 'fam_a',
-          accountId: 'acc_1',
-          amount: 250000,
-          kind: 'insurancePremium',
-          date: DateTime(2025, 3, 1));
+        id: 'tx1',
+        familyId: 'fam_a',
+        accountId: 'acc_1',
+        amount: 250000,
+        kind: 'insurancePremium',
+        date: DateTime(2025, 3, 1),
+      );
 
       final txns = await db.select(db.transactions).get();
       final summary = DashboardAggregation.monthlySummary(txns);
@@ -239,15 +335,20 @@ void main() {
     test('income kind counts toward income total', () async {
       await _seedFamily('fam_a');
       await _insertAccount(
-          id: 'acc_1', familyId: 'fam_a', type: 'savings', balance: 0);
+        id: 'acc_1',
+        familyId: 'fam_a',
+        type: 'savings',
+        balance: 0,
+      );
 
       await _insertTransaction(
-          id: 'tx1',
-          familyId: 'fam_a',
-          accountId: 'acc_1',
-          amount: 300000,
-          kind: 'income',
-          date: DateTime(2025, 3, 1));
+        id: 'tx1',
+        familyId: 'fam_a',
+        accountId: 'acc_1',
+        amount: 300000,
+        kind: 'income',
+        date: DateTime(2025, 3, 1),
+      );
 
       final txns = await db.select(db.transactions).get();
       final summary = DashboardAggregation.monthlySummary(txns);
@@ -260,36 +361,69 @@ void main() {
     test('computes net worth per date from snapshots', () async {
       await _seedFamily('fam_a');
       final savings = await _insertAccount(
-          id: 'sav', familyId: 'fam_a', type: 'savings', balance: 500000);
+        id: 'sav',
+        familyId: 'fam_a',
+        type: 'savings',
+        balance: 500000,
+      );
       final loan = await _insertAccount(
-          id: 'loan', familyId: 'fam_a', type: 'loan', balance: 200000);
+        id: 'loan',
+        familyId: 'fam_a',
+        type: 'loan',
+        balance: 200000,
+      );
 
       // Insert snapshots
-      await db.into(db.balanceSnapshots).insert(BalanceSnapshotsCompanion.insert(
-            id: 's1', accountId: 'sav',
-            snapshotDate: DateTime(2025, 1, 1), balance: 300000,
-            familyId: 'fam_a',
-          ));
-      await db.into(db.balanceSnapshots).insert(BalanceSnapshotsCompanion.insert(
-            id: 's2', accountId: 'loan',
-            snapshotDate: DateTime(2025, 1, 1), balance: 250000,
-            familyId: 'fam_a',
-          ));
-      await db.into(db.balanceSnapshots).insert(BalanceSnapshotsCompanion.insert(
-            id: 's3', accountId: 'sav',
-            snapshotDate: DateTime(2025, 2, 1), balance: 400000,
-            familyId: 'fam_a',
-          ));
-      await db.into(db.balanceSnapshots).insert(BalanceSnapshotsCompanion.insert(
-            id: 's4', accountId: 'loan',
-            snapshotDate: DateTime(2025, 2, 1), balance: 240000,
-            familyId: 'fam_a',
-          ));
+      await db
+          .into(db.balanceSnapshots)
+          .insert(
+            BalanceSnapshotsCompanion.insert(
+              id: 's1',
+              accountId: 'sav',
+              snapshotDate: DateTime(2025, 1, 1),
+              balance: 300000,
+              familyId: 'fam_a',
+            ),
+          );
+      await db
+          .into(db.balanceSnapshots)
+          .insert(
+            BalanceSnapshotsCompanion.insert(
+              id: 's2',
+              accountId: 'loan',
+              snapshotDate: DateTime(2025, 1, 1),
+              balance: 250000,
+              familyId: 'fam_a',
+            ),
+          );
+      await db
+          .into(db.balanceSnapshots)
+          .insert(
+            BalanceSnapshotsCompanion.insert(
+              id: 's3',
+              accountId: 'sav',
+              snapshotDate: DateTime(2025, 2, 1),
+              balance: 400000,
+              familyId: 'fam_a',
+            ),
+          );
+      await db
+          .into(db.balanceSnapshots)
+          .insert(
+            BalanceSnapshotsCompanion.insert(
+              id: 's4',
+              accountId: 'loan',
+              snapshotDate: DateTime(2025, 2, 1),
+              balance: 240000,
+              familyId: 'fam_a',
+            ),
+          );
 
       final snapshots = await db.select(db.balanceSnapshots).get();
-      final history = DashboardAggregation.computeNetWorthHistory(
-        snapshots, [savings, loan],
-      );
+      final history = DashboardAggregation.computeNetWorthHistory(snapshots, [
+        savings,
+        loan,
+      ]);
 
       expect(history.length, 2);
       // Jan: 300000 - 250000 = 50000
@@ -308,24 +442,40 @@ void main() {
     test('results are sorted chronologically', () async {
       await _seedFamily('fam_a');
       final savings = await _insertAccount(
-          id: 'sav', familyId: 'fam_a', type: 'savings', balance: 100000);
+        id: 'sav',
+        familyId: 'fam_a',
+        type: 'savings',
+        balance: 100000,
+      );
 
       // Insert out of order
-      await db.into(db.balanceSnapshots).insert(BalanceSnapshotsCompanion.insert(
-            id: 's2', accountId: 'sav',
-            snapshotDate: DateTime(2025, 3, 1), balance: 300000,
-            familyId: 'fam_a',
-          ));
-      await db.into(db.balanceSnapshots).insert(BalanceSnapshotsCompanion.insert(
-            id: 's1', accountId: 'sav',
-            snapshotDate: DateTime(2025, 1, 1), balance: 100000,
-            familyId: 'fam_a',
-          ));
+      await db
+          .into(db.balanceSnapshots)
+          .insert(
+            BalanceSnapshotsCompanion.insert(
+              id: 's2',
+              accountId: 'sav',
+              snapshotDate: DateTime(2025, 3, 1),
+              balance: 300000,
+              familyId: 'fam_a',
+            ),
+          );
+      await db
+          .into(db.balanceSnapshots)
+          .insert(
+            BalanceSnapshotsCompanion.insert(
+              id: 's1',
+              accountId: 'sav',
+              snapshotDate: DateTime(2025, 1, 1),
+              balance: 100000,
+              familyId: 'fam_a',
+            ),
+          );
 
       final snapshots = await db.select(db.balanceSnapshots).get();
-      final history = DashboardAggregation.computeNetWorthHistory(
-        snapshots, [savings],
-      );
+      final history = DashboardAggregation.computeNetWorthHistory(snapshots, [
+        savings,
+      ]);
 
       expect(history[0].date.isBefore(history[1].date), isTrue);
     });
@@ -342,10 +492,7 @@ void main() {
     });
 
     test('returns 0 when income is zero', () {
-      final summary = MonthlySummary(
-        totalIncome: 0,
-        totalExpenses: 100000,
-      );
+      final summary = MonthlySummary(totalIncome: 0, totalExpenses: 100000);
       expect(DashboardAggregation.computeSavingsRate(summary), 0.0);
     });
 
@@ -358,76 +505,98 @@ void main() {
     });
 
     test('returns 100 when no expenses', () {
-      final summary = MonthlySummary(
-        totalIncome: 500000,
-        totalExpenses: 0,
-      );
+      final summary = MonthlySummary(totalIncome: 500000, totalExpenses: 0);
       expect(DashboardAggregation.computeSavingsRate(summary), 100.0);
     });
   });
 
   group('ScopeFiltering', () {
-    test('family scope includes shared and familyWide, excludes private',
-        () async {
-      await _seedFamily('fam_a');
+    test(
+      'family scope includes shared and familyWide, excludes private',
+      () async {
+        await _seedFamily('fam_a');
 
-      final accounts = <Account>[];
-      accounts.add(await _insertAccount(
-          id: 'shared',
-          familyId: 'fam_a',
-          visibility: 'shared',
-          balance: 100));
-      accounts.add(await _insertAccount(
-          id: 'family_wide',
-          familyId: 'fam_a',
-          visibility: 'familyWide',
-          balance: 200));
-      accounts.add(await _insertAccount(
-          id: 'priv',
-          familyId: 'fam_a',
-          visibility: 'private_',
-          balance: 300));
+        final accounts = <Account>[];
+        accounts.add(
+          await _insertAccount(
+            id: 'shared',
+            familyId: 'fam_a',
+            visibility: 'shared',
+            balance: 100,
+          ),
+        );
+        accounts.add(
+          await _insertAccount(
+            id: 'family_wide',
+            familyId: 'fam_a',
+            visibility: 'familyWide',
+            balance: 200,
+          ),
+        );
+        accounts.add(
+          await _insertAccount(
+            id: 'priv',
+            familyId: 'fam_a',
+            visibility: 'private_',
+            balance: 300,
+          ),
+        );
 
-      final filtered = DashboardAggregation.filterByScope(
-        accounts,
-        scope: DashboardScope.family,
-      );
+        final filtered = DashboardAggregation.filterByScope(
+          accounts,
+          scope: DashboardScope.family,
+        );
 
-      expect(filtered, hasLength(2));
-      expect(filtered.map((a) => a.id), containsAll(['shared', 'family_wide']));
-    });
+        expect(filtered, hasLength(2));
+        expect(
+          filtered.map((a) => a.id),
+          containsAll(['shared', 'family_wide']),
+        );
+      },
+    );
 
     test('personal scope includes accounts for a specific userId', () async {
       await _seedFamily('fam_a');
       // Add second user
-      await db.into(db.users).insert(UsersCompanion.insert(
-            id: 'user2',
-            email: 'user2@test.com',
-            displayName: 'User 2',
-            role: 'member',
-            familyId: 'fam_a',
-          ));
+      await db
+          .into(db.users)
+          .insert(
+            UsersCompanion.insert(
+              id: 'user2',
+              email: 'user2@test.com',
+              displayName: 'User 2',
+              role: 'member',
+              familyId: 'fam_a',
+            ),
+          );
 
       final accounts = <Account>[];
-      accounts.add(await _insertAccount(
-          id: 'mine', familyId: 'fam_a', balance: 100));
+      accounts.add(
+        await _insertAccount(id: 'mine', familyId: 'fam_a', balance: 100),
+      );
       // Insert account for user2 directly
-      await db.into(db.accounts).insert(AccountsCompanion(
-            id: const Value('theirs'),
-            name: const Value('Account theirs'),
-            type: const Value('savings'),
-            balance: const Value(200),
-            visibility: const Value('shared'),
-            familyId: const Value('fam_a'),
-            userId: const Value('user2'),
-          ));
-      accounts.add(await (db.select(db.accounts)
-                ..where((a) => a.id.equals('theirs')))
-              .getSingle());
+      await db
+          .into(db.accounts)
+          .insert(
+            AccountsCompanion(
+              id: const Value('theirs'),
+              name: const Value('Account theirs'),
+              type: const Value('savings'),
+              balance: const Value(200),
+              visibility: const Value('shared'),
+              familyId: const Value('fam_a'),
+              userId: const Value('user2'),
+            ),
+          );
+      accounts.add(
+        await (db.select(
+          db.accounts,
+        )..where((a) => a.id.equals('theirs'))).getSingle(),
+      );
       // Re-read 'mine' to have correct Account object
-      accounts[0] = await (db.select(db.accounts)
-                ..where((a) => a.id.equals('mine')))
-              .getSingle();
+      accounts[0] = await (db.select(
+        db.accounts,
+      )..where((a) => a.id.equals('mine'))).getSingle();
 
       final filtered = DashboardAggregation.filterByScope(
         accounts,

@@ -17,8 +17,7 @@ class KeyDerivation {
   /// Uses PBKDF2 with HMAC-SHA256, 100k iterations.
   Uint8List deriveKey(String passphrase, Uint8List salt) {
     final params = Pbkdf2Parameters(salt, _iterations, _keyLengthBytes);
-    final pbkdf2 = KeyDerivator('SHA-256/HMAC/PBKDF2')
-      ..init(params);
+    final pbkdf2 = KeyDerivator('SHA-256/HMAC/PBKDF2')..init(params);
 
     return pbkdf2.process(Uint8List.fromList(utf8.encode(passphrase)));
   }

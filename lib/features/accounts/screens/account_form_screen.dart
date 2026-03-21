@@ -94,10 +94,7 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen> {
             const SizedBox(height: 16),
             _buildVisibilitySelector(),
             const SizedBox(height: 24),
-            FilledButton(
-              onPressed: _save,
-              child: const Text('Save'),
-            ),
+            FilledButton(onPressed: _save, child: const Text('Save')),
           ],
         ),
       ),
@@ -149,24 +146,28 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen> {
     final balancePaise = CurrencyInput.toPaise(_balanceController.text);
 
     if (widget.isEditing) {
-      await (dao.update(dao.accounts)
-            ..where((a) => a.id.equals(widget.existingAccount!.id)))
-          .write(AccountsCompanion(
-        name: Value(_nameController.text.trim()),
-        type: Value(_selectedType),
-        balance: Value(balancePaise),
-        visibility: Value(_selectedVisibility),
-      ));
+      await (dao.update(
+        dao.accounts,
+      )..where((a) => a.id.equals(widget.existingAccount!.id))).write(
+        AccountsCompanion(
+          name: Value(_nameController.text.trim()),
+          type: Value(_selectedType),
+          balance: Value(balancePaise),
+          visibility: Value(_selectedVisibility),
+        ),
+      );
     } else {
-      await dao.insertAccount(AccountsCompanion(
-        id: Value(const Uuid().v4()),
-        name: Value(_nameController.text.trim()),
-        type: Value(_selectedType),
-        balance: Value(balancePaise),
-        visibility: Value(_selectedVisibility),
-        familyId: Value(widget.familyId),
-        userId: Value(widget.userId),
-      ));
+      await dao.insertAccount(
+        AccountsCompanion(
+          id: Value(const Uuid().v4()),
+          name: Value(_nameController.text.trim()),
+          type: Value(_selectedType),
+          balance: Value(balancePaise),
+          visibility: Value(_selectedVisibility),
+          familyId: Value(widget.familyId),
+          userId: Value(widget.userId),
+        ),
+      );
     }
 
     if (mounted) Navigator.of(context).pop();

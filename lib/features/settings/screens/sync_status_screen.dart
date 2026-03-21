@@ -37,9 +37,7 @@ class SyncStatusScreen extends StatelessWidget {
             value: status.pendingChanges == 0
                 ? 'Up to date'
                 : '${status.pendingChanges} pending',
-            icon: status.pendingChanges == 0
-                ? Icons.check_circle
-                : Icons.sync,
+            icon: status.pendingChanges == 0 ? Icons.check_circle : Icons.sync,
             valueColor: status.pendingChanges == 0
                 ? Colors.green
                 : theme.colorScheme.primary,
@@ -115,10 +113,7 @@ class _StatusCard extends StatelessWidget {
       child: ListTile(
         leading: Icon(icon),
         title: Text(title),
-        subtitle: Text(
-          value,
-          style: TextStyle(color: valueColor),
-        ),
+        subtitle: Text(value, style: TextStyle(color: valueColor)),
       ),
     );
   }

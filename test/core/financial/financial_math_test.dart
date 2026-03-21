@@ -8,11 +8,7 @@ void main() {
   group('FinancialMath.pmt', () {
     test('should_return_emi_for_10L_loan_at_10pct_for_12_months', () {
       // Excel: PMT(0.10/12, 12, -1000000) ≈ 87916 paise (₹879.16)
-      final result = FinancialMath.pmt(
-        rate: 0.10 / 12,
-        nper: 12,
-        pv: -1000000,
-      );
+      final result = FinancialMath.pmt(rate: 0.10 / 12, nper: 12, pv: -1000000);
       expect(result, 87916);
     });
 
@@ -28,21 +24,13 @@ void main() {
 
     test('should_handle_zero_rate_by_dividing_evenly', () {
       // 0% interest: simple division = 100000 / 12 = 8333 paise
-      final result = FinancialMath.pmt(
-        rate: 0,
-        nper: 12,
-        pv: -100000,
-      );
+      final result = FinancialMath.pmt(rate: 0, nper: 12, pv: -100000);
       expect(result, 8333);
     });
 
     test('should_default_fv_to_zero', () {
       // Same as first test — fv defaults to 0
-      final result = FinancialMath.pmt(
-        rate: 0.10 / 12,
-        nper: 12,
-        pv: -1000000,
-      );
+      final result = FinancialMath.pmt(rate: 0.10 / 12, nper: 12, pv: -1000000);
       expect(result, 87916);
     });
   });
@@ -53,22 +41,14 @@ void main() {
   group('FinancialMath.fv', () {
     test('should_return_fv_of_5000_per_month_at_12pct_for_60_months', () {
       // Excel: FV(0.01, 60, -5000) — monthly rate = 12%/12 = 1%
-      final result = FinancialMath.fv(
-        rate: 0.01,
-        nper: 60,
-        pmt: -5000,
-      );
+      final result = FinancialMath.fv(rate: 0.01, nper: 60, pmt: -5000);
       // FV = 5000 * ((1.01^60 - 1) / 0.01)
       expect(result, 408348);
     });
 
     test('should_handle_zero_rate', () {
       // 0% rate: FV = -(pmt * nper) = -((-1000) * 12) = 12000
-      final result = FinancialMath.fv(
-        rate: 0,
-        nper: 12,
-        pmt: -1000,
-      );
+      final result = FinancialMath.fv(rate: 0, nper: 12, pmt: -1000);
       expect(result, 12000);
     });
   });
@@ -79,21 +59,13 @@ void main() {
   group('FinancialMath.pv', () {
     test('should_return_pv_of_10000_per_month_for_24_months_at_10pct', () {
       // Excel: PV(0.10/12, 24, -10000)
-      final result = FinancialMath.pv(
-        rate: 0.10 / 12,
-        nper: 24,
-        pmt: -10000,
-      );
+      final result = FinancialMath.pv(rate: 0.10 / 12, nper: 24, pmt: -10000);
       expect(result, 216709);
     });
 
     test('should_handle_zero_rate', () {
       // 0% rate: PV = -(pmt * nper) = -((-10000) * 24) = 240000
-      final result = FinancialMath.pv(
-        rate: 0,
-        nper: 24,
-        pmt: -10000,
-      );
+      final result = FinancialMath.pv(rate: 0, nper: 24, pmt: -10000);
       expect(result, 240000);
     });
   });

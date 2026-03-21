@@ -66,7 +66,8 @@ class _PassphraseSetupScreenState extends State<PassphraseSetupScreen> {
                 labelText: 'Passphrase',
                 suffixIcon: IconButton(
                   icon: Icon(
-                      _obscure ? Icons.visibility_off : Icons.visibility),
+                    _obscure ? Icons.visibility_off : Icons.visibility,
+                  ),
                   onPressed: () => setState(() => _obscure = !_obscure),
                 ),
               ),
@@ -79,7 +80,8 @@ class _PassphraseSetupScreenState extends State<PassphraseSetupScreen> {
                 labelText: 'Confirm passphrase',
                 suffixIcon: IconButton(
                   icon: Icon(
-                      _obscure ? Icons.visibility_off : Icons.visibility),
+                    _obscure ? Icons.visibility_off : Icons.visibility,
+                  ),
                   onPressed: () => setState(() => _obscure = !_obscure),
                 ),
               ),
@@ -92,10 +94,7 @@ class _PassphraseSetupScreenState extends State<PassphraseSetupScreen> {
               ),
             ],
             const SizedBox(height: Spacing.xl),
-            FilledButton(
-              onPressed: _submit,
-              child: const Text('Continue'),
-            ),
+            FilledButton(onPressed: _submit, child: const Text('Continue')),
           ],
         ),
       ),

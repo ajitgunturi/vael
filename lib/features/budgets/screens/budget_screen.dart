@@ -23,8 +23,19 @@ class BudgetScreen extends ConsumerWidget {
   final int month;
 
   static const _monthNames = [
-    '', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+    '',
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
   ];
 
   @override
@@ -33,9 +44,7 @@ class BudgetScreen extends ConsumerWidget {
     final summaryAsync = ref.watch(budgetSummaryProvider(key));
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Budget — ${_monthNames[month]} $year'),
-      ),
+      appBar: AppBar(title: Text('Budget — ${_monthNames[month]} $year')),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _navigateToForm(context),
         child: const Icon(Icons.add),
@@ -56,7 +65,11 @@ class BudgetScreen extends ConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           // ignore: deprecated_member_use
-          Icon(Icons.pie_chart_outline, size: 48, color: ColorTokens.neutralStatic),
+          Icon(
+            Icons.pie_chart_outline,
+            size: 48,
+            color: ColorTokens.neutralStatic,
+          ),
           SizedBox(height: Spacing.md),
           Text('No budgets set'),
           SizedBox(height: Spacing.sm),
@@ -114,7 +127,9 @@ class _BudgetGroupCard extends StatelessWidget {
     final progress = row.limitAmount > 0
         ? (row.actualSpent / row.limitAmount).clamp(0.0, 1.5)
         : 1.0;
-    final barColor = row.isOverspent ? ColorTokens.negative : ColorTokens.positive;
+    final barColor = row.isOverspent
+        ? ColorTokens.negative
+        : ColorTokens.positive;
     final spentFormatted = formatIndianNumber(row.actualSpent ~/ 100);
     final limitFormatted = row.limitAmount > 0
         ? formatIndianNumber(row.limitAmount ~/ 100)
@@ -141,9 +156,9 @@ class _BudgetGroupCard extends StatelessWidget {
                     Text(
                       'Overspent',
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                            color: ColorTokens.negative,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        color: ColorTokens.negative,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                 ],
               ),
@@ -169,8 +184,8 @@ class _BudgetGroupCard extends StatelessWidget {
                     Text(
                       '₹${formatIndianNumber(row.remaining ~/ 100)} remaining',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: ColorTokens.positive,
-                          ),
+                        color: ColorTokens.positive,
+                      ),
                     ),
                 ],
               ),

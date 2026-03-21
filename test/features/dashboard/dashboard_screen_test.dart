@@ -61,8 +61,7 @@ void main() {
   }) {
     return ProviderScope(
       overrides: [
-        dashboardDataProvider('fam_a')
-            .overrideWith((_) => Stream.value(data)),
+        dashboardDataProvider('fam_a').overrideWith((_) => Stream.value(data)),
         dashboardScopeProvider.overrideWith((ref) => scope),
       ],
       child: MaterialApp(
@@ -74,8 +73,9 @@ void main() {
 
   group('DashboardScreen', () {
     // ── 2.5.8 Hero Net Worth Card ──
-    testWidgets('shows hero net worth with large formatted amount',
-        (tester) async {
+    testWidgets('shows hero net worth with large formatted amount', (
+      tester,
+    ) async {
       await tester.pumpWidget(buildTestApp(data: _makeData()));
       await tester.pumpAndSettle();
 
@@ -85,15 +85,17 @@ void main() {
 
     testWidgets('shows negative net worth in expense color', (tester) async {
       await tester.pumpWidget(
-          buildTestApp(data: _makeData(netWorth: -500000000)));
+        buildTestApp(data: _makeData(netWorth: -500000000)),
+      );
       await tester.pumpAndSettle();
 
       expect(find.textContaining('50,00,000'), findsOneWidget);
     });
 
     // ── 2.5.9 Compact Income/Expense Tiles ──
-    testWidgets('shows compact income, expense, net savings tiles',
-        (tester) async {
+    testWidgets('shows compact income, expense, net savings tiles', (
+      tester,
+    ) async {
       await tester.pumpWidget(buildTestApp(data: _makeData()));
       await tester.pumpAndSettle();
 
@@ -115,16 +117,14 @@ void main() {
 
     // ── 2.5.11 Savings Rate Badge ──
     testWidgets('shows savings rate badge green when >= 20%', (tester) async {
-      await tester.pumpWidget(
-          buildTestApp(data: _makeData(savingsRate: 47)));
+      await tester.pumpWidget(buildTestApp(data: _makeData(savingsRate: 47)));
       await tester.pumpAndSettle();
 
       expect(find.textContaining('Savings Rate: 47%'), findsOneWidget);
     });
 
     testWidgets('shows savings rate badge red when < 10%', (tester) async {
-      await tester.pumpWidget(
-          buildTestApp(data: _makeData(savingsRate: 5)));
+      await tester.pumpWidget(buildTestApp(data: _makeData(savingsRate: 5)));
       await tester.pumpAndSettle();
 
       expect(find.textContaining('Savings Rate: 5%'), findsOneWidget);
@@ -149,8 +149,7 @@ void main() {
         ),
       ];
 
-      await tester
-          .pumpWidget(buildTestApp(data: _makeData(), goals: goals));
+      await tester.pumpWidget(buildTestApp(data: _makeData(), goals: goals));
       await tester.pumpAndSettle();
 
       expect(find.text('Goals'), findsOneWidget);

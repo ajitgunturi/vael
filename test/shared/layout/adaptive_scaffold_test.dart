@@ -59,10 +59,13 @@ void main() {
 
     test('has exactly 5 destinations (Settings removed)', () {
       expect(AdaptiveScaffold.destinations.length, 5);
-      expect(
-        AdaptiveScaffold.destinations.map((d) => d.label).toList(),
-        ['Dashboard', 'Accounts', 'Transactions', 'Budget', 'Goals'],
-      );
+      expect(AdaptiveScaffold.destinations.map((d) => d.label).toList(), [
+        'Dashboard',
+        'Accounts',
+        'Transactions',
+        'Budget',
+        'Goals',
+      ]);
     });
 
     group('at 400dp width (compact — phone portrait)', () {
@@ -98,9 +101,7 @@ void main() {
         addTearDown(tester.view.resetPhysicalSize);
         addTearDown(tester.view.resetDevicePixelRatio);
 
-        await tester.pumpWidget(
-          buildTestHarness(width: 400, selectedIndex: 2),
-        );
+        await tester.pumpWidget(buildTestHarness(width: 400, selectedIndex: 2));
 
         final bottomNav = tester.widget<BottomNavigationBar>(
           find.byType(BottomNavigationBar),
@@ -108,18 +109,21 @@ void main() {
         expect(bottomNav.currentIndex, 2);
       });
 
-      testWidgets('should call onDestinationSelected when tapped',
-          (tester) async {
+      testWidgets('should call onDestinationSelected when tapped', (
+        tester,
+      ) async {
         tester.view.physicalSize = const Size(400, 800);
         tester.view.devicePixelRatio = 1.0;
         addTearDown(tester.view.resetPhysicalSize);
         addTearDown(tester.view.resetDevicePixelRatio);
 
         int? tappedIndex;
-        await tester.pumpWidget(buildTestHarness(
-          width: 400,
-          onDestinationSelected: (i) => tappedIndex = i,
-        ));
+        await tester.pumpWidget(
+          buildTestHarness(
+            width: 400,
+            onDestinationSelected: (i) => tappedIndex = i,
+          ),
+        );
 
         await tester.tap(find.byIcon(Icons.pie_chart));
         expect(tappedIndex, 3);
@@ -147,9 +151,7 @@ void main() {
 
         await tester.pumpWidget(buildTestHarness(width: 750));
 
-        final rail = tester.widget<NavigationRail>(
-          find.byType(NavigationRail),
-        );
+        final rail = tester.widget<NavigationRail>(find.byType(NavigationRail));
         expect(rail.destinations.length, 5);
       });
 
@@ -159,20 +161,17 @@ void main() {
         addTearDown(tester.view.resetPhysicalSize);
         addTearDown(tester.view.resetDevicePixelRatio);
 
-        await tester.pumpWidget(
-          buildTestHarness(width: 750, selectedIndex: 4),
-        );
+        await tester.pumpWidget(buildTestHarness(width: 750, selectedIndex: 4));
 
-        final rail = tester.widget<NavigationRail>(
-          find.byType(NavigationRail),
-        );
+        final rail = tester.widget<NavigationRail>(find.byType(NavigationRail));
         expect(rail.selectedIndex, 4);
       });
     });
 
     group('at 1200dp width (expanded — landscape iPad/Mac)', () {
-      testWidgets('should render persistent drawer with ListTiles',
-          (tester) async {
+      testWidgets('should render persistent drawer with ListTiles', (
+        tester,
+      ) async {
         tester.view.physicalSize = const Size(1200, 800);
         tester.view.devicePixelRatio = 1.0;
         addTearDown(tester.view.resetPhysicalSize);
@@ -200,18 +199,21 @@ void main() {
         expect(find.text('Goals'), findsOneWidget);
       });
 
-      testWidgets('should call onDestinationSelected when tapped',
-          (tester) async {
+      testWidgets('should call onDestinationSelected when tapped', (
+        tester,
+      ) async {
         tester.view.physicalSize = const Size(1200, 800);
         tester.view.devicePixelRatio = 1.0;
         addTearDown(tester.view.resetPhysicalSize);
         addTearDown(tester.view.resetDevicePixelRatio);
 
         int? tappedIndex;
-        await tester.pumpWidget(buildTestHarness(
-          width: 1200,
-          onDestinationSelected: (i) => tappedIndex = i,
-        ));
+        await tester.pumpWidget(
+          buildTestHarness(
+            width: 1200,
+            onDestinationSelected: (i) => tappedIndex = i,
+          ),
+        );
 
         await tester.tap(find.text('Goals'));
         expect(tappedIndex, 4);
@@ -228,18 +230,21 @@ void main() {
       expect(find.text('body'), findsOneWidget);
     });
 
-    testWidgets('shows settings gear icon in AppBar when callback provided',
-        (tester) async {
+    testWidgets('shows settings gear icon in AppBar when callback provided', (
+      tester,
+    ) async {
       tester.view.physicalSize = const Size(400, 800);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);
       addTearDown(tester.view.resetDevicePixelRatio);
 
       var settingsTapped = false;
-      await tester.pumpWidget(buildTestHarness(
-        width: 400,
-        onSettingsTap: () => settingsTapped = true,
-      ));
+      await tester.pumpWidget(
+        buildTestHarness(
+          width: 400,
+          onSettingsTap: () => settingsTapped = true,
+        ),
+      );
 
       expect(find.byIcon(Icons.settings), findsOneWidget);
       await tester.tap(find.byIcon(Icons.settings));

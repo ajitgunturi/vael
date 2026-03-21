@@ -33,8 +33,10 @@ class DashboardData {
 ///
 /// Combines account grouping, net worth, and monthly transaction summary.
 /// Respects the current [dashboardScopeProvider] setting.
-final dashboardDataProvider =
-    StreamProvider.family<DashboardData, String>((ref, familyId) {
+final dashboardDataProvider = StreamProvider.family<DashboardData, String>((
+  ref,
+  familyId,
+) {
   final db = ref.watch(databaseProvider);
   final accountDao = AccountDao(db);
   final transactionDao = TransactionDao(db);
@@ -43,10 +45,7 @@ final dashboardDataProvider =
   // Watch accounts reactively
   return accountDao.watchAll(familyId).asyncMap((accounts) async {
     // Apply scope filter
-    final scoped = DashboardAggregation.filterByScope(
-      accounts,
-      scope: scope,
-    );
+    final scoped = DashboardAggregation.filterByScope(accounts, scope: scope);
 
     final grouped = DashboardAggregation.groupAccounts(scoped);
     final netWorth = DashboardAggregation.computeNetWorth(scoped);

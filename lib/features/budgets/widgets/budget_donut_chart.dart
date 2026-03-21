@@ -36,13 +36,16 @@ class BudgetDonutChart extends StatelessWidget {
           PieChart(
             PieChartData(
               sections: rows
-                  .map((r) => PieChartSectionData(
-                        value: r.actualSpent.toDouble(),
-                        color: _groupColors[r.categoryGroup] ??
-                            ColorTokens.neutralStatic,
-                        radius: 32,
-                        showTitle: false,
-                      ))
+                  .map(
+                    (r) => PieChartSectionData(
+                      value: r.actualSpent.toDouble(),
+                      color:
+                          _groupColors[r.categoryGroup] ??
+                          ColorTokens.neutralStatic,
+                      radius: 32,
+                      showTitle: false,
+                    ),
+                  )
                   .toList(),
               sectionsSpace: 2,
               centerSpaceRadius: 56,
@@ -53,16 +56,16 @@ class BudgetDonutChart extends StatelessWidget {
             children: [
               Text(
                 '₹${formatIndianNumber(totalSpent ~/ 100)}',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: Spacing.xs),
               Text(
                 'spent',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: ColorTokens.of(context).onSurfaceVariant,
-                    ),
+                  color: ColorTokens.of(context).onSurfaceVariant,
+                ),
               ),
             ],
           ),

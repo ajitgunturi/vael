@@ -40,8 +40,7 @@ class TransactionListScreen extends ConsumerStatefulWidget {
 
 enum _KindFilter { all, income, expense, transfer }
 
-class _TransactionListScreenState
-    extends ConsumerState<TransactionListScreen> {
+class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
   bool _searching = false;
   String _searchQuery = '';
   _KindFilter _activeFilter = _KindFilter.all;
@@ -101,8 +100,11 @@ class _TransactionListScreenState
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.receipt_long_outlined,
-                size: 64, color: Theme.of(context).colorScheme.outline),
+            Icon(
+              Icons.receipt_long_outlined,
+              size: 64,
+              color: Theme.of(context).colorScheme.outline,
+            ),
             const SizedBox(height: Spacing.md),
             const Text('No transactions yet'),
             const SizedBox(height: Spacing.sm),
@@ -202,7 +204,9 @@ class _FilterChipRow extends StatelessWidget {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.symmetric(
-          horizontal: Spacing.md, vertical: Spacing.sm),
+        horizontal: Spacing.md,
+        vertical: Spacing.sm,
+      ),
       child: Row(
         children: [
           _chip(context, 'All', _KindFilter.all),
@@ -235,13 +239,17 @@ class _DateHeader extends StatelessWidget {
     final colors = ColorTokens.of(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(
-          Spacing.md, Spacing.md, Spacing.md, Spacing.xs),
+        Spacing.md,
+        Spacing.md,
+        Spacing.md,
+        Spacing.xs,
+      ),
       child: Text(
         label,
         style: Theme.of(context).textTheme.titleSmall?.copyWith(
-              color: colors.onSurfaceVariant,
-              fontWeight: FontWeight.w600,
-            ),
+          color: colors.onSurfaceVariant,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }

@@ -18,7 +18,10 @@ class TransactionGrouping {
   }) {
     final result = <String, List<DateTime>>{};
     final todayDate = DateTime(
-        referenceDate.year, referenceDate.month, referenceDate.day);
+      referenceDate.year,
+      referenceDate.month,
+      referenceDate.day,
+    );
     final yesterdayDate = todayDate.subtract(const Duration(days: 1));
     final sameYearFmt = DateFormat('dd MMM');
     final otherYearFmt = DateFormat('dd MMM yyyy');

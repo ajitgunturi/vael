@@ -7,8 +7,7 @@ import 'package:vael/features/transactions/screens/transaction_list_screen.dart'
 
 void main() {
   group('Pull-to-Refresh', () {
-    testWidgets('transaction list screen has RefreshIndicator',
-        (tester) async {
+    testWidgets('transaction list screen has RefreshIndicator', (tester) async {
       final txns = [
         Transaction(
           id: 'tx1',
@@ -28,8 +27,9 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            transactionsProvider('fam_a')
-                .overrideWith((_) => Stream.value(txns)),
+            transactionsProvider(
+              'fam_a',
+            ).overrideWith((_) => Stream.value(txns)),
           ],
           child: const MaterialApp(
             home: TransactionListScreen(familyId: 'fam_a', userId: 'user_1'),

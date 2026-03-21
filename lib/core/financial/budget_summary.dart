@@ -57,7 +57,9 @@ class BudgetSummary {
       if (!sharedAccountIds.contains(tx.accountId)) continue;
 
       // Resolve category group
-      final category = tx.categoryId != null ? categoryById[tx.categoryId] : null;
+      final category = tx.categoryId != null
+          ? categoryById[tx.categoryId]
+          : null;
       final group = category?.groupName ?? 'MISSING';
 
       actuals[group] = (actuals[group] ?? 0) + tx.amount;
@@ -81,22 +83,26 @@ class BudgetSummary {
     // Budgeted groups first
     for (final b in budgets) {
       budgetedGroups.add(b.categoryGroup);
-      rows.add(BudgetSummaryRow(
-        categoryGroup: b.categoryGroup,
-        limitAmount: b.limitAmount,
-        actualSpent: actualsByGroup[b.categoryGroup] ?? 0,
-        budgetId: b.id,
-      ));
+      rows.add(
+        BudgetSummaryRow(
+          categoryGroup: b.categoryGroup,
+          limitAmount: b.limitAmount,
+          actualSpent: actualsByGroup[b.categoryGroup] ?? 0,
+          budgetId: b.id,
+        ),
+      );
     }
 
     // Unbudgeted groups with actuals
     for (final entry in actualsByGroup.entries) {
       if (!budgetedGroups.contains(entry.key)) {
-        rows.add(BudgetSummaryRow(
-          categoryGroup: entry.key,
-          limitAmount: 0,
-          actualSpent: entry.value,
-        ));
+        rows.add(
+          BudgetSummaryRow(
+            categoryGroup: entry.key,
+            limitAmount: 0,
+            actualSpent: entry.value,
+          ),
+        );
       }
     }
 

@@ -33,10 +33,7 @@ class CurrencyInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
-      decoration: InputDecoration(
-        labelText: label,
-        prefixText: '₹ ',
-      ),
+      decoration: InputDecoration(labelText: label, prefixText: '₹ '),
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       inputFormatters: [
         FilteringTextInputFormatter.allow(RegExp(r'[\d.,]')),
@@ -83,9 +80,9 @@ class _IndianCommaFormatter extends TextInputFormatter {
     // Group remaining in pairs from right
     final buffer = StringBuffer();
     while (remaining.length > 2) {
-      buffer.write(remaining.substring(0, remaining.length - 2).isEmpty
-          ? ''
-          : '');
+      buffer.write(
+        remaining.substring(0, remaining.length - 2).isEmpty ? '' : '',
+      );
       final pair = remaining.substring(remaining.length - 2);
       remaining = remaining.substring(0, remaining.length - 2);
       if (buffer.isEmpty) {

@@ -57,8 +57,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     _amountController = TextEditingController(
       text: existing != null ? (existing.amount / 100).toStringAsFixed(0) : '',
     );
-    _descriptionController =
-        TextEditingController(text: existing?.description ?? '');
+    _descriptionController = TextEditingController(
+      text: existing?.description ?? '',
+    );
     _selectedKind = existing?.kind ?? 'expense';
     _selectedDate = existing?.date ?? DateTime.now();
     _selectedAccountId = existing?.accountId;
@@ -93,7 +94,8 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
               validator: (v) {
                 if (v == null || v.trim().isEmpty) return 'Amount is required';
                 final parsed = double.tryParse(v.replaceAll(',', ''));
-                if (parsed == null || parsed <= 0) return 'Enter a valid amount';
+                if (parsed == null || parsed <= 0)
+                  return 'Enter a valid amount';
                 return null;
               },
             ),
@@ -107,15 +109,11 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
             const SizedBox(height: 16),
             accountsAsync.when(
               data: (accounts) => _buildAccountPickers(accounts),
-              loading: () =>
-                  const Center(child: CircularProgressIndicator()),
+              loading: () => const Center(child: CircularProgressIndicator()),
               error: (e, _) => Text('Error loading accounts: $e'),
             ),
             const SizedBox(height: 24),
-            FilledButton(
-              onPressed: _save,
-              child: const Text('Save'),
-            ),
+            FilledButton(onPressed: _save, child: const Text('Save')),
           ],
         ),
       ),
@@ -185,8 +183,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
             value: _selectedToAccountId,
             decoration: const InputDecoration(labelText: 'To Account'),
             items: accounts
-                .map(
-                    (a) => DropdownMenuItem(value: a.id, child: Text(a.name)))
+                .map((a) => DropdownMenuItem(value: a.id, child: Text(a.name)))
                 .toList(),
             onChanged: (v) => setState(() => _selectedToAccountId = v),
             validator: (v) {
@@ -211,18 +208,22 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     final amountPaise = CurrencyInput.toPaise(_amountController.text);
     final txId = widget.existingTransaction?.id ?? const Uuid().v4();
 
-    await dao.insertTransaction(TransactionsCompanion(
-      id: Value(txId),
-      amount: Value(amountPaise),
-      date: Value(_selectedDate),
-      description: Value(_descriptionController.text.isNotEmpty
-          ? _descriptionController.text
-          : null),
-      kind: Value(_selectedKind),
-      accountId: Value(_selectedAccountId!),
-      toAccountId: Value(_selectedToAccountId),
-      familyId: Value(widget.familyId),
-    ));
+    await dao.insertTransaction(
+      TransactionsCompanion(
+        id: Value(txId),
+        amount: Value(amountPaise),
+        date: Value(_selectedDate),
+        description: Value(
+          _descriptionController.text.isNotEmpty
+              ? _descriptionController.text
+              : null,
+        ),
+        kind: Value(_selectedKind),
+        accountId: Value(_selectedAccountId!),
+        toAccountId: Value(_selectedToAccountId),
+        familyId: Value(widget.familyId),
+      ),
+    );
 
     // Apply balance cascade
     await balanceService.applyTransaction(

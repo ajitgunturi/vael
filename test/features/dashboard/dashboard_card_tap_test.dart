@@ -27,8 +27,9 @@ void main() {
   Widget buildTestApp({void Function(int)? onNavigateToTab}) {
     return ProviderScope(
       overrides: [
-        dashboardDataProvider('fam_a')
-            .overrideWith((_) => Stream.value(_fakeData())),
+        dashboardDataProvider(
+          'fam_a',
+        ).overrideWith((_) => Stream.value(_fakeData())),
         dashboardScopeProvider.overrideWith((ref) => DashboardScope.family),
       ],
       child: MaterialApp(
@@ -42,8 +43,9 @@ void main() {
   }
 
   group('Dashboard Card Tap Navigation', () {
-    testWidgets('hero net worth card has tap feedback (InkWell)',
-        (tester) async {
+    testWidgets('hero net worth card has tap feedback (InkWell)', (
+      tester,
+    ) async {
       await tester.pumpWidget(buildTestApp());
       await tester.pumpAndSettle();
 
@@ -51,22 +53,27 @@ void main() {
       expect(find.byType(InkWell), findsWidgets);
     });
 
-    testWidgets('tapping income tile calls onNavigateToTab(2) for transactions',
-        (tester) async {
+    testWidgets(
+      'tapping income tile calls onNavigateToTab(2) for transactions',
+      (tester) async {
+        int? tappedTab;
+        await tester.pumpWidget(
+          buildTestApp(onNavigateToTab: (tab) => tappedTab = tab),
+        );
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.text('Income'));
+        expect(tappedTab, 2); // Transactions tab
+      },
+    );
+
+    testWidgets('tapping expenses tile calls onNavigateToTab(3) for budget', (
+      tester,
+    ) async {
       int? tappedTab;
       await tester.pumpWidget(
-          buildTestApp(onNavigateToTab: (tab) => tappedTab = tab));
-      await tester.pumpAndSettle();
-
-      await tester.tap(find.text('Income'));
-      expect(tappedTab, 2); // Transactions tab
-    });
-
-    testWidgets('tapping expenses tile calls onNavigateToTab(3) for budget',
-        (tester) async {
-      int? tappedTab;
-      await tester.pumpWidget(
-          buildTestApp(onNavigateToTab: (tab) => tappedTab = tab));
+        buildTestApp(onNavigateToTab: (tab) => tappedTab = tab),
+      );
       await tester.pumpAndSettle();
 
       await tester.tap(find.text('Expenses'));

@@ -10,9 +10,7 @@ void main() {
   Widget buildTestApp({required List<BudgetSummaryRow> rows}) {
     final key = (familyId: 'fam_a', year: 2025, month: 3);
     return ProviderScope(
-      overrides: [
-        budgetSummaryProvider(key).overrideWith((_) async => rows),
-      ],
+      overrides: [budgetSummaryProvider(key).overrideWith((_) async => rows)],
       child: const MaterialApp(
         home: BudgetScreen(familyId: 'fam_a', year: 2025, month: 3),
       ),
@@ -21,20 +19,24 @@ void main() {
 
   group('BudgetScreen', () {
     testWidgets('shows budget groups with progress bars', (tester) async {
-      await tester.pumpWidget(buildTestApp(rows: [
-        const BudgetSummaryRow(
-          categoryGroup: 'ESSENTIAL',
-          limitAmount: 1000000,
-          actualSpent: 600000,
-          budgetId: 'b1',
+      await tester.pumpWidget(
+        buildTestApp(
+          rows: [
+            const BudgetSummaryRow(
+              categoryGroup: 'ESSENTIAL',
+              limitAmount: 1000000,
+              actualSpent: 600000,
+              budgetId: 'b1',
+            ),
+            const BudgetSummaryRow(
+              categoryGroup: 'NON_ESSENTIAL',
+              limitAmount: 500000,
+              actualSpent: 200000,
+              budgetId: 'b2',
+            ),
+          ],
         ),
-        const BudgetSummaryRow(
-          categoryGroup: 'NON_ESSENTIAL',
-          limitAmount: 500000,
-          actualSpent: 200000,
-          budgetId: 'b2',
-        ),
-      ]));
+      );
       await tester.pumpAndSettle();
 
       expect(find.text('Essential'), findsOneWidget);
@@ -43,14 +45,18 @@ void main() {
     });
 
     testWidgets('highlights overspent groups', (tester) async {
-      await tester.pumpWidget(buildTestApp(rows: [
-        const BudgetSummaryRow(
-          categoryGroup: 'ESSENTIAL',
-          limitAmount: 500000,
-          actualSpent: 700000,
-          budgetId: 'b1',
+      await tester.pumpWidget(
+        buildTestApp(
+          rows: [
+            const BudgetSummaryRow(
+              categoryGroup: 'ESSENTIAL',
+              limitAmount: 500000,
+              actualSpent: 700000,
+              budgetId: 'b1',
+            ),
+          ],
         ),
-      ]));
+      );
       await tester.pumpAndSettle();
 
       expect(find.text('Overspent'), findsOneWidget);
@@ -60,16 +66,21 @@ void main() {
       expect(overspentWidget.style?.color, ColorTokens.negative);
     });
 
-    testWidgets('shows formatted spend amounts in Indian notation',
-        (tester) async {
-      await tester.pumpWidget(buildTestApp(rows: [
-        const BudgetSummaryRow(
-          categoryGroup: 'ESSENTIAL',
-          limitAmount: 10000000, // ₹1,00,000
-          actualSpent: 5000000, // ₹50,000
-          budgetId: 'b1',
+    testWidgets('shows formatted spend amounts in Indian notation', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        buildTestApp(
+          rows: [
+            const BudgetSummaryRow(
+              categoryGroup: 'ESSENTIAL',
+              limitAmount: 10000000, // ₹1,00,000
+              actualSpent: 5000000, // ₹50,000
+              budgetId: 'b1',
+            ),
+          ],
         ),
-      ]));
+      );
       await tester.pumpAndSettle();
 
       // "50,000" appears in spend line and remaining line.
@@ -92,13 +103,17 @@ void main() {
     });
 
     testWidgets('shows uncategorized group label for MISSING', (tester) async {
-      await tester.pumpWidget(buildTestApp(rows: [
-        const BudgetSummaryRow(
-          categoryGroup: 'MISSING',
-          limitAmount: 0,
-          actualSpent: 150000,
+      await tester.pumpWidget(
+        buildTestApp(
+          rows: [
+            const BudgetSummaryRow(
+              categoryGroup: 'MISSING',
+              limitAmount: 0,
+              actualSpent: 150000,
+            ),
+          ],
         ),
-      ]));
+      );
       await tester.pumpAndSettle();
 
       expect(find.text('Uncategorized'), findsOneWidget);

@@ -18,57 +18,71 @@ void main() {
   });
 
   Future<void> _seedFamily(String familyId) async {
-    await db.into(db.families).insert(FamiliesCompanion.insert(
-          id: familyId,
-          name: 'Family',
-          createdAt: DateTime(2025),
-        ));
+    await db
+        .into(db.families)
+        .insert(
+          FamiliesCompanion.insert(
+            id: familyId,
+            name: 'Family',
+            createdAt: DateTime(2025),
+          ),
+        );
   }
 
   group('BudgetDao', () {
     test('inserts and retrieves budgets for a month', () async {
       await _seedFamily('fam_a');
-      await dao.insertBudget(BudgetsCompanion(
-        id: const Value('b1'),
-        familyId: const Value('fam_a'),
-        year: const Value(2025),
-        month: const Value(3),
-        categoryGroup: const Value('ESSENTIAL'),
-        limitAmount: const Value(500000),
-      ));
-      await dao.insertBudget(BudgetsCompanion(
-        id: const Value('b2'),
-        familyId: const Value('fam_a'),
-        year: const Value(2025),
-        month: const Value(3),
-        categoryGroup: const Value('NON_ESSENTIAL'),
-        limitAmount: const Value(200000),
-      ));
+      await dao.insertBudget(
+        BudgetsCompanion(
+          id: const Value('b1'),
+          familyId: const Value('fam_a'),
+          year: const Value(2025),
+          month: const Value(3),
+          categoryGroup: const Value('ESSENTIAL'),
+          limitAmount: const Value(500000),
+        ),
+      );
+      await dao.insertBudget(
+        BudgetsCompanion(
+          id: const Value('b2'),
+          familyId: const Value('fam_a'),
+          year: const Value(2025),
+          month: const Value(3),
+          categoryGroup: const Value('NON_ESSENTIAL'),
+          limitAmount: const Value(200000),
+        ),
+      );
 
       final results = await dao.getForMonth('fam_a', 2025, 3);
       expect(results, hasLength(2));
-      expect(results.map((b) => b.categoryGroup),
-          containsAll(['ESSENTIAL', 'NON_ESSENTIAL']));
+      expect(
+        results.map((b) => b.categoryGroup),
+        containsAll(['ESSENTIAL', 'NON_ESSENTIAL']),
+      );
     });
 
     test('filters by year and month', () async {
       await _seedFamily('fam_a');
-      await dao.insertBudget(BudgetsCompanion(
-        id: const Value('b1'),
-        familyId: const Value('fam_a'),
-        year: const Value(2025),
-        month: const Value(3),
-        categoryGroup: const Value('ESSENTIAL'),
-        limitAmount: const Value(500000),
-      ));
-      await dao.insertBudget(BudgetsCompanion(
-        id: const Value('b2'),
-        familyId: const Value('fam_a'),
-        year: const Value(2025),
-        month: const Value(4),
-        categoryGroup: const Value('ESSENTIAL'),
-        limitAmount: const Value(600000),
-      ));
+      await dao.insertBudget(
+        BudgetsCompanion(
+          id: const Value('b1'),
+          familyId: const Value('fam_a'),
+          year: const Value(2025),
+          month: const Value(3),
+          categoryGroup: const Value('ESSENTIAL'),
+          limitAmount: const Value(500000),
+        ),
+      );
+      await dao.insertBudget(
+        BudgetsCompanion(
+          id: const Value('b2'),
+          familyId: const Value('fam_a'),
+          year: const Value(2025),
+          month: const Value(4),
+          categoryGroup: const Value('ESSENTIAL'),
+          limitAmount: const Value(600000),
+        ),
+      );
 
       final march = await dao.getForMonth('fam_a', 2025, 3);
       expect(march, hasLength(1));
@@ -81,14 +95,16 @@ void main() {
 
     test('updates budget limit', () async {
       await _seedFamily('fam_a');
-      await dao.insertBudget(BudgetsCompanion(
-        id: const Value('b1'),
-        familyId: const Value('fam_a'),
-        year: const Value(2025),
-        month: const Value(3),
-        categoryGroup: const Value('ESSENTIAL'),
-        limitAmount: const Value(500000),
-      ));
+      await dao.insertBudget(
+        BudgetsCompanion(
+          id: const Value('b1'),
+          familyId: const Value('fam_a'),
+          year: const Value(2025),
+          month: const Value(3),
+          categoryGroup: const Value('ESSENTIAL'),
+          limitAmount: const Value(500000),
+        ),
+      );
 
       await dao.updateLimit('b1', 750000);
 
@@ -98,14 +114,16 @@ void main() {
 
     test('deletes a budget', () async {
       await _seedFamily('fam_a');
-      await dao.insertBudget(BudgetsCompanion(
-        id: const Value('b1'),
-        familyId: const Value('fam_a'),
-        year: const Value(2025),
-        month: const Value(3),
-        categoryGroup: const Value('ESSENTIAL'),
-        limitAmount: const Value(500000),
-      ));
+      await dao.insertBudget(
+        BudgetsCompanion(
+          id: const Value('b1'),
+          familyId: const Value('fam_a'),
+          year: const Value(2025),
+          month: const Value(3),
+          categoryGroup: const Value('ESSENTIAL'),
+          limitAmount: const Value(500000),
+        ),
+      );
 
       await dao.deleteBudget('b1');
 
@@ -116,22 +134,26 @@ void main() {
     test('isolates by familyId', () async {
       await _seedFamily('fam_a');
       await _seedFamily('fam_b');
-      await dao.insertBudget(BudgetsCompanion(
-        id: const Value('b1'),
-        familyId: const Value('fam_a'),
-        year: const Value(2025),
-        month: const Value(3),
-        categoryGroup: const Value('ESSENTIAL'),
-        limitAmount: const Value(500000),
-      ));
-      await dao.insertBudget(BudgetsCompanion(
-        id: const Value('b2'),
-        familyId: const Value('fam_b'),
-        year: const Value(2025),
-        month: const Value(3),
-        categoryGroup: const Value('ESSENTIAL'),
-        limitAmount: const Value(300000),
-      ));
+      await dao.insertBudget(
+        BudgetsCompanion(
+          id: const Value('b1'),
+          familyId: const Value('fam_a'),
+          year: const Value(2025),
+          month: const Value(3),
+          categoryGroup: const Value('ESSENTIAL'),
+          limitAmount: const Value(500000),
+        ),
+      );
+      await dao.insertBudget(
+        BudgetsCompanion(
+          id: const Value('b2'),
+          familyId: const Value('fam_b'),
+          year: const Value(2025),
+          month: const Value(3),
+          categoryGroup: const Value('ESSENTIAL'),
+          limitAmount: const Value(300000),
+        ),
+      );
 
       final famA = await dao.getForMonth('fam_a', 2025, 3);
       expect(famA, hasLength(1));

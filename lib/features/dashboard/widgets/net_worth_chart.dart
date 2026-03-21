@@ -8,10 +8,7 @@ import '../../../shared/theme/spacing.dart';
 ///
 /// Shows up to 6 months of net worth history.
 class NetWorthChart extends StatelessWidget {
-  const NetWorthChart({
-    super.key,
-    required this.history,
-  });
+  const NetWorthChart({super.key, required this.history});
 
   /// (date, netWorth in paise) pairs — sorted chronologically.
   final List<({DateTime date, int netWorth})> history;
@@ -35,8 +32,10 @@ class NetWorthChart extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Net Worth Trend',
-                style: Theme.of(context).textTheme.titleMedium),
+            Text(
+              'Net Worth Trend',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             const SizedBox(height: Spacing.md),
             SizedBox(
               height: 200,
@@ -45,10 +44,8 @@ class NetWorthChart extends StatelessWidget {
                   gridData: FlGridData(
                     show: true,
                     drawVerticalLine: false,
-                    getDrawingHorizontalLine: (_) => FlLine(
-                      color: tokens.chartGrid,
-                      strokeWidth: 1,
-                    ),
+                    getDrawingHorizontalLine: (_) =>
+                        FlLine(color: tokens.chartGrid, strokeWidth: 1),
                   ),
                   titlesData: const FlTitlesData(show: false),
                   borderData: FlBorderData(show: false),

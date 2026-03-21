@@ -16,13 +16,15 @@ class SyncChangelogDao extends DatabaseAccessor<AppDatabase>
     required String payload,
     required DateTime timestamp,
   }) {
-    return into(syncChangelog).insert(SyncChangelogCompanion.insert(
-      entityType: entityType,
-      entityId: entityId,
-      operation: operation,
-      payload: payload,
-      timestamp: timestamp,
-    ));
+    return into(syncChangelog).insert(
+      SyncChangelogCompanion.insert(
+        entityType: entityType,
+        entityId: entityId,
+        operation: operation,
+        payload: payload,
+        timestamp: timestamp,
+      ),
+    );
   }
 
   Future<List<SyncChangelogData>> getUnsyncedEntries() {
@@ -33,9 +35,9 @@ class SyncChangelogDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<List<SyncChangelogData>> getAllEntries() {
-    return (select(syncChangelog)
-          ..orderBy([(t) => OrderingTerm.asc(t.timestamp)]))
-        .get();
+    return (select(
+      syncChangelog,
+    )..orderBy([(t) => OrderingTerm.asc(t.timestamp)])).get();
   }
 
   Future<void> markSynced(List<int> ids, String changesetId) {
@@ -48,9 +50,9 @@ class SyncChangelogDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<void> deleteOlderThan(DateTime cutoff) {
-    return (delete(syncChangelog)
-          ..where(
-              (t) => t.synced.equals(true) & t.timestamp.isSmallerThanValue(cutoff)))
+    return (delete(syncChangelog)..where(
+          (t) => t.synced.equals(true) & t.timestamp.isSmallerThanValue(cutoff),
+        ))
         .go();
   }
 }

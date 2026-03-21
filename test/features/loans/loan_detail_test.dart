@@ -32,9 +32,7 @@ void main() {
   Widget buildTestApp({LoanViewData? data}) {
     final key = (accountId: 'acc_loan', familyId: 'fam_a');
     return ProviderScope(
-      overrides: [
-        loanViewProvider(key).overrideWith((_) async => data),
-      ],
+      overrides: [loanViewProvider(key).overrideWith((_) async => data)],
       child: const MaterialApp(
         home: LoanDetailScreen(accountId: 'acc_loan', familyId: 'fam_a'),
       ),
@@ -42,8 +40,9 @@ void main() {
   }
 
   group('LoanDetailScreen', () {
-    testWidgets('shows loan summary with principal, rate, tenure',
-        (tester) async {
+    testWidgets('shows loan summary with principal, rate, tenure', (
+      tester,
+    ) async {
       final loan = _fakeLoan();
       final schedule = AmortizationCalculator.generateSchedule(
         principal: loan.principal,
@@ -52,23 +51,29 @@ void main() {
       );
       final enrichment = AmortizationCalculator.enrich(schedule, fromMonth: 24);
 
-      await tester.pumpWidget(buildTestApp(
-        data: LoanViewData(
-          loan: loan,
-          schedule: schedule,
-          enrichment: enrichment,
+      await tester.pumpWidget(
+        buildTestApp(
+          data: LoanViewData(
+            loan: loan,
+            schedule: schedule,
+            enrichment: enrichment,
+          ),
         ),
-      ));
+      );
       await tester.pumpAndSettle();
 
       expect(find.text('Loan Summary'), findsOneWidget);
-      expect(find.textContaining('5,00,00,000'), findsWidgets); // principal in rupees
+      expect(
+        find.textContaining('5,00,00,000'),
+        findsWidgets,
+      ); // principal in rupees
       expect(find.textContaining('8.5%'), findsOneWidget);
       expect(find.textContaining('240 months'), findsOneWidget);
     });
 
-    testWidgets('shows EMI split with principal and interest labels',
-        (tester) async {
+    testWidgets('shows EMI split with principal and interest labels', (
+      tester,
+    ) async {
       final loan = _fakeLoan();
       final schedule = AmortizationCalculator.generateSchedule(
         principal: loan.principal,
@@ -77,13 +82,15 @@ void main() {
       );
       final enrichment = AmortizationCalculator.enrich(schedule, fromMonth: 12);
 
-      await tester.pumpWidget(buildTestApp(
-        data: LoanViewData(
-          loan: loan,
-          schedule: schedule,
-          enrichment: enrichment,
+      await tester.pumpWidget(
+        buildTestApp(
+          data: LoanViewData(
+            loan: loan,
+            schedule: schedule,
+            enrichment: enrichment,
+          ),
         ),
-      ));
+      );
       await tester.pumpAndSettle();
 
       expect(find.text('Next EMI Split'), findsOneWidget);
@@ -108,13 +115,15 @@ void main() {
       );
       final enrichment = AmortizationCalculator.enrich(schedule, fromMonth: 0);
 
-      await tester.pumpWidget(buildTestApp(
-        data: LoanViewData(
-          loan: loan,
-          schedule: schedule,
-          enrichment: enrichment,
+      await tester.pumpWidget(
+        buildTestApp(
+          data: LoanViewData(
+            loan: loan,
+            schedule: schedule,
+            enrichment: enrichment,
+          ),
         ),
-      ));
+      );
       await tester.pumpAndSettle();
 
       expect(find.text('Amortization Schedule'), findsOneWidget);
@@ -131,8 +140,9 @@ void main() {
       expect(find.text('Loan not found'), findsOneWidget);
     });
 
-    testWidgets('shows remaining tenure and interest remaining',
-        (tester) async {
+    testWidgets('shows remaining tenure and interest remaining', (
+      tester,
+    ) async {
       final loan = _fakeLoan();
       final schedule = AmortizationCalculator.generateSchedule(
         principal: loan.principal,
@@ -141,18 +151,21 @@ void main() {
       );
       final enrichment = AmortizationCalculator.enrich(schedule, fromMonth: 24);
 
-      await tester.pumpWidget(buildTestApp(
-        data: LoanViewData(
-          loan: loan,
-          schedule: schedule,
-          enrichment: enrichment,
+      await tester.pumpWidget(
+        buildTestApp(
+          data: LoanViewData(
+            loan: loan,
+            schedule: schedule,
+            enrichment: enrichment,
+          ),
         ),
-      ));
+      );
       await tester.pumpAndSettle();
 
       expect(
-          find.textContaining('${enrichment.remainingTenure} months'),
-          findsOneWidget);
+        find.textContaining('${enrichment.remainingTenure} months'),
+        findsOneWidget,
+      );
       expect(find.textContaining('Interest Remaining'), findsOneWidget);
     });
   });

@@ -9,9 +9,7 @@ void main() {
   Widget buildTestApp({required List<BudgetSummaryRow> rows}) {
     final key = (familyId: 'fam_a', year: 2025, month: 3);
     return ProviderScope(
-      overrides: [
-        budgetSummaryProvider(key).overrideWith((_) async => rows),
-      ],
+      overrides: [budgetSummaryProvider(key).overrideWith((_) async => rows)],
       child: const MaterialApp(
         home: BudgetScreen(familyId: 'fam_a', year: 2025, month: 3),
       ),
@@ -39,14 +37,18 @@ void main() {
     });
 
     testWidgets('budget cards are tappable', (tester) async {
-      await tester.pumpWidget(buildTestApp(rows: [
-        const BudgetSummaryRow(
-          categoryGroup: 'ESSENTIAL',
-          limitAmount: 1000000,
-          actualSpent: 600000,
-          budgetId: 'b1',
+      await tester.pumpWidget(
+        buildTestApp(
+          rows: [
+            const BudgetSummaryRow(
+              categoryGroup: 'ESSENTIAL',
+              limitAmount: 1000000,
+              actualSpent: 600000,
+              budgetId: 'b1',
+            ),
+          ],
         ),
-      ]));
+      );
       await tester.pumpAndSettle();
 
       // Card should have InkWell for tap feedback
@@ -54,14 +56,18 @@ void main() {
     });
 
     testWidgets('tapping a budget card navigates to edit form', (tester) async {
-      await tester.pumpWidget(buildTestApp(rows: [
-        const BudgetSummaryRow(
-          categoryGroup: 'ESSENTIAL',
-          limitAmount: 1000000,
-          actualSpent: 600000,
-          budgetId: 'b1',
+      await tester.pumpWidget(
+        buildTestApp(
+          rows: [
+            const BudgetSummaryRow(
+              categoryGroup: 'ESSENTIAL',
+              limitAmount: 1000000,
+              actualSpent: 600000,
+              budgetId: 'b1',
+            ),
+          ],
         ),
-      ]));
+      );
       await tester.pumpAndSettle();
 
       await tester.tap(find.text('Essential'));
@@ -71,14 +77,18 @@ void main() {
     });
 
     testWidgets('shows remaining amount on budget cards', (tester) async {
-      await tester.pumpWidget(buildTestApp(rows: [
-        const BudgetSummaryRow(
-          categoryGroup: 'ESSENTIAL',
-          limitAmount: 1000000, // ₹10,000
-          actualSpent: 600000, // ₹6,000
-          budgetId: 'b1',
+      await tester.pumpWidget(
+        buildTestApp(
+          rows: [
+            const BudgetSummaryRow(
+              categoryGroup: 'ESSENTIAL',
+              limitAmount: 1000000, // ₹10,000
+              actualSpent: 600000, // ₹6,000
+              budgetId: 'b1',
+            ),
+          ],
         ),
-      ]));
+      );
       await tester.pumpAndSettle();
 
       // Remaining: ₹4,000
@@ -86,8 +96,9 @@ void main() {
       expect(find.textContaining('remaining'), findsOneWidget);
     });
 
-    testWidgets('budget form has category group dropdown and amount field',
-        (tester) async {
+    testWidgets('budget form has category group dropdown and amount field', (
+      tester,
+    ) async {
       await tester.pumpWidget(buildTestApp(rows: []));
       await tester.pumpAndSettle();
 

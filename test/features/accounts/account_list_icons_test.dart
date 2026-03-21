@@ -32,31 +32,40 @@ void main() {
   Widget buildTestApp({required AccountGroups groups}) {
     return ProviderScope(
       overrides: [
-        groupedAccountsProvider('fam_a')
-            .overrideWith((_) => Stream.value(groups)),
+        groupedAccountsProvider(
+          'fam_a',
+        ).overrideWith((_) => Stream.value(groups)),
       ],
-      child: const MaterialApp(
-        home: AccountListScreen(familyId: 'fam_a'),
-      ),
+      child: const MaterialApp(home: AccountListScreen(familyId: 'fam_a')),
     );
   }
 
   group('Account List Icons + Coloring', () {
     testWidgets('shows type-specific icons for accounts', (tester) async {
-      await tester.pumpWidget(buildTestApp(
-        groups: AccountGroups(
-          banking: [
-            _fakeAccount(
-                id: 'a1', name: 'Savings', type: 'savings', balance: 100000),
-          ],
-          investments: [],
-          loans: [],
-          creditCards: [
-            _fakeAccount(
-                id: 'a2', name: 'HDFC CC', type: 'creditCard', balance: 50000),
-          ],
+      await tester.pumpWidget(
+        buildTestApp(
+          groups: AccountGroups(
+            banking: [
+              _fakeAccount(
+                id: 'a1',
+                name: 'Savings',
+                type: 'savings',
+                balance: 100000,
+              ),
+            ],
+            investments: [],
+            loans: [],
+            creditCards: [
+              _fakeAccount(
+                id: 'a2',
+                name: 'HDFC CC',
+                type: 'creditCard',
+                balance: 50000,
+              ),
+            ],
+          ),
         ),
-      ));
+      );
       await tester.pumpAndSettle();
 
       expect(find.byIcon(Icons.account_balance), findsOneWidget);
@@ -64,22 +73,27 @@ void main() {
     });
 
     testWidgets('shows red balance for liability accounts', (tester) async {
-      await tester.pumpWidget(buildTestApp(
-        groups: AccountGroups(
-          banking: [],
-          investments: [],
-          loans: [
-            _fakeAccount(
-                id: 'a1', name: 'Home Loan', type: 'loan', balance: 5000000),
-          ],
-          creditCards: [],
+      await tester.pumpWidget(
+        buildTestApp(
+          groups: AccountGroups(
+            banking: [],
+            investments: [],
+            loans: [
+              _fakeAccount(
+                id: 'a1',
+                name: 'Home Loan',
+                type: 'loan',
+                balance: 5000000,
+              ),
+            ],
+            creditCards: [],
+          ),
         ),
-      ));
+      );
       await tester.pumpAndSettle();
 
       // Find the balance text widget and check its color is expense/negative
-      final balanceText =
-          tester.widget<Text>(find.textContaining('50,000'));
+      final balanceText = tester.widget<Text>(find.textContaining('50,000'));
       expect(balanceText.style?.color, isNotNull);
       // Loan balance should be colored as expense (red)
     });

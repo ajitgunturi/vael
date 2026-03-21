@@ -12,9 +12,7 @@ class VaelApp extends StatelessWidget {
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
       themeMode: ThemeMode.system,
-      home: const Scaffold(
-        body: Center(child: Text('Vael')),
-      ),
+      home: const Scaffold(body: Center(child: Text('Vael'))),
     );
   }
 }

@@ -109,7 +109,11 @@ void main() {
       }
 
       final entries = await dao.getAllEntries();
-      expect(entries.map((e) => e.operation).toSet(), {'INSERT', 'UPDATE', 'DELETE'});
+      expect(entries.map((e) => e.operation).toSet(), {
+        'INSERT',
+        'UPDATE',
+        'DELETE',
+      });
     });
 
     test('deleteOlderThan removes synced entries before cutoff', () async {

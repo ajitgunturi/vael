@@ -32,9 +32,7 @@ void main() {
   Widget buildTestApp(LoanViewData data) {
     final key = (accountId: 'acc_loan', familyId: 'fam_a');
     return ProviderScope(
-      overrides: [
-        loanViewProvider(key).overrideWith((_) async => data),
-      ],
+      overrides: [loanViewProvider(key).overrideWith((_) async => data)],
       child: const MaterialApp(
         home: LoanDetailScreen(accountId: 'acc_loan', familyId: 'fam_a'),
       ),
@@ -80,8 +78,9 @@ void main() {
       expect(find.text('Show More'), findsNothing);
     });
 
-    testWidgets('does not show "Show More" for short schedules (≤12)',
-        (tester) async {
+    testWidgets('does not show "Show More" for short schedules (≤12)', (
+      tester,
+    ) async {
       final data = _buildLoanData(tenureMonths: 10);
       await tester.pumpWidget(buildTestApp(data));
       await tester.pumpAndSettle();

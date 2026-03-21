@@ -23,11 +23,13 @@ class InMemoryDriveClient implements DriveClientInterface {
   @override
   Future<void> uploadChangeset(String fileName, Uint8List data) async {
     uploads[fileName] = data;
-    _changesetFiles.add(DriveFileEntry(
-      id: fileName,
-      name: fileName,
-      modifiedTime: DateTime.now().toUtc(),
-    ));
+    _changesetFiles.add(
+      DriveFileEntry(
+        id: fileName,
+        name: fileName,
+        modifiedTime: DateTime.now().toUtc(),
+      ),
+    );
   }
 
   @override
@@ -38,9 +40,7 @@ class InMemoryDriveClient implements DriveClientInterface {
   @override
   Future<List<DriveFileEntry>> listChangesets({DateTime? after}) async {
     if (after == null) return _changesetFiles;
-    return _changesetFiles
-        .where((f) => f.modifiedTime.isAfter(after))
-        .toList();
+    return _changesetFiles.where((f) => f.modifiedTime.isAfter(after)).toList();
   }
 
   @override

@@ -6,8 +6,10 @@ import 'database_providers.dart';
 /// Streams all non-deleted accounts for [familyId].
 ///
 /// Rebuilds automatically when the accounts table changes (drift stream).
-final accountsProvider =
-    StreamProvider.family<List<Account>, String>((ref, familyId) {
+final accountsProvider = StreamProvider.family<List<Account>, String>((
+  ref,
+  familyId,
+) {
   final dao = ref.watch(accountDaoProvider);
   return dao.watchAll(familyId);
 });
@@ -22,8 +24,7 @@ const _liabilityTypes = {'creditCard', 'loan'};
 ///
 /// Only includes accounts with visibility `shared` or `familyWide`.
 /// Excludes `private_` accounts from the family-level calculation.
-final netWorthProvider =
-    StreamProvider.family<int, String>((ref, familyId) {
+final netWorthProvider = StreamProvider.family<int, String>((ref, familyId) {
   final dao = ref.watch(accountDaoProvider);
   return dao.watchAll(familyId).map((accounts) {
     int netWorth = 0;

@@ -1,12 +1,7 @@
 import 'financial_math.dart';
 
 /// Goal tracking status — computed from progress vs timeline.
-enum GoalTrackingStatus {
-  active,
-  onTrack,
-  atRisk,
-  completed,
-}
+enum GoalTrackingStatus { active, onTrack, atRisk, completed }
 
 /// Point-in-time snapshot of a goal's computed state.
 class GoalSnapshot {

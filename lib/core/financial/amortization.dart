@@ -86,14 +86,16 @@ class AmortizationCalculator {
         newOutstanding = 0;
       }
 
-      rows.add(AmortizationRow(
-        month: month,
-        emi: interestComponent + principalComponent,
-        principal: principalComponent,
-        interest: interestComponent,
-        prepayment: prepayment,
-        outstanding: newOutstanding.round(),
-      ));
+      rows.add(
+        AmortizationRow(
+          month: month,
+          emi: interestComponent + principalComponent,
+          principal: principalComponent,
+          interest: interestComponent,
+          prepayment: prepayment,
+          outstanding: newOutstanding.round(),
+        ),
+      );
 
       outstanding = newOutstanding;
     }
@@ -109,21 +111,24 @@ class AmortizationCalculator {
     List<AmortizationRow> schedule, {
     int fromMonth = 0,
   }) {
-    final futureRows =
-        schedule.where((r) => r.month > fromMonth).toList();
+    final futureRows = schedule.where((r) => r.month > fromMonth).toList();
 
     final remainingTenure = futureRows.length;
 
-    final totalInterestRemaining =
-        futureRows.fold<int>(0, (sum, r) => sum + r.interest);
+    final totalInterestRemaining = futureRows.fold<int>(
+      0,
+      (sum, r) => sum + r.interest,
+    );
 
-    final totalPrepaidPrincipal =
-        schedule.fold<int>(0, (sum, r) => sum + r.prepayment);
+    final totalPrepaidPrincipal = schedule.fold<int>(
+      0,
+      (sum, r) => sum + r.prepayment,
+    );
 
-    final nextPrincipal =
-        futureRows.isNotEmpty ? futureRows.first.principal : 0;
-    final nextInterest =
-        futureRows.isNotEmpty ? futureRows.first.interest : 0;
+    final nextPrincipal = futureRows.isNotEmpty
+        ? futureRows.first.principal
+        : 0;
+    final nextInterest = futureRows.isNotEmpty ? futureRows.first.interest : 0;
 
     return AmortizationEnrichment(
       remainingTenure: remainingTenure,
@@ -142,10 +147,14 @@ class AmortizationCalculator {
     required List<AmortizationRow> baseSchedule,
     required List<AmortizationRow> prepaySchedule,
   }) {
-    final baseInterest =
-        baseSchedule.fold<int>(0, (sum, r) => sum + r.interest);
-    final prepayInterest =
-        prepaySchedule.fold<int>(0, (sum, r) => sum + r.interest);
+    final baseInterest = baseSchedule.fold<int>(
+      0,
+      (sum, r) => sum + r.interest,
+    );
+    final prepayInterest = prepaySchedule.fold<int>(
+      0,
+      (sum, r) => sum + r.interest,
+    );
     return baseInterest - prepayInterest;
   }
 }

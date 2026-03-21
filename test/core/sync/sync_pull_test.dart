@@ -17,9 +17,7 @@ class MockDriveClient implements DriveClientInterface {
   @override
   Future<List<DriveFileEntry>> listChangesets({DateTime? after}) async {
     if (after == null) return files;
-    return files
-        .where((f) => f.modifiedTime.isAfter(after))
-        .toList();
+    return files.where((f) => f.modifiedTime.isAfter(after)).toList();
   }
 
   @override
@@ -38,17 +36,23 @@ class MockDriveClient implements DriveClientInterface {
   @override
   Future<void> writeManifest(Map<String, dynamic> manifest) async {}
 
-  void addEncryptedChangeset(String fileId, Changeset changeset,
-      Uint8List fek, DateTime modifiedTime) {
+  void addEncryptedChangeset(
+    String fileId,
+    Changeset changeset,
+    Uint8List fek,
+    DateTime modifiedTime,
+  ) {
     final serializer = ChangesetSerializer();
     final bytes = serializer.toBytes(changeset);
     final encrypted = AesGcm().encrypt(bytes, fek);
 
-    files.add(DriveFileEntry(
-      id: fileId,
-      name: '$fileId.enc',
-      modifiedTime: modifiedTime,
-    ));
+    files.add(
+      DriveFileEntry(
+        id: fileId,
+        name: '$fileId.enc',
+        modifiedTime: modifiedTime,
+      ),
+    );
     fileData[fileId] = encrypted;
   }
 }
@@ -182,10 +186,7 @@ void main() {
     test('only fetches changesets after last pull time', () async {
       await stateDao.initDevice('device-B');
       // Simulate a previous pull
-      await stateDao.recordPull(
-        'device-B',
-        DateTime.utc(2026, 3, 20, 9, 0),
-      );
+      await stateDao.recordPull('device-B', DateTime.utc(2026, 3, 20, 9, 0));
 
       // Old changeset (before last pull) — should be skipped by listChangesets
       driveClient.addEncryptedChangeset(
@@ -287,7 +288,12 @@ void main() {
           sequence: 2,
           timestamp: DateTime.utc(2026, 3, 20, 11, 0),
           operations: [
-            SyncOperation(op: OpType.insert, table: 't', id: 'second', data: {}),
+            SyncOperation(
+              op: OpType.insert,
+              table: 't',
+              id: 'second',
+              data: {},
+            ),
           ],
         ),
         fek,

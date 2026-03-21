@@ -19,18 +19,26 @@ void main() {
 
   /// Seeds minimal family + user rows so foreign keys are satisfied.
   Future<void> _seedFamily(String familyId) async {
-    await db.into(db.families).insert(FamiliesCompanion.insert(
-          id: familyId,
-          name: 'Family $familyId',
-          createdAt: DateTime(2025),
-        ));
-    await db.into(db.users).insert(UsersCompanion.insert(
-          id: 'user_$familyId',
-          email: '$familyId@test.com',
-          displayName: 'User $familyId',
-          role: 'admin',
-          familyId: familyId,
-        ));
+    await db
+        .into(db.families)
+        .insert(
+          FamiliesCompanion.insert(
+            id: familyId,
+            name: 'Family $familyId',
+            createdAt: DateTime(2025),
+          ),
+        );
+    await db
+        .into(db.users)
+        .insert(
+          UsersCompanion.insert(
+            id: 'user_$familyId',
+            email: '$familyId@test.com',
+            displayName: 'User $familyId',
+            role: 'admin',
+            familyId: familyId,
+          ),
+        );
   }
 
   Future<void> _insertAccount({
@@ -39,16 +47,20 @@ void main() {
     String type = 'savings',
     DateTime? deletedAt,
   }) async {
-    await db.into(db.accounts).insert(AccountsCompanion(
-          id: Value(id),
-          name: Value('Account $id'),
-          type: Value(type),
-          balance: const Value(0),
-          visibility: const Value('shared'),
-          familyId: Value(familyId),
-          userId: Value('user_$familyId'),
-          deletedAt: Value(deletedAt),
-        ));
+    await db
+        .into(db.accounts)
+        .insert(
+          AccountsCompanion(
+            id: Value(id),
+            name: Value('Account $id'),
+            type: Value(type),
+            balance: const Value(0),
+            visibility: const Value('shared'),
+            familyId: Value(familyId),
+            userId: Value('user_$familyId'),
+            deletedAt: Value(deletedAt),
+          ),
+        );
   }
 
   group('AccountDao', () {
@@ -86,8 +98,7 @@ void main() {
       await _seedFamily('fam_a');
 
       await _insertAccount(id: 'acc_1', familyId: 'fam_a', type: 'savings');
-      await _insertAccount(
-          id: 'acc_2', familyId: 'fam_a', type: 'creditCard');
+      await _insertAccount(id: 'acc_2', familyId: 'fam_a', type: 'creditCard');
       await _insertAccount(id: 'acc_3', familyId: 'fam_a', type: 'savings');
 
       final results = await dao.getByType('fam_a', 'savings');
@@ -150,9 +161,9 @@ void main() {
       expect(results, isEmpty);
 
       // But the row still exists in the raw table
-      final raw = await (db.select(db.accounts)
-            ..where((t) => t.id.equals('acc_1')))
-          .getSingle();
+      final raw = await (db.select(
+        db.accounts,
+      )..where((t) => t.id.equals('acc_1'))).getSingle();
       expect(raw.deletedAt, isNotNull);
     });
   });

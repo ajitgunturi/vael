@@ -120,8 +120,9 @@ void main() {
 
       final uploaded = driveClient.uploads.values.first;
       final decrypted = AesGcm().decrypt(uploaded, fek);
-      final changeset =
-          ChangesetSerializer().deserialize(utf8.decode(decrypted));
+      final changeset = ChangesetSerializer().deserialize(
+        utf8.decode(decrypted),
+      );
 
       expect(changeset.deviceId, 'device-A');
       expect(changeset.operations, hasLength(1));
@@ -146,8 +147,9 @@ void main() {
       expect(driveClient.uploads, hasLength(1));
       final uploaded = driveClient.uploads.values.first;
       final decrypted = AesGcm().decrypt(uploaded, fek);
-      final changeset =
-          ChangesetSerializer().deserialize(utf8.decode(decrypted));
+      final changeset = ChangesetSerializer().deserialize(
+        utf8.decode(decrypted),
+      );
       expect(changeset.operations, hasLength(5));
     });
 

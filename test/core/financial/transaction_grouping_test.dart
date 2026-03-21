@@ -16,18 +16,13 @@ void main() {
     });
 
     test('groups yesterday transactions under "Yesterday"', () {
-      final dates = [
-        DateTime(2025, 3, 14, 9, 0),
-      ];
+      final dates = [DateTime(2025, 3, 14, 9, 0)];
       final groups = TransactionGrouping.groupByDate(dates, referenceDate: now);
       expect(groups.keys.first, 'Yesterday');
     });
 
     test('groups older dates under "dd MMM" format', () {
-      final dates = [
-        DateTime(2025, 3, 10, 12, 0),
-        DateTime(2025, 2, 28, 8, 0),
-      ];
+      final dates = [DateTime(2025, 3, 10, 12, 0), DateTime(2025, 2, 28, 8, 0)];
       final groups = TransactionGrouping.groupByDate(dates, referenceDate: now);
       expect(groups.keys, containsAll(['10 Mar', '28 Feb']));
     });
@@ -45,8 +40,10 @@ void main() {
     });
 
     test('returns empty map for empty input', () {
-      final groups =
-          TransactionGrouping.groupByDate(<DateTime>[], referenceDate: now);
+      final groups = TransactionGrouping.groupByDate(
+        <DateTime>[],
+        referenceDate: now,
+      );
       expect(groups, isEmpty);
     });
 
@@ -66,10 +63,7 @@ void main() {
   group('TransactionGrouping.filterBySearch', () {
     test('filters by description substring case-insensitively', () {
       final descriptions = ['March Salary', 'Groceries', 'Netflix'];
-      final results = TransactionGrouping.matchesSearch(
-        descriptions,
-        'groc',
-      );
+      final results = TransactionGrouping.matchesSearch(descriptions, 'groc');
       expect(results, ['Groceries']);
     });
 

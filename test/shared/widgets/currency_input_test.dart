@@ -7,10 +7,7 @@ void main() {
     Widget wrap({TextEditingController? controller}) {
       return MaterialApp(
         home: Scaffold(
-          body: CurrencyInput(
-            label: 'Amount',
-            controller: controller,
-          ),
+          body: CurrencyInput(label: 'Amount', controller: controller),
         ),
       );
     }
@@ -20,8 +17,9 @@ void main() {
       expect(find.text('₹ '), findsOneWidget);
     });
 
-    testWidgets('formats input with Indian commas as user types',
-        (tester) async {
+    testWidgets('formats input with Indian commas as user types', (
+      tester,
+    ) async {
       final controller = TextEditingController();
       await tester.pumpWidget(wrap(controller: controller));
       await tester.pumpAndSettle();

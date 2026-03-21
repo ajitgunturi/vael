@@ -11,24 +11,24 @@ class LoanDao extends DatabaseAccessor<AppDatabase> with _$LoanDaoMixin {
 
   /// Returns the loan detail for a specific [accountId] within [familyId].
   Future<LoanDetail?> getByAccountId(String accountId, String familyId) {
-    return (select(loanDetails)
-          ..where((l) =>
-              l.accountId.equals(accountId) & l.familyId.equals(familyId)))
+    return (select(loanDetails)..where(
+          (l) => l.accountId.equals(accountId) & l.familyId.equals(familyId),
+        ))
         .getSingleOrNull();
   }
 
   /// Returns all loan details for [familyId].
   Future<List<LoanDetail>> getAll(String familyId) {
-    return (select(loanDetails)
-          ..where((l) => l.familyId.equals(familyId)))
-        .get();
+    return (select(
+      loanDetails,
+    )..where((l) => l.familyId.equals(familyId))).get();
   }
 
   /// Watches a single loan detail by [accountId].
   Stream<LoanDetail?> watchByAccountId(String accountId, String familyId) {
-    return (select(loanDetails)
-          ..where((l) =>
-              l.accountId.equals(accountId) & l.familyId.equals(familyId)))
+    return (select(loanDetails)..where(
+          (l) => l.accountId.equals(accountId) & l.familyId.equals(familyId),
+        ))
         .watchSingleOrNull();
   }
 
@@ -39,7 +39,8 @@ class LoanDao extends DatabaseAccessor<AppDatabase> with _$LoanDaoMixin {
 
   /// Updates outstanding principal after a payment or prepayment.
   Future<int> updateOutstanding(String id, int newOutstanding) {
-    return (update(loanDetails)..where((l) => l.id.equals(id)))
-        .write(LoanDetailsCompanion(outstandingPrincipal: Value(newOutstanding)));
+    return (update(loanDetails)..where((l) => l.id.equals(id))).write(
+      LoanDetailsCompanion(outstandingPrincipal: Value(newOutstanding)),
+    );
   }
 }

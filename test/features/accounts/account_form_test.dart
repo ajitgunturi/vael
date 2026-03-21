@@ -20,18 +20,26 @@ void main() {
   });
 
   Future<void> _seedFamily(String familyId) async {
-    await db.into(db.families).insert(FamiliesCompanion.insert(
-          id: familyId,
-          name: 'Test Family',
-          createdAt: DateTime(2025),
-        ));
-    await db.into(db.users).insert(UsersCompanion.insert(
-          id: 'user_$familyId',
-          email: '$familyId@test.com',
-          displayName: 'User',
-          role: 'admin',
-          familyId: familyId,
-        ));
+    await db
+        .into(db.families)
+        .insert(
+          FamiliesCompanion.insert(
+            id: familyId,
+            name: 'Test Family',
+            createdAt: DateTime(2025),
+          ),
+        );
+    await db
+        .into(db.users)
+        .insert(
+          UsersCompanion.insert(
+            id: 'user_$familyId',
+            email: '$familyId@test.com',
+            displayName: 'User',
+            role: 'admin',
+            familyId: familyId,
+          ),
+        );
   }
 
   Widget buildTestApp({
@@ -81,11 +89,13 @@ void main() {
   }
 
   group('AccountFormScreen — create mode', () {
-    testWidgets('shows form fields for name, type, balance, visibility',
-        (tester) async {
+    testWidgets('shows form fields for name, type, balance, visibility', (
+      tester,
+    ) async {
       await _seedFamily('fam_a');
       await tester.pumpWidget(
-          buildDirectForm(familyId: 'fam_a', userId: 'user_fam_a'));
+        buildDirectForm(familyId: 'fam_a', userId: 'user_fam_a'),
+      );
       await tester.pumpAndSettle();
 
       expect(find.text('Account Name'), findsOneWidget);
@@ -97,7 +107,8 @@ void main() {
     testWidgets('validates that name is required', (tester) async {
       await _seedFamily('fam_a');
       await tester.pumpWidget(
-          buildDirectForm(familyId: 'fam_a', userId: 'user_fam_a'));
+        buildDirectForm(familyId: 'fam_a', userId: 'user_fam_a'),
+      );
       await tester.pumpAndSettle();
 
       await tester.tap(find.text('Save'));
@@ -111,7 +122,8 @@ void main() {
 
       // Use navigation harness so Navigator.pop works
       await tester.pumpWidget(
-          buildTestApp(familyId: 'fam_a', userId: 'user_fam_a'));
+        buildTestApp(familyId: 'fam_a', userId: 'user_fam_a'),
+      );
       await tester.pumpAndSettle();
 
       // Navigate to form
@@ -120,11 +132,15 @@ void main() {
 
       // Enter name
       await tester.enterText(
-          find.widgetWithText(TextFormField, 'Account Name'), 'New Savings');
+        find.widgetWithText(TextFormField, 'Account Name'),
+        'New Savings',
+      );
 
       // Enter balance
       await tester.enterText(
-          find.widgetWithText(TextFormField, 'Opening Balance'), '5000');
+        find.widgetWithText(TextFormField, 'Opening Balance'),
+        '5000',
+      );
 
       // Tap save — use runAsync for DB write + Navigator.pop
       await tester.runAsync(() async {
@@ -144,7 +160,8 @@ void main() {
     testWidgets('account type defaults to savings', (tester) async {
       await _seedFamily('fam_a');
       await tester.pumpWidget(
-          buildDirectForm(familyId: 'fam_a', userId: 'user_fam_a'));
+        buildDirectForm(familyId: 'fam_a', userId: 'user_fam_a'),
+      );
       await tester.pumpAndSettle();
 
       expect(find.text('Savings'), findsWidgets);
@@ -153,7 +170,8 @@ void main() {
     testWidgets('allows selecting account type from dropdown', (tester) async {
       await _seedFamily('fam_a');
       await tester.pumpWidget(
-          buildDirectForm(familyId: 'fam_a', userId: 'user_fam_a'));
+        buildDirectForm(familyId: 'fam_a', userId: 'user_fam_a'),
+      );
       await tester.pumpAndSettle();
 
       // Tap the current dropdown value to open it
@@ -168,7 +186,8 @@ void main() {
     testWidgets('visibility defaults to shared', (tester) async {
       await _seedFamily('fam_a');
       await tester.pumpWidget(
-          buildDirectForm(familyId: 'fam_a', userId: 'user_fam_a'));
+        buildDirectForm(familyId: 'fam_a', userId: 'user_fam_a'),
+      );
       await tester.pumpAndSettle();
 
       expect(find.text('Shared'), findsWidgets);
@@ -178,25 +197,31 @@ void main() {
   group('AccountFormScreen — edit mode', () {
     testWidgets('pre-fills form with existing account data', (tester) async {
       await _seedFamily('fam_a');
-      await db.into(db.accounts).insert(AccountsCompanion(
-            id: const Value('existing'),
-            name: const Value('HDFC Savings'),
-            type: const Value('savings'),
-            balance: const Value(324567),
-            visibility: const Value('shared'),
-            familyId: const Value('fam_a'),
-            userId: const Value('user_fam_a'),
-          ));
+      await db
+          .into(db.accounts)
+          .insert(
+            AccountsCompanion(
+              id: const Value('existing'),
+              name: const Value('HDFC Savings'),
+              type: const Value('savings'),
+              balance: const Value(324567),
+              visibility: const Value('shared'),
+              familyId: const Value('fam_a'),
+              userId: const Value('user_fam_a'),
+            ),
+          );
 
-      final account = await (db.select(db.accounts)
-            ..where((a) => a.id.equals('existing')))
-          .getSingle();
+      final account = await (db.select(
+        db.accounts,
+      )..where((a) => a.id.equals('existing'))).getSingle();
 
-      await tester.pumpWidget(buildDirectForm(
-        familyId: 'fam_a',
-        userId: 'user_fam_a',
-        existingAccount: account,
-      ));
+      await tester.pumpWidget(
+        buildDirectForm(
+          familyId: 'fam_a',
+          userId: 'user_fam_a',
+          existingAccount: account,
+        ),
+      );
       await tester.pumpAndSettle();
 
       expect(

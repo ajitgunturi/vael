@@ -38,26 +38,24 @@ void main() {
   }) {
     return ProviderScope(
       overrides: [
-        groupedAccountsProvider(familyId)
-            .overrideWith((_) => Stream.value(groups)),
+        groupedAccountsProvider(
+          familyId,
+        ).overrideWith((_) => Stream.value(groups)),
       ],
-      child: MaterialApp(
-        home: AccountListScreen(familyId: familyId),
-      ),
+      child: MaterialApp(home: AccountListScreen(familyId: familyId)),
     );
   }
 
   group('AccountListScreen', () {
-    testWidgets('shows grouped accounts under section headers',
-        (tester) async {
+    testWidgets('shows grouped accounts under section headers', (tester) async {
       final groups = AccountGroups(
         banking: [_fakeAccount(id: 'sav', name: 'HDFC Savings')],
         investments: [
-          _fakeAccount(id: 'inv', name: 'Zerodha', type: 'investment')
+          _fakeAccount(id: 'inv', name: 'Zerodha', type: 'investment'),
         ],
         loans: [],
         creditCards: [
-          _fakeAccount(id: 'cc', name: 'SBI Credit', type: 'creditCard')
+          _fakeAccount(id: 'cc', name: 'SBI Credit', type: 'creditCard'),
         ],
       );
 
@@ -80,7 +78,7 @@ void main() {
             id: 'sav',
             name: 'HDFC Savings',
             balance: 32456700, // ₹3,24,567
-          )
+          ),
         ],
         investments: [],
         loans: [],
@@ -96,9 +94,16 @@ void main() {
     testWidgets('shows visibility badge for each account', (tester) async {
       final groups = AccountGroups(
         banking: [
-          _fakeAccount(id: 'shared', name: 'Shared Account', visibility: 'shared'),
           _fakeAccount(
-              id: 'priv', name: 'Private Account', visibility: 'private_'),
+            id: 'shared',
+            name: 'Shared Account',
+            visibility: 'shared',
+          ),
+          _fakeAccount(
+            id: 'priv',
+            name: 'Private Account',
+            visibility: 'private_',
+          ),
         ],
         investments: [],
         loans: [],

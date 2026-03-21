@@ -18,18 +18,26 @@ void main() {
   });
 
   Future<void> _seedFamily(String familyId) async {
-    await db.into(db.families).insert(FamiliesCompanion.insert(
-          id: familyId,
-          name: 'Family $familyId',
-          createdAt: DateTime(2025),
-        ));
-    await db.into(db.users).insert(UsersCompanion.insert(
-          id: 'user_$familyId',
-          email: '$familyId@test.com',
-          displayName: 'User $familyId',
-          role: 'admin',
-          familyId: familyId,
-        ));
+    await db
+        .into(db.families)
+        .insert(
+          FamiliesCompanion.insert(
+            id: familyId,
+            name: 'Family $familyId',
+            createdAt: DateTime(2025),
+          ),
+        );
+    await db
+        .into(db.users)
+        .insert(
+          UsersCompanion.insert(
+            id: 'user_$familyId',
+            email: '$familyId@test.com',
+            displayName: 'User $familyId',
+            role: 'admin',
+            familyId: familyId,
+          ),
+        );
   }
 
   Future<void> _insertGoal({
@@ -39,16 +47,18 @@ void main() {
     String status = 'active',
     int currentSavings = 0,
   }) async {
-    await dao.insertGoal(GoalsCompanion(
-      id: Value(id),
-      name: Value('Goal $id'),
-      targetAmount: Value(targetAmount),
-      targetDate: Value(DateTime(2030, 1, 1)),
-      currentSavings: Value(currentSavings),
-      status: Value(status),
-      familyId: Value(familyId),
-      createdAt: Value(DateTime(2025)),
-    ));
+    await dao.insertGoal(
+      GoalsCompanion(
+        id: Value(id),
+        name: Value('Goal $id'),
+        targetAmount: Value(targetAmount),
+        targetDate: Value(DateTime(2030, 1, 1)),
+        currentSavings: Value(currentSavings),
+        status: Value(status),
+        familyId: Value(familyId),
+        createdAt: Value(DateTime(2025)),
+      ),
+    );
   }
 
   group('GoalDao', () {
@@ -101,7 +111,11 @@ void main() {
     test('updateProgress updates savings and status', () async {
       await _seedFamily('fam_a');
       await _insertGoal(
-          id: 'g1', familyId: 'fam_a', currentSavings: 0, status: 'active');
+        id: 'g1',
+        familyId: 'fam_a',
+        currentSavings: 0,
+        status: 'active',
+      );
 
       final updated = await dao.updateProgress(
         'g1',

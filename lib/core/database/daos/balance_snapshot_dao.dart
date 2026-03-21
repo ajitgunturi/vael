@@ -30,10 +30,12 @@ class BalanceSnapshotDao extends DatabaseAccessor<AppDatabase>
     DateTime end,
   ) {
     return (select(balanceSnapshots)
-          ..where((s) =>
-              s.familyId.equals(familyId) &
-              s.snapshotDate.isBiggerOrEqualValue(start) &
-              s.snapshotDate.isSmallerOrEqualValue(end))
+          ..where(
+            (s) =>
+                s.familyId.equals(familyId) &
+                s.snapshotDate.isBiggerOrEqualValue(start) &
+                s.snapshotDate.isSmallerOrEqualValue(end),
+          )
           ..orderBy([(s) => OrderingTerm.asc(s.snapshotDate)]))
         .get();
   }

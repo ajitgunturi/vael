@@ -45,7 +45,10 @@ class DashboardScreen extends ConsumerWidget {
       ),
       body: dataAsync.when(
         data: (data) => _DashboardBody(
-              data: data, goals: goals, onNavigateToTab: onNavigateToTab),
+          data: data,
+          goals: goals,
+          onNavigateToTab: onNavigateToTab,
+        ),
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Error: $e')),
       ),
@@ -64,8 +67,7 @@ class _ScopeToggle extends StatelessWidget {
     return SegmentedButton<DashboardScope>(
       segments: const [
         ButtonSegment(value: DashboardScope.family, label: Text('Family')),
-        ButtonSegment(
-            value: DashboardScope.personal, label: Text('Personal')),
+        ButtonSegment(value: DashboardScope.personal, label: Text('Personal')),
       ],
       selected: {scope},
       onSelectionChanged: (s) => onChanged(s.first),
@@ -129,27 +131,28 @@ class _HeroNetWorthCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(Spacing.cardRadius),
         onTap: onTap,
         child: Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: Spacing.lg,
-          horizontal: Spacing.md,
+          padding: const EdgeInsets.symmetric(
+            vertical: Spacing.lg,
+            horizontal: Spacing.md,
+          ),
+          child: Column(
+            children: [
+              Text(
+                'Net Worth',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: tokens.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: Spacing.sm),
+              Text(
+                '$sign₹$formatted',
+                style: Theme.of(
+                  context,
+                ).textTheme.displayLarge?.copyWith(color: color),
+              ),
+            ],
+          ),
         ),
-        child: Column(
-          children: [
-            Text('Net Worth',
-                style: Theme.of(context)
-                    .textTheme
-                    .titleMedium
-                    ?.copyWith(color: tokens.onSurfaceVariant)),
-            const SizedBox(height: Spacing.sm),
-            Text(
-              '$sign₹$formatted',
-              style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                    color: color,
-                  ),
-            ),
-          ],
-        ),
-      ),
       ),
     );
   }
@@ -225,11 +228,13 @@ class _CompactTile extends StatelessWidget {
             children: [
               Text(label, style: Theme.of(context).textTheme.labelSmall),
               const SizedBox(height: Spacing.xs),
-              Text(value,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyMedium
-                      ?.copyWith(color: color, fontWeight: FontWeight.w600)),
+              Text(
+                value,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: color,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ],
           ),
         ),
@@ -341,12 +346,16 @@ class _GoalTile extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(goal.name,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        )),
-                Text(status.label,
-                    style: TextStyle(color: status.color, fontSize: 12)),
+                Text(
+                  goal.name,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
+                ),
+                Text(
+                  status.label,
+                  style: TextStyle(color: status.color, fontSize: 12),
+                ),
               ],
             ),
             const SizedBox(height: Spacing.sm),
@@ -371,7 +380,9 @@ class _GoalTile extends StatelessWidget {
   }
 
   static ({String label, Color color}) _statusLabel(
-      String status, ColorTokens tokens) {
+    String status,
+    ColorTokens tokens,
+  ) {
     return switch (status) {
       'completed' => (label: 'Completed', color: tokens.income),
       'onTrack' => (label: 'On Track', color: tokens.income),

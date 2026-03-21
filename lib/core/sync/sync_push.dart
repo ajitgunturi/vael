@@ -66,17 +66,16 @@ class SyncPush {
     final bytes = serializer.toBytes(changeset);
     final encrypted = aesGcm.encrypt(bytes, fek);
 
-    final timestamp =
-        DateTime.now().toUtc().toIso8601String().replaceAll(':', '-');
+    final timestamp = DateTime.now().toUtc().toIso8601String().replaceAll(
+      ':',
+      '-',
+    );
     final fileName =
         '${timestamp}_${deviceId}_${'$sequence'.padLeft(3, '0')}.enc';
 
     await driveClient.uploadChangeset(fileName, encrypted);
 
-    await changelogDao.markSynced(
-      entries.map((e) => e.id).toList(),
-      fileName,
-    );
+    await changelogDao.markSynced(entries.map((e) => e.id).toList(), fileName);
     await stateDao.recordPush(deviceId, DateTime.now().toUtc());
   }
 }

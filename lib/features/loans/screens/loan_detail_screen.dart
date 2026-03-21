@@ -76,21 +76,42 @@ class _SummaryCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Loan Summary',
-                style: Theme.of(context).textTheme.titleMedium),
+            Text(
+              'Loan Summary',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             const SizedBox(height: 12),
-            _row(context, 'Principal',
-                '₹${formatIndianNumber(loan.principal ~/ 100)}'),
-            _row(context, 'Interest Rate',
-                '${(loan.annualRate * 100).toStringAsFixed(1)}%'),
+            _row(
+              context,
+              'Principal',
+              '₹${formatIndianNumber(loan.principal ~/ 100)}',
+            ),
+            _row(
+              context,
+              'Interest Rate',
+              '${(loan.annualRate * 100).toStringAsFixed(1)}%',
+            ),
             _row(context, 'Tenure', '${loan.tenureMonths} months'),
-            _row(context, 'Outstanding',
-                '₹${formatIndianNumber(loan.outstandingPrincipal ~/ 100)}'),
-            _row(context, 'EMI', '₹${formatIndianNumber(loan.emiAmount ~/ 100)}'),
-            _row(context, 'Remaining Tenure',
-                '${enrichment.remainingTenure} months'),
-            _row(context, 'Interest Remaining',
-                '₹${formatIndianNumber(enrichment.totalInterestRemaining ~/ 100)}'),
+            _row(
+              context,
+              'Outstanding',
+              '₹${formatIndianNumber(loan.outstandingPrincipal ~/ 100)}',
+            ),
+            _row(
+              context,
+              'EMI',
+              '₹${formatIndianNumber(loan.emiAmount ~/ 100)}',
+            ),
+            _row(
+              context,
+              'Remaining Tenure',
+              '${enrichment.remainingTenure} months',
+            ),
+            _row(
+              context,
+              'Interest Remaining',
+              '₹${formatIndianNumber(enrichment.totalInterestRemaining ~/ 100)}',
+            ),
           ],
         ),
       ),
@@ -104,9 +125,12 @@ class _SummaryCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(label, style: Theme.of(context).textTheme.bodyMedium),
-          Text(value, style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-              )),
+          Text(
+            value,
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+          ),
         ],
       ),
     );
@@ -121,8 +145,9 @@ class _EmiSplitCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final totalEmi = enrichment.nextPrincipal + enrichment.nextInterest;
-    final principalPercent =
-        totalEmi > 0 ? enrichment.nextPrincipal / totalEmi : 0.0;
+    final principalPercent = totalEmi > 0
+        ? enrichment.nextPrincipal / totalEmi
+        : 0.0;
 
     return Card(
       child: Padding(
@@ -130,8 +155,10 @@ class _EmiSplitCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Next EMI Split',
-                style: Theme.of(context).textTheme.titleMedium),
+            Text(
+              'Next EMI Split',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             const SizedBox(height: 12),
             ClipRRect(
               borderRadius: BorderRadius.circular(4),
@@ -139,8 +166,7 @@ class _EmiSplitCard extends StatelessWidget {
                 value: principalPercent,
                 minHeight: 12,
                 backgroundColor: ColorTokens.negative.withValues(alpha: 0.3),
-                valueColor:
-                    const AlwaysStoppedAnimation(ColorTokens.positive),
+                valueColor: const AlwaysStoppedAnimation(ColorTokens.positive),
               ),
             ),
             const SizedBox(height: 8),
@@ -180,7 +206,8 @@ class _AmortizationTableState extends State<_AmortizationTable> {
 
   @override
   Widget build(BuildContext context) {
-    final showAll = _expanded || widget.schedule.length <= _AmortizationTable.pageSize;
+    final showAll =
+        _expanded || widget.schedule.length <= _AmortizationTable.pageSize;
     final visibleRows = showAll
         ? widget.schedule
         : widget.schedule.take(_AmortizationTable.pageSize).toList();
@@ -191,8 +218,10 @@ class _AmortizationTableState extends State<_AmortizationTable> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Amortization Schedule',
-                style: Theme.of(context).textTheme.titleMedium),
+            Text(
+              'Amortization Schedule',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             const SizedBox(height: 12),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
@@ -206,14 +235,21 @@ class _AmortizationTableState extends State<_AmortizationTable> {
                   DataColumn(label: Text('Outstanding'), numeric: true),
                 ],
                 rows: visibleRows.map((r) {
-                  return DataRow(cells: [
-                    DataCell(Text('${r.month}')),
-                    DataCell(Text('₹${formatIndianNumber(r.emi ~/ 100)}')),
-                    DataCell(Text('₹${formatIndianNumber(r.principal ~/ 100)}')),
-                    DataCell(Text('₹${formatIndianNumber(r.interest ~/ 100)}')),
-                    DataCell(
-                        Text('₹${formatIndianNumber(r.outstanding ~/ 100)}')),
-                  ]);
+                  return DataRow(
+                    cells: [
+                      DataCell(Text('${r.month}')),
+                      DataCell(Text('₹${formatIndianNumber(r.emi ~/ 100)}')),
+                      DataCell(
+                        Text('₹${formatIndianNumber(r.principal ~/ 100)}'),
+                      ),
+                      DataCell(
+                        Text('₹${formatIndianNumber(r.interest ~/ 100)}'),
+                      ),
+                      DataCell(
+                        Text('₹${formatIndianNumber(r.outstanding ~/ 100)}'),
+                      ),
+                    ],
+                  );
                 }).toList(),
               ),
             ),

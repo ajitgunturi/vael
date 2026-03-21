@@ -12,18 +12,17 @@ class CategoryDao extends DatabaseAccessor<AppDatabase>
 
   /// Returns all categories belonging to [familyId].
   Future<List<Category>> getAll(String familyId) {
-    return (select(categories)
-          ..where((c) => c.familyId.equals(familyId)))
-        .get();
+    return (select(
+      categories,
+    )..where((c) => c.familyId.equals(familyId))).get();
   }
 
   /// Returns categories of the given [type] ('INCOME' or 'EXPENSE') within
   /// [familyId].
   Future<List<Category>> getByType(String familyId, String type) {
-    return (select(categories)
-          ..where(
-              (c) => c.familyId.equals(familyId) & c.type.equals(type)))
-        .get();
+    return (select(
+      categories,
+    )..where((c) => c.familyId.equals(familyId) & c.type.equals(type))).get();
   }
 
   /// Inserts a new category row.

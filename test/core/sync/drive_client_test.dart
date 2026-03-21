@@ -38,8 +38,11 @@ class MockDriveApi implements DriveApiAdapter {
   }
 
   @override
-  Future<void> uploadFile(String name, Uint8List data,
-      {String? parentId}) async {
+  Future<void> uploadFile(
+    String name,
+    Uint8List data, {
+    String? parentId,
+  }) async {
     if (shouldFail) throw Exception('Upload failed');
     files[name] = MockFile(name: name, data: data, parentId: parentId);
   }
@@ -62,19 +65,23 @@ class MockDriveApi implements DriveApiAdapter {
   }
 
   @override
-  Future<List<DriveFileEntry>> listFiles(String parentId,
-      {DateTime? modifiedAfter}) async {
+  Future<List<DriveFileEntry>> listFiles(
+    String parentId, {
+    DateTime? modifiedAfter,
+  }) async {
     if (shouldFail) throw Exception('List failed');
     return files.values
         .where((f) => f.parentId == parentId)
-        .where((f) =>
-            modifiedAfter == null ||
-            f.modifiedTime.isAfter(modifiedAfter))
-        .map((f) => DriveFileEntry(
-              id: f.name,
-              name: f.name,
-              modifiedTime: f.modifiedTime,
-            ))
+        .where(
+          (f) => modifiedAfter == null || f.modifiedTime.isAfter(modifiedAfter),
+        )
+        .map(
+          (f) => DriveFileEntry(
+            id: f.name,
+            name: f.name,
+            modifiedTime: f.modifiedTime,
+          ),
+        )
         .toList();
   }
 
@@ -194,10 +201,7 @@ void main() {
     test('handles API errors gracefully', () async {
       mockApi.shouldFail = true;
 
-      expect(
-        () => driveClient.listChangesets(),
-        throwsException,
-      );
+      expect(() => driveClient.listChangesets(), throwsException);
     });
   });
 }

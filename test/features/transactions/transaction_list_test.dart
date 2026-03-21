@@ -35,8 +35,9 @@ void main() {
   }) {
     return ProviderScope(
       overrides: [
-        transactionsProvider(familyId)
-            .overrideWith((_) => Stream.value(transactions)),
+        transactionsProvider(
+          familyId,
+        ).overrideWith((_) => Stream.value(transactions)),
       ],
       child: MaterialApp(
         home: TransactionListScreen(familyId: familyId, userId: 'user_fam_a'),
@@ -45,8 +46,9 @@ void main() {
   }
 
   group('TransactionListScreen', () {
-    testWidgets('shows transactions with kind labels and dates',
-        (tester) async {
+    testWidgets('shows transactions with kind labels and dates', (
+      tester,
+    ) async {
       final txns = [
         _fakeTxn(
           id: 'tx1',
@@ -91,23 +93,34 @@ void main() {
 
     testWidgets('colors income green and expenses red', (tester) async {
       final txns = [
-        _fakeTxn(id: 'tx1', amount: 100000, kind: 'salary',
-            date: DateTime(2025, 3, 1)),
-        _fakeTxn(id: 'tx2', amount: 50000, kind: 'expense',
-            date: DateTime(2025, 3, 2)),
+        _fakeTxn(
+          id: 'tx1',
+          amount: 100000,
+          kind: 'salary',
+          date: DateTime(2025, 3, 1),
+        ),
+        _fakeTxn(
+          id: 'tx2',
+          amount: 50000,
+          kind: 'expense',
+          date: DateTime(2025, 3, 2),
+        ),
       ];
 
       await tester.pumpWidget(buildTestApp(transactions: txns));
       await tester.pumpAndSettle();
 
       // Verify color helper
-      expect(TransactionListScreen.amountColor('salary'),
-          ColorTokens.positive);
-      expect(TransactionListScreen.amountColor('expense'),
-          ColorTokens.negative);
-      expect(TransactionListScreen.amountColor('transfer'),
-          // ignore: deprecated_member_use
-          ColorTokens.neutralStatic);
+      expect(TransactionListScreen.amountColor('salary'), ColorTokens.positive);
+      expect(
+        TransactionListScreen.amountColor('expense'),
+        ColorTokens.negative,
+      );
+      expect(
+        TransactionListScreen.amountColor('transfer'),
+        // ignore: deprecated_member_use
+        ColorTokens.neutralStatic,
+      );
     });
 
     testWidgets('shows empty state when no transactions', (tester) async {

@@ -45,20 +45,20 @@ class Changeset {
   });
 
   Map<String, dynamic> toJson() => {
-        'device_id': deviceId,
-        'sequence': sequence,
-        'timestamp': timestamp.toUtc().toIso8601String(),
-        'operations': operations.map((op) => op.toJson()).toList(),
-      };
+    'device_id': deviceId,
+    'sequence': sequence,
+    'timestamp': timestamp.toUtc().toIso8601String(),
+    'operations': operations.map((op) => op.toJson()).toList(),
+  };
 
   factory Changeset.fromJson(Map<String, dynamic> json) => Changeset(
-        deviceId: json['device_id'] as String,
-        sequence: json['sequence'] as int,
-        timestamp: DateTime.parse(json['timestamp'] as String),
-        operations: (json['operations'] as List)
-            .map((e) => SyncOperation.fromJson(e as Map<String, dynamic>))
-            .toList(),
-      );
+    deviceId: json['device_id'] as String,
+    sequence: json['sequence'] as int,
+    timestamp: DateTime.parse(json['timestamp'] as String),
+    operations: (json['operations'] as List)
+        .map((e) => SyncOperation.fromJson(e as Map<String, dynamic>))
+        .toList(),
+  );
 }
 
 enum OpType { insert, update, delete }
@@ -96,15 +96,13 @@ class SyncOperation {
   }
 
   factory SyncOperation.fromJson(Map<String, dynamic> json) => SyncOperation(
-        op: OpType.values.firstWhere(
-          (e) => e.name.toUpperCase() == json['op'],
-        ),
-        table: json['table'] as String,
-        id: json['id'] as String,
-        data: json['data'] as Map<String, dynamic>?,
-        prev: json['prev'] as Map<String, dynamic>?,
-        deletedAt: json['deleted_at'] != null
-            ? DateTime.parse(json['deleted_at'] as String)
-            : null,
-      );
+    op: OpType.values.firstWhere((e) => e.name.toUpperCase() == json['op']),
+    table: json['table'] as String,
+    id: json['id'] as String,
+    data: json['data'] as Map<String, dynamic>?,
+    prev: json['prev'] as Map<String, dynamic>?,
+    deletedAt: json['deleted_at'] != null
+        ? DateTime.parse(json['deleted_at'] as String)
+        : null,
+  );
 }

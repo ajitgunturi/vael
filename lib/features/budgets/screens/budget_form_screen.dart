@@ -45,10 +45,12 @@ class _BudgetFormScreenState extends State<BudgetFormScreen> {
   void initState() {
     super.initState();
     _selectedGroup = widget.initialGroup;
-    final initialRupees =
-        widget.initialAmount != null ? (widget.initialAmount! ~/ 100) : null;
-    _amountController =
-        TextEditingController(text: initialRupees?.toString() ?? '');
+    final initialRupees = widget.initialAmount != null
+        ? (widget.initialAmount! ~/ 100)
+        : null;
+    _amountController = TextEditingController(
+      text: initialRupees?.toString() ?? '',
+    );
   }
 
   @override
@@ -72,10 +74,7 @@ class _BudgetFormScreenState extends State<BudgetFormScreen> {
               value: _selectedGroup,
               decoration: const InputDecoration(labelText: 'Category Group'),
               items: _categoryGroups
-                  .map((g) => DropdownMenuItem(
-                        value: g.$1,
-                        child: Text(g.$2),
-                      ))
+                  .map((g) => DropdownMenuItem(value: g.$1, child: Text(g.$2)))
                   .toList(),
               onChanged: widget.isEditing
                   ? null // locked when editing

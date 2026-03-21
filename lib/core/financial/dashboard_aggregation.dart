@@ -132,7 +132,10 @@ class DashboardAggregation {
     final byDate = <DateTime, Map<String, int>>{};
     for (final s in snapshots) {
       final day = DateTime(
-          s.snapshotDate.year, s.snapshotDate.month, s.snapshotDate.day);
+        s.snapshotDate.year,
+        s.snapshotDate.month,
+        s.snapshotDate.day,
+      );
       byDate.putIfAbsent(day, () => {});
       byDate[day]![s.accountId] = s.balance;
     }
@@ -176,9 +179,7 @@ class DashboardAggregation {
   }) {
     switch (scope) {
       case DashboardScope.family:
-        return accounts
-            .where((a) => a.visibility != 'private_')
-            .toList();
+        return accounts.where((a) => a.visibility != 'private_').toList();
       case DashboardScope.personal:
         assert(userId != null, 'userId required for personal scope');
         return accounts.where((a) => a.userId == userId).toList();

@@ -62,13 +62,15 @@ void main() {
   group('ColorTokens.of(context) — light mode', () {
     testWidgets('returns surface tokens matching spec', (tester) async {
       late ColorTokens tokens;
-      await tester.pumpWidget(_buildTestApp(
-        brightness: Brightness.light,
-        builder: (ctx) {
-          tokens = ColorTokens.of(ctx);
-          return const SizedBox();
-        },
-      ));
+      await tester.pumpWidget(
+        _buildTestApp(
+          brightness: Brightness.light,
+          builder: (ctx) {
+            tokens = ColorTokens.of(ctx);
+            return const SizedBox();
+          },
+        ),
+      );
 
       expect(tokens.surface, equals(const Color(0xFFFAFAF9)));
       expect(tokens.surfaceDim, equals(const Color(0xFFF0EFED)));
@@ -80,13 +82,15 @@ void main() {
 
     testWidgets('returns text tokens matching spec', (tester) async {
       late ColorTokens tokens;
-      await tester.pumpWidget(_buildTestApp(
-        brightness: Brightness.light,
-        builder: (ctx) {
-          tokens = ColorTokens.of(ctx);
-          return const SizedBox();
-        },
-      ));
+      await tester.pumpWidget(
+        _buildTestApp(
+          brightness: Brightness.light,
+          builder: (ctx) {
+            tokens = ColorTokens.of(ctx);
+            return const SizedBox();
+          },
+        ),
+      );
 
       expect(tokens.onSurface, equals(const Color(0xFF1A1A1A)));
       expect(tokens.onSurfaceVariant, equals(const Color(0xFF6B6B6B)));
@@ -96,13 +100,15 @@ void main() {
 
     testWidgets('returns semantic tokens matching spec', (tester) async {
       late ColorTokens tokens;
-      await tester.pumpWidget(_buildTestApp(
-        brightness: Brightness.light,
-        builder: (ctx) {
-          tokens = ColorTokens.of(ctx);
-          return const SizedBox();
-        },
-      ));
+      await tester.pumpWidget(
+        _buildTestApp(
+          brightness: Brightness.light,
+          builder: (ctx) {
+            tokens = ColorTokens.of(ctx);
+            return const SizedBox();
+          },
+        ),
+      );
 
       expect(tokens.income, equals(const Color(0xFF2D7A2D)));
       expect(tokens.incomeContainer, equals(const Color(0xFFE8F5E3)));
@@ -118,13 +124,15 @@ void main() {
 
     testWidgets('returns action tokens matching spec', (tester) async {
       late ColorTokens tokens;
-      await tester.pumpWidget(_buildTestApp(
-        brightness: Brightness.light,
-        builder: (ctx) {
-          tokens = ColorTokens.of(ctx);
-          return const SizedBox();
-        },
-      ));
+      await tester.pumpWidget(
+        _buildTestApp(
+          brightness: Brightness.light,
+          builder: (ctx) {
+            tokens = ColorTokens.of(ctx);
+            return const SizedBox();
+          },
+        ),
+      );
 
       expect(tokens.primary, equals(const Color(0xFF2D5A27)));
       expect(tokens.primaryContainer, equals(const Color(0xFFD4EDCF)));
@@ -137,13 +145,15 @@ void main() {
 
     testWidgets('returns chart tokens matching spec', (tester) async {
       late ColorTokens tokens;
-      await tester.pumpWidget(_buildTestApp(
-        brightness: Brightness.light,
-        builder: (ctx) {
-          tokens = ColorTokens.of(ctx);
-          return const SizedBox();
-        },
-      ));
+      await tester.pumpWidget(
+        _buildTestApp(
+          brightness: Brightness.light,
+          builder: (ctx) {
+            tokens = ColorTokens.of(ctx);
+            return const SizedBox();
+          },
+        ),
+      );
 
       expect(tokens.chartLine1, equals(const Color(0xFF2D5A27)));
       expect(tokens.chartLine2, equals(const Color(0xFFB3261E)));
@@ -158,13 +168,15 @@ void main() {
   group('ColorTokens.of(context) — dark mode', () {
     testWidgets('returns surface tokens matching spec', (tester) async {
       late ColorTokens tokens;
-      await tester.pumpWidget(_buildTestApp(
-        brightness: Brightness.dark,
-        builder: (ctx) {
-          tokens = ColorTokens.of(ctx);
-          return const SizedBox();
-        },
-      ));
+      await tester.pumpWidget(
+        _buildTestApp(
+          brightness: Brightness.dark,
+          builder: (ctx) {
+            tokens = ColorTokens.of(ctx);
+            return const SizedBox();
+          },
+        ),
+      );
 
       expect(tokens.surface, equals(const Color(0xFF0F0F0F)));
       expect(tokens.surfaceDim, equals(const Color(0xFF0F0F0F)));
@@ -174,16 +186,19 @@ void main() {
       expect(tokens.inverseSurface, equals(const Color(0xFFE8E8E8)));
     });
 
-    testWidgets('returns text and semantic tokens matching spec',
-        (tester) async {
+    testWidgets('returns text and semantic tokens matching spec', (
+      tester,
+    ) async {
       late ColorTokens tokens;
-      await tester.pumpWidget(_buildTestApp(
-        brightness: Brightness.dark,
-        builder: (ctx) {
-          tokens = ColorTokens.of(ctx);
-          return const SizedBox();
-        },
-      ));
+      await tester.pumpWidget(
+        _buildTestApp(
+          brightness: Brightness.dark,
+          builder: (ctx) {
+            tokens = ColorTokens.of(ctx);
+            return const SizedBox();
+          },
+        ),
+      );
 
       // Text
       expect(tokens.onSurface, equals(const Color(0xFFE8E6E3)));
@@ -198,16 +213,19 @@ void main() {
       expect(tokens.neutral, equals(const Color(0xFFA3A3A0)));
     });
 
-    testWidgets('returns action and chart tokens matching spec',
-        (tester) async {
+    testWidgets('returns action and chart tokens matching spec', (
+      tester,
+    ) async {
       late ColorTokens tokens;
-      await tester.pumpWidget(_buildTestApp(
-        brightness: Brightness.dark,
-        builder: (ctx) {
-          tokens = ColorTokens.of(ctx);
-          return const SizedBox();
-        },
-      ));
+      await tester.pumpWidget(
+        _buildTestApp(
+          brightness: Brightness.dark,
+          builder: (ctx) {
+            tokens = ColorTokens.of(ctx);
+            return const SizedBox();
+          },
+        ),
+      );
 
       // Action
       expect(tokens.primary, equals(const Color(0xFF7BC470)));
@@ -236,104 +254,154 @@ void main() {
     test('light — onSurface on surface', () {
       final tokens = ColorTokens.light();
       final ratio = _contrastRatio(tokens.onSurface, tokens.surface);
-      expect(ratio, greaterThanOrEqualTo(wcagAA),
-          reason: 'light onSurface/surface ratio: $ratio');
+      expect(
+        ratio,
+        greaterThanOrEqualTo(wcagAA),
+        reason: 'light onSurface/surface ratio: $ratio',
+      );
     });
 
     test('light — onSurfaceVariant on surface', () {
       final tokens = ColorTokens.light();
       final ratio = _contrastRatio(tokens.onSurfaceVariant, tokens.surface);
-      expect(ratio, greaterThanOrEqualTo(wcagAA),
-          reason: 'light onSurfaceVariant/surface ratio: $ratio');
+      expect(
+        ratio,
+        greaterThanOrEqualTo(wcagAA),
+        reason: 'light onSurfaceVariant/surface ratio: $ratio',
+      );
     });
 
     test('light — income on surface', () {
       final tokens = ColorTokens.light();
       final ratio = _contrastRatio(tokens.income, tokens.surface);
-      expect(ratio, greaterThanOrEqualTo(wcagAA),
-          reason: 'light income/surface ratio: $ratio');
+      expect(
+        ratio,
+        greaterThanOrEqualTo(wcagAA),
+        reason: 'light income/surface ratio: $ratio',
+      );
     });
 
     test('light — expense on surface', () {
       final tokens = ColorTokens.light();
       final ratio = _contrastRatio(tokens.expense, tokens.surface);
-      expect(ratio, greaterThanOrEqualTo(wcagAA),
-          reason: 'light expense/surface ratio: $ratio');
+      expect(
+        ratio,
+        greaterThanOrEqualTo(wcagAA),
+        reason: 'light expense/surface ratio: $ratio',
+      );
     });
 
     test('light — onIncomeContainer on incomeContainer', () {
       final tokens = ColorTokens.light();
-      final ratio =
-          _contrastRatio(tokens.onIncomeContainer, tokens.incomeContainer);
-      expect(ratio, greaterThanOrEqualTo(wcagAA),
-          reason: 'light onIncomeContainer/incomeContainer ratio: $ratio');
+      final ratio = _contrastRatio(
+        tokens.onIncomeContainer,
+        tokens.incomeContainer,
+      );
+      expect(
+        ratio,
+        greaterThanOrEqualTo(wcagAA),
+        reason: 'light onIncomeContainer/incomeContainer ratio: $ratio',
+      );
     });
 
     test('light — onExpenseContainer on expenseContainer', () {
       final tokens = ColorTokens.light();
-      final ratio =
-          _contrastRatio(tokens.onExpenseContainer, tokens.expenseContainer);
-      expect(ratio, greaterThanOrEqualTo(wcagAA),
-          reason: 'light onExpenseContainer/expenseContainer ratio: $ratio');
+      final ratio = _contrastRatio(
+        tokens.onExpenseContainer,
+        tokens.expenseContainer,
+      );
+      expect(
+        ratio,
+        greaterThanOrEqualTo(wcagAA),
+        reason: 'light onExpenseContainer/expenseContainer ratio: $ratio',
+      );
     });
 
     test('light — onPrimary on primary', () {
       final tokens = ColorTokens.light();
       final ratio = _contrastRatio(tokens.onPrimary, tokens.primary);
-      expect(ratio, greaterThanOrEqualTo(wcagAA),
-          reason: 'light onPrimary/primary ratio: $ratio');
+      expect(
+        ratio,
+        greaterThanOrEqualTo(wcagAA),
+        reason: 'light onPrimary/primary ratio: $ratio',
+      );
     });
 
     // Dark mode pairs
     test('dark — onSurface on surface', () {
       final tokens = ColorTokens.dark();
       final ratio = _contrastRatio(tokens.onSurface, tokens.surface);
-      expect(ratio, greaterThanOrEqualTo(wcagAA),
-          reason: 'dark onSurface/surface ratio: $ratio');
+      expect(
+        ratio,
+        greaterThanOrEqualTo(wcagAA),
+        reason: 'dark onSurface/surface ratio: $ratio',
+      );
     });
 
     test('dark — onSurfaceVariant on surface', () {
       final tokens = ColorTokens.dark();
       final ratio = _contrastRatio(tokens.onSurfaceVariant, tokens.surface);
-      expect(ratio, greaterThanOrEqualTo(wcagAA),
-          reason: 'dark onSurfaceVariant/surface ratio: $ratio');
+      expect(
+        ratio,
+        greaterThanOrEqualTo(wcagAA),
+        reason: 'dark onSurfaceVariant/surface ratio: $ratio',
+      );
     });
 
     test('dark — income on surface', () {
       final tokens = ColorTokens.dark();
       final ratio = _contrastRatio(tokens.income, tokens.surface);
-      expect(ratio, greaterThanOrEqualTo(wcagAA),
-          reason: 'dark income/surface ratio: $ratio');
+      expect(
+        ratio,
+        greaterThanOrEqualTo(wcagAA),
+        reason: 'dark income/surface ratio: $ratio',
+      );
     });
 
     test('dark — expense on surface', () {
       final tokens = ColorTokens.dark();
       final ratio = _contrastRatio(tokens.expense, tokens.surface);
-      expect(ratio, greaterThanOrEqualTo(wcagAA),
-          reason: 'dark expense/surface ratio: $ratio');
+      expect(
+        ratio,
+        greaterThanOrEqualTo(wcagAA),
+        reason: 'dark expense/surface ratio: $ratio',
+      );
     });
 
     test('dark — onIncomeContainer on incomeContainer', () {
       final tokens = ColorTokens.dark();
-      final ratio =
-          _contrastRatio(tokens.onIncomeContainer, tokens.incomeContainer);
-      expect(ratio, greaterThanOrEqualTo(wcagAA),
-          reason: 'dark onIncomeContainer/incomeContainer ratio: $ratio');
+      final ratio = _contrastRatio(
+        tokens.onIncomeContainer,
+        tokens.incomeContainer,
+      );
+      expect(
+        ratio,
+        greaterThanOrEqualTo(wcagAA),
+        reason: 'dark onIncomeContainer/incomeContainer ratio: $ratio',
+      );
     });
 
     test('dark — onExpenseContainer on expenseContainer', () {
       final tokens = ColorTokens.dark();
-      final ratio =
-          _contrastRatio(tokens.onExpenseContainer, tokens.expenseContainer);
-      expect(ratio, greaterThanOrEqualTo(wcagAA),
-          reason: 'dark onExpenseContainer/expenseContainer ratio: $ratio');
+      final ratio = _contrastRatio(
+        tokens.onExpenseContainer,
+        tokens.expenseContainer,
+      );
+      expect(
+        ratio,
+        greaterThanOrEqualTo(wcagAA),
+        reason: 'dark onExpenseContainer/expenseContainer ratio: $ratio',
+      );
     });
 
     test('dark — onPrimary on primary', () {
       final tokens = ColorTokens.dark();
       final ratio = _contrastRatio(tokens.onPrimary, tokens.primary);
-      expect(ratio, greaterThanOrEqualTo(wcagAA),
-          reason: 'dark onPrimary/primary ratio: $ratio');
+      expect(
+        ratio,
+        greaterThanOrEqualTo(wcagAA),
+        reason: 'dark onPrimary/primary ratio: $ratio',
+      );
     });
   });
 }

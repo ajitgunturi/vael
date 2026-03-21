@@ -94,8 +94,7 @@ void main() {
     test('card has 12dp border radius', () {
       final theme = AppTheme.light();
       final shape = theme.cardTheme.shape as RoundedRectangleBorder;
-      final radius =
-          (shape.borderRadius as BorderRadius).topLeft.x;
+      final radius = (shape.borderRadius as BorderRadius).topLeft.x;
       expect(radius, equals(Spacing.cardRadius));
       expect(radius, equals(12.0));
     });

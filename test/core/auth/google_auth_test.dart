@@ -45,9 +45,9 @@ class MockGoogleSignInAccount implements GoogleSignInAccount {
     this.serverAuthCode,
     MockGoogleSignInAuthentication? auth,
     Map<String, String>? authHeaders,
-  })  : _auth = auth ?? MockGoogleSignInAuthentication(),
-        _authHeaders = authHeaders ??
-            {'Authorization': 'Bearer mock-access-token'};
+  }) : _auth = auth ?? MockGoogleSignInAuthentication(),
+       _authHeaders =
+           authHeaders ?? {'Authorization': 'Bearer mock-access-token'};
 
   @override
   Future<GoogleSignInAuthentication> get authentication async => _auth;
@@ -85,8 +85,7 @@ class MockGoogleSignIn implements GoogleSignIn {
   Future<GoogleSignInAccount?> signInSilently({
     bool suppressErrors = true,
     bool reAuthenticate = false,
-  }) async =>
-      null;
+  }) async => null;
 
   @override
   Future<GoogleSignInAccount?> disconnect() async => null;
@@ -95,9 +94,10 @@ class MockGoogleSignIn implements GoogleSignIn {
   Future<bool> isSignedIn() async => accountToReturn != null;
 
   @override
-  Future<bool> canAccessScopes(List<String> scopes,
-          {String? accessToken}) async =>
-      true;
+  Future<bool> canAccessScopes(
+    List<String> scopes, {
+    String? accessToken,
+  }) async => true;
 
   @override
   Future<bool> requestScopes(List<String> scopes) async => true;
@@ -106,8 +106,7 @@ class MockGoogleSignIn implements GoogleSignIn {
   GoogleSignInAccount? get currentUser => accountToReturn;
 
   @override
-  Stream<GoogleSignInAccount?> get onCurrentUserChanged =>
-      const Stream.empty();
+  Stream<GoogleSignInAccount?> get onCurrentUserChanged => const Stream.empty();
 
   @override
   String? get serverClientId => null;
@@ -167,8 +166,7 @@ void main() {
   });
 
   group('GoogleAuthService.signIn', () {
-    test(
-        'should return GoogleAuthResult with email, displayName, accessToken '
+    test('should return GoogleAuthResult with email, displayName, accessToken '
         'on success', () async {
       mockGoogleSignIn.accountToReturn = MockGoogleSignInAccount(
         email: 'ajit@example.com',

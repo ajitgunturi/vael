@@ -35,7 +35,8 @@ class AccountListScreen extends ConsumerWidget {
   }
 
   Widget _buildBody(BuildContext context, AccountGroups grouped) {
-    final hasAny = grouped.banking.isNotEmpty ||
+    final hasAny =
+        grouped.banking.isNotEmpty ||
         grouped.investments.isNotEmpty ||
         grouped.loans.isNotEmpty ||
         grouped.creditCards.isNotEmpty;
@@ -45,8 +46,11 @@ class AccountListScreen extends ConsumerWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.account_balance_wallet_outlined,
-                size: 64, color: Theme.of(context).colorScheme.outline),
+            Icon(
+              Icons.account_balance_wallet_outlined,
+              size: 64,
+              color: Theme.of(context).colorScheme.outline,
+            ),
             const SizedBox(height: 16),
             const Text('No accounts yet'),
             const SizedBox(height: 8),
@@ -70,8 +74,7 @@ class AccountListScreen extends ConsumerWidget {
         if (grouped.loans.isNotEmpty)
           _AccountSection(title: 'Loans', accounts: grouped.loans),
         if (grouped.creditCards.isNotEmpty)
-          _AccountSection(
-              title: 'Credit Cards', accounts: grouped.creditCards),
+          _AccountSection(title: 'Credit Cards', accounts: grouped.creditCards),
       ],
     );
   }

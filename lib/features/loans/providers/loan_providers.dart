@@ -15,8 +15,10 @@ final loanDaoProvider = Provider<LoanDao>((ref) {
 });
 
 /// Streams a single loan detail by account ID.
-final loanDetailProvider =
-    StreamProvider.family<LoanDetail?, LoanKey>((ref, key) {
+final loanDetailProvider = StreamProvider.family<LoanDetail?, LoanKey>((
+  ref,
+  key,
+) {
   final dao = ref.watch(loanDaoProvider);
   return dao.watchByAccountId(key.accountId, key.familyId);
 });
@@ -38,8 +40,10 @@ class LoanViewData {
 ///
 /// [fromMonth] is derived from loan start date vs now to compute
 /// how many months have elapsed.
-final loanViewProvider =
-    FutureProvider.family<LoanViewData?, LoanKey>((ref, key) async {
+final loanViewProvider = FutureProvider.family<LoanViewData?, LoanKey>((
+  ref,
+  key,
+) async {
   final db = ref.watch(databaseProvider);
   final dao = LoanDao(db);
 
@@ -62,11 +66,7 @@ final loanViewProvider =
     fromMonth: elapsedMonths.clamp(0, schedule.length),
   );
 
-  return LoanViewData(
-    loan: loan,
-    schedule: schedule,
-    enrichment: enrichment,
-  );
+  return LoanViewData(loan: loan, schedule: schedule, enrichment: enrichment);
 });
 
 /// Simulates prepayment impact: generates schedule with a prepayment

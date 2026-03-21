@@ -191,8 +191,10 @@ void main() {
         );
 
         expect(snapshot.inflationAdjustedTarget, isPositive);
-        expect(snapshot.inflationAdjustedTarget,
-            greaterThan(10000000)); // inflation adds
+        expect(
+          snapshot.inflationAdjustedTarget,
+          greaterThan(10000000),
+        ); // inflation adds
         expect(snapshot.requiredMonthlySip, isPositive);
         expect(snapshot.status, isNotNull);
         expect(snapshot.progressPercent, greaterThanOrEqualTo(0.0));

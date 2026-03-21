@@ -10,8 +10,10 @@ final transactionDaoProvider = Provider<TransactionDao>((ref) {
 });
 
 /// Streams all transactions for [familyId], ordered by date descending.
-final transactionsProvider =
-    StreamProvider.family<List<Transaction>, String>((ref, familyId) {
+final transactionsProvider = StreamProvider.family<List<Transaction>, String>((
+  ref,
+  familyId,
+) {
   final dao = ref.watch(transactionDaoProvider);
   return dao.watchAll(familyId);
 });

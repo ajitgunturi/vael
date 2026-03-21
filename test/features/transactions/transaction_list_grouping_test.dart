@@ -34,8 +34,9 @@ void main() {
   }) {
     return ProviderScope(
       overrides: [
-        transactionsProvider(familyId)
-            .overrideWith((_) => Stream.value(transactions)),
+        transactionsProvider(
+          familyId,
+        ).overrideWith((_) => Stream.value(transactions)),
       ],
       child: MaterialApp(
         home: TransactionListScreen(familyId: familyId, userId: 'user_fam_a'),
@@ -106,17 +107,19 @@ void main() {
     testWidgets('typing in search filters transactions', (tester) async {
       final txns = [
         _fakeTxn(
-            id: 'tx1',
-            amount: 100000,
-            kind: 'salary',
-            date: today,
-            description: 'March Salary'),
+          id: 'tx1',
+          amount: 100000,
+          kind: 'salary',
+          date: today,
+          description: 'March Salary',
+        ),
         _fakeTxn(
-            id: 'tx2',
-            amount: 50000,
-            kind: 'expense',
-            date: today,
-            description: 'Groceries'),
+          id: 'tx2',
+          amount: 50000,
+          kind: 'expense',
+          date: today,
+          description: 'Groceries',
+        ),
       ];
 
       await tester.pumpWidget(buildTestApp(transactions: txns));
@@ -139,23 +142,26 @@ void main() {
     testWidgets('shows filter chips for transaction kinds', (tester) async {
       final txns = [
         _fakeTxn(
-            id: 'tx1',
-            amount: 100000,
-            kind: 'salary',
-            date: today,
-            description: 'Pay'),
+          id: 'tx1',
+          amount: 100000,
+          kind: 'salary',
+          date: today,
+          description: 'Pay',
+        ),
         _fakeTxn(
-            id: 'tx2',
-            amount: 50000,
-            kind: 'expense',
-            date: today,
-            description: 'Food'),
+          id: 'tx2',
+          amount: 50000,
+          kind: 'expense',
+          date: today,
+          description: 'Food',
+        ),
         _fakeTxn(
-            id: 'tx3',
-            amount: 25000,
-            kind: 'transfer',
-            date: today,
-            description: 'Move Money'),
+          id: 'tx3',
+          amount: 25000,
+          kind: 'transfer',
+          date: today,
+          description: 'Move Money',
+        ),
       ];
 
       await tester.pumpWidget(buildTestApp(transactions: txns));
@@ -170,17 +176,19 @@ void main() {
     testWidgets('tapping filter chip filters by kind', (tester) async {
       final txns = [
         _fakeTxn(
-            id: 'tx1',
-            amount: 100000,
-            kind: 'salary',
-            date: today,
-            description: 'Pay'),
+          id: 'tx1',
+          amount: 100000,
+          kind: 'salary',
+          date: today,
+          description: 'Pay',
+        ),
         _fakeTxn(
-            id: 'tx2',
-            amount: 50000,
-            kind: 'expense',
-            date: today,
-            description: 'Food'),
+          id: 'tx2',
+          amount: 50000,
+          kind: 'expense',
+          date: today,
+          description: 'Food',
+        ),
       ];
 
       await tester.pumpWidget(buildTestApp(transactions: txns));

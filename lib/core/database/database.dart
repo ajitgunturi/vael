@@ -15,20 +15,22 @@ import 'tables/users.dart';
 
 part 'database.g.dart';
 
-@DriftDatabase(tables: [
-  Families,
-  Users,
-  Accounts,
-  Categories,
-  Transactions,
-  BalanceSnapshots,
-  AuditLog,
-  Goals,
-  Budgets,
-  LoanDetails,
-  SyncChangelog,
-  SyncStateTable,
-])
+@DriftDatabase(
+  tables: [
+    Families,
+    Users,
+    Accounts,
+    Categories,
+    Transactions,
+    BalanceSnapshots,
+    AuditLog,
+    Goals,
+    Budgets,
+    LoanDetails,
+    SyncChangelog,
+    SyncStateTable,
+  ],
+)
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e);
 

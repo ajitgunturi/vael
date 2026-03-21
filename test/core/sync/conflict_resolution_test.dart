@@ -176,14 +176,17 @@ void main() {
         expect(result, SchemaCheck.compatible);
       });
 
-      test('allows sync when local schema is newer (can handle older data)', () {
-        final result = resolver.checkSchemaCompatibility(
-          localVersion: 5,
-          remoteVersion: 4,
-        );
+      test(
+        'allows sync when local schema is newer (can handle older data)',
+        () {
+          final result = resolver.checkSchemaCompatibility(
+            localVersion: 5,
+            remoteVersion: 4,
+          );
 
-        expect(result, SchemaCheck.compatible);
-      });
+          expect(result, SchemaCheck.compatible);
+        },
+      );
     });
 
     group('Deterministic Mock Clocks', () {

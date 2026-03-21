@@ -11,11 +11,7 @@ void main() {
     setUp(() {
       // 10,00,000 paise = ₹10,000 principal, 10% annual, 12 months
       // Using TVM convention: PV is negative (cash outflow for a loan)
-      emi = FinancialMath.pmt(
-        rate: 0.10 / 12,
-        nper: 12,
-        pv: -1000000,
-      );
+      emi = FinancialMath.pmt(rate: 0.10 / 12, nper: 12, pv: -1000000);
       schedule = AmortizationCalculator.generateSchedule(
         principal: 1000000,
         annualRate: 0.10,
@@ -27,8 +23,11 @@ void main() {
       // Every row's EMI should equal the computed PMT value
       // (last row may differ slightly due to rounding adjustment)
       for (var i = 0; i < schedule.length - 1; i++) {
-        expect(schedule[i].emi, equals(emi),
-            reason: 'EMI mismatch at month ${schedule[i].month}');
+        expect(
+          schedule[i].emi,
+          equals(emi),
+          reason: 'EMI mismatch at month ${schedule[i].month}',
+        );
       }
     });
 
@@ -37,8 +36,10 @@ void main() {
     });
 
     test('sum of all principal components should equal original loan', () {
-      final totalPrincipal =
-          schedule.fold<int>(0, (sum, row) => sum + row.principal);
+      final totalPrincipal = schedule.fold<int>(
+        0,
+        (sum, row) => sum + row.principal,
+      );
       // Allow 1 paisa tolerance for rounding
       expect((totalPrincipal - 1000000).abs(), lessThanOrEqualTo(1));
     });
@@ -60,17 +61,21 @@ void main() {
 
     test('outstanding decreases monotonically', () {
       for (var i = 1; i < schedule.length; i++) {
-        expect(schedule[i].outstanding,
-            lessThan(schedule[i - 1].outstanding + schedule[i - 1].prepayment),
-            reason: 'Outstanding did not decrease at month ${schedule[i].month}');
+        expect(
+          schedule[i].outstanding,
+          lessThan(schedule[i - 1].outstanding + schedule[i - 1].prepayment),
+          reason: 'Outstanding did not decrease at month ${schedule[i].month}',
+        );
       }
     });
 
     test('interest component decreases over time', () {
       for (var i = 1; i < schedule.length; i++) {
-        expect(schedule[i].interest, lessThanOrEqualTo(schedule[i - 1].interest),
-            reason:
-                'Interest did not decrease at month ${schedule[i].month}');
+        expect(
+          schedule[i].interest,
+          lessThanOrEqualTo(schedule[i - 1].interest),
+          reason: 'Interest did not decrease at month ${schedule[i].month}',
+        );
       }
     });
   });
@@ -98,10 +103,14 @@ void main() {
     });
 
     test('total interest paid should be less than base schedule', () {
-      final baseInterest =
-          baseSchedule.fold<int>(0, (sum, row) => sum + row.interest);
-      final prepayInterest =
-          prepaySchedule.fold<int>(0, (sum, row) => sum + row.interest);
+      final baseInterest = baseSchedule.fold<int>(
+        0,
+        (sum, row) => sum + row.interest,
+      );
+      final prepayInterest = prepaySchedule.fold<int>(
+        0,
+        (sum, row) => sum + row.interest,
+      );
       expect(prepayInterest, lessThan(baseInterest));
     });
 
@@ -110,15 +119,23 @@ void main() {
       expect(month6.prepayment, equals(200000));
     });
 
-    test('sum of principal + prepayments equals original loan (within 1 paisa)',
-        () {
-      final totalPrincipal =
-          prepaySchedule.fold<int>(0, (sum, r) => sum + r.principal);
-      final totalPrepay =
-          prepaySchedule.fold<int>(0, (sum, r) => sum + r.prepayment);
-      expect((totalPrincipal + totalPrepay - 1000000).abs(),
-          lessThanOrEqualTo(1));
-    });
+    test(
+      'sum of principal + prepayments equals original loan (within 1 paisa)',
+      () {
+        final totalPrincipal = prepaySchedule.fold<int>(
+          0,
+          (sum, r) => sum + r.principal,
+        );
+        final totalPrepay = prepaySchedule.fold<int>(
+          0,
+          (sum, r) => sum + r.prepayment,
+        );
+        expect(
+          (totalPrincipal + totalPrepay - 1000000).abs(),
+          lessThanOrEqualTo(1),
+        );
+      },
+    );
   });
 
   group('AmortizationCalculator — multiple prepayments', () {
@@ -145,10 +162,14 @@ void main() {
     });
 
     test('total interest with two prepayments is less than one', () {
-      final singleInterest =
-          singlePrepay.fold<int>(0, (sum, r) => sum + r.interest);
-      final multiInterest =
-          multiPrepay.fold<int>(0, (sum, r) => sum + r.interest);
+      final singleInterest = singlePrepay.fold<int>(
+        0,
+        (sum, r) => sum + r.interest,
+      );
+      final multiInterest = multiPrepay.fold<int>(
+        0,
+        (sum, r) => sum + r.interest,
+      );
       expect(multiInterest, lessThan(singleInterest));
     });
   });
@@ -215,22 +236,30 @@ void main() {
     });
 
     test('remainingTenure from month 0 equals full schedule length', () {
-      final enrichment =
-          AmortizationCalculator.enrich(baseSchedule, fromMonth: 0);
+      final enrichment = AmortizationCalculator.enrich(
+        baseSchedule,
+        fromMonth: 0,
+      );
       expect(enrichment.remainingTenure, equals(12));
     });
 
     test('remainingTenure from month 6 equals remaining rows', () {
-      final enrichment =
-          AmortizationCalculator.enrich(baseSchedule, fromMonth: 6);
+      final enrichment = AmortizationCalculator.enrich(
+        baseSchedule,
+        fromMonth: 6,
+      );
       expect(enrichment.remainingTenure, equals(6));
     });
 
     test('totalInterestRemaining sums future interest', () {
-      final totalInterest =
-          baseSchedule.fold<int>(0, (sum, r) => sum + r.interest);
-      final enrichFrom0 =
-          AmortizationCalculator.enrich(baseSchedule, fromMonth: 0);
+      final totalInterest = baseSchedule.fold<int>(
+        0,
+        (sum, r) => sum + r.interest,
+      );
+      final enrichFrom0 = AmortizationCalculator.enrich(
+        baseSchedule,
+        fromMonth: 0,
+      );
       expect(enrichFrom0.totalInterestRemaining, equals(totalInterest));
     });
 
@@ -251,10 +280,14 @@ void main() {
     });
 
     test('totalInterestSaved equals difference in total interest', () {
-      final baseInterest =
-          baseSchedule.fold<int>(0, (sum, r) => sum + r.interest);
-      final prepayInterest =
-          prepaySchedule.fold<int>(0, (sum, r) => sum + r.interest);
+      final baseInterest = baseSchedule.fold<int>(
+        0,
+        (sum, r) => sum + r.interest,
+      );
+      final prepayInterest = prepaySchedule.fold<int>(
+        0,
+        (sum, r) => sum + r.interest,
+      );
       final saved = AmortizationCalculator.interestSaved(
         baseSchedule: baseSchedule,
         prepaySchedule: prepaySchedule,
@@ -263,8 +296,10 @@ void main() {
     });
 
     test('nextPaymentBreakdown returns first future row', () {
-      final enrichFrom3 =
-          AmortizationCalculator.enrich(baseSchedule, fromMonth: 3);
+      final enrichFrom3 = AmortizationCalculator.enrich(
+        baseSchedule,
+        fromMonth: 3,
+      );
       // Month 4 is the next payment after month 3
       final month4 = baseSchedule.firstWhere((r) => r.month == 4);
       expect(enrichFrom3.nextPrincipal, equals(month4.principal));

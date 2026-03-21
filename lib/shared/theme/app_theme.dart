@@ -26,7 +26,10 @@ class AppTheme {
   }
 
   static ThemeData _build(
-      ColorTokens tokens, TextTheme textTheme, Brightness brightness) {
+    ColorTokens tokens,
+    TextTheme textTheme,
+    Brightness brightness,
+  ) {
     final colorScheme = ColorScheme(
       brightness: brightness,
       primary: tokens.primary,

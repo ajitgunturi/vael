@@ -10,8 +10,10 @@ abstract class DriveApiAdapter {
   Future<void> uploadFile(String name, Uint8List data, {String? parentId});
   Future<void> updateFile(String fileId, Uint8List data);
   Future<Uint8List> downloadFile(String fileId);
-  Future<List<DriveFileEntry>> listFiles(String parentId,
-      {DateTime? modifiedAfter});
+  Future<List<DriveFileEntry>> listFiles(
+    String parentId, {
+    DateTime? modifiedAfter,
+  });
   Future<String?> findFile(String name, {String? parentId});
 }
 
@@ -42,8 +44,10 @@ class DriveClient implements DriveClientInterface {
 
   @override
   Future<List<DriveFileEntry>> listChangesets({DateTime? after}) async {
-    final folderId = await api.findFolder('changesets',
-        parentId: await _vaelFolderId());
+    final folderId = await api.findFolder(
+      'changesets',
+      parentId: await _vaelFolderId(),
+    );
     if (folderId == null) return [];
     return api.listFiles(folderId, modifiedAfter: after);
   }
@@ -61,8 +65,10 @@ class DriveClient implements DriveClientInterface {
 
   @override
   Future<Uint8List?> downloadSnapshot() async {
-    final folderId = await api.findFolder('snapshots',
-        parentId: await _vaelFolderId());
+    final folderId = await api.findFolder(
+      'snapshots',
+      parentId: await _vaelFolderId(),
+    );
     if (folderId == null) return null;
     final fileId = await api.findFile('latest.enc', parentId: folderId);
     if (fileId == null) return null;
@@ -71,8 +77,10 @@ class DriveClient implements DriveClientInterface {
 
   @override
   Future<Map<String, dynamic>?> readManifest() async {
-    final metaId = await api.findFolder('.meta',
-        parentId: await _vaelFolderId());
+    final metaId = await api.findFolder(
+      '.meta',
+      parentId: await _vaelFolderId(),
+    );
     if (metaId == null) return null;
     final fileId = await api.findFile('manifest.json', parentId: metaId);
     if (fileId == null) return null;

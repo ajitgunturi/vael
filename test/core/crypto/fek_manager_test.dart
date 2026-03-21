@@ -10,10 +10,7 @@ void main() {
     late FekManager fekManager;
 
     setUp(() {
-      fekManager = FekManager(
-        keyDerivation: KeyDerivation(),
-        aesGcm: AesGcm(),
-      );
+      fekManager = FekManager(keyDerivation: KeyDerivation(), aesGcm: AesGcm());
     });
 
     test('generates a random 32-byte FEK', () {
@@ -59,15 +56,18 @@ void main() {
       );
     });
 
-    test('wrapping same FEK twice produces different ciphertext (random IV)', () {
-      final fek = fekManager.generateFek();
-      final kek = Uint8List.fromList(List.generate(32, (i) => i));
+    test(
+      'wrapping same FEK twice produces different ciphertext (random IV)',
+      () {
+        final fek = fekManager.generateFek();
+        final kek = Uint8List.fromList(List.generate(32, (i) => i));
 
-      final wrapped1 = fekManager.wrapFek(fek, kek);
-      final wrapped2 = fekManager.wrapFek(fek, kek);
+        final wrapped1 = fekManager.wrapFek(fek, kek);
+        final wrapped2 = fekManager.wrapFek(fek, kek);
 
-      expect(wrapped1, isNot(equals(wrapped2)));
-    });
+        expect(wrapped1, isNot(equals(wrapped2)));
+      },
+    );
 
     test('full flow: passphrase → KEK → wrap FEK → unwrap FEK', () {
       final kd = KeyDerivation();

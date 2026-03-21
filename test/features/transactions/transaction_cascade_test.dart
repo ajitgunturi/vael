@@ -25,18 +25,26 @@ void main() {
   });
 
   Future<void> _seedFamily(String familyId) async {
-    await db.into(db.families).insert(FamiliesCompanion.insert(
-          id: familyId,
-          name: 'Family',
-          createdAt: DateTime(2025),
-        ));
-    await db.into(db.users).insert(UsersCompanion.insert(
-          id: 'user_$familyId',
-          email: '$familyId@test.com',
-          displayName: 'User',
-          role: 'admin',
-          familyId: familyId,
-        ));
+    await db
+        .into(db.families)
+        .insert(
+          FamiliesCompanion.insert(
+            id: familyId,
+            name: 'Family',
+            createdAt: DateTime(2025),
+          ),
+        );
+    await db
+        .into(db.users)
+        .insert(
+          UsersCompanion.insert(
+            id: 'user_$familyId',
+            email: '$familyId@test.com',
+            displayName: 'User',
+            role: 'admin',
+            familyId: familyId,
+          ),
+        );
   }
 
   Future<void> _insertAccount({
@@ -44,15 +52,19 @@ void main() {
     required String familyId,
     int balance = 0,
   }) async {
-    await db.into(db.accounts).insert(AccountsCompanion(
-          id: Value(id),
-          name: Value('Account $id'),
-          type: const Value('savings'),
-          balance: Value(balance),
-          visibility: const Value('shared'),
-          familyId: Value(familyId),
-          userId: Value('user_$familyId'),
-        ));
+    await db
+        .into(db.accounts)
+        .insert(
+          AccountsCompanion(
+            id: Value(id),
+            name: Value('Account $id'),
+            type: const Value('savings'),
+            balance: Value(balance),
+            visibility: const Value('shared'),
+            familyId: Value(familyId),
+            userId: Value('user_$familyId'),
+          ),
+        );
   }
 
   group('Transaction → Balance Cascade', () {
@@ -60,14 +72,16 @@ void main() {
       await _seedFamily('fam_a');
       await _insertAccount(id: 'acc_1', familyId: 'fam_a', balance: 1000000);
 
-      await txnDao.insertTransaction(TransactionsCompanion(
-        id: const Value('tx1'),
-        amount: const Value(200000),
-        date: Value(DateTime(2025, 3, 1)),
-        kind: const Value('expense'),
-        accountId: const Value('acc_1'),
-        familyId: const Value('fam_a'),
-      ));
+      await txnDao.insertTransaction(
+        TransactionsCompanion(
+          id: const Value('tx1'),
+          amount: const Value(200000),
+          date: Value(DateTime(2025, 3, 1)),
+          kind: const Value('expense'),
+          accountId: const Value('acc_1'),
+          familyId: const Value('fam_a'),
+        ),
+      );
       await balanceService.applyTransaction(
         kind: 'expense',
         amount: 200000,
@@ -82,14 +96,16 @@ void main() {
       await _seedFamily('fam_a');
       await _insertAccount(id: 'acc_1', familyId: 'fam_a', balance: 500000);
 
-      await txnDao.insertTransaction(TransactionsCompanion(
-        id: const Value('tx1'),
-        amount: const Value(5000000),
-        date: Value(DateTime(2025, 3, 1)),
-        kind: const Value('salary'),
-        accountId: const Value('acc_1'),
-        familyId: const Value('fam_a'),
-      ));
+      await txnDao.insertTransaction(
+        TransactionsCompanion(
+          id: const Value('tx1'),
+          amount: const Value(5000000),
+          date: Value(DateTime(2025, 3, 1)),
+          kind: const Value('salary'),
+          accountId: const Value('acc_1'),
+          familyId: const Value('fam_a'),
+        ),
+      );
       await balanceService.applyTransaction(
         kind: 'salary',
         amount: 5000000,
@@ -105,15 +121,17 @@ void main() {
       await _insertAccount(id: 'acc_1', familyId: 'fam_a', balance: 1000000);
       await _insertAccount(id: 'acc_2', familyId: 'fam_a', balance: 200000);
 
-      await txnDao.insertTransaction(TransactionsCompanion(
-        id: const Value('tx1'),
-        amount: const Value(300000),
-        date: Value(DateTime(2025, 3, 1)),
-        kind: const Value('transfer'),
-        accountId: const Value('acc_1'),
-        toAccountId: const Value('acc_2'),
-        familyId: const Value('fam_a'),
-      ));
+      await txnDao.insertTransaction(
+        TransactionsCompanion(
+          id: const Value('tx1'),
+          amount: const Value(300000),
+          date: Value(DateTime(2025, 3, 1)),
+          kind: const Value('transfer'),
+          accountId: const Value('acc_1'),
+          toAccountId: const Value('acc_2'),
+          familyId: const Value('fam_a'),
+        ),
+      );
       await balanceService.applyTransaction(
         kind: 'transfer',
         amount: 300000,

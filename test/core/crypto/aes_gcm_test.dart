@@ -80,7 +80,9 @@ void main() {
     });
 
     test('encrypts large plaintext (1 MB)', () {
-      final plaintext = Uint8List.fromList(List.generate(1024 * 1024, (i) => i % 256));
+      final plaintext = Uint8List.fromList(
+        List.generate(1024 * 1024, (i) => i % 256),
+      );
 
       final ciphertext = aesGcm.encrypt(plaintext, key);
       final decrypted = aesGcm.decrypt(ciphertext, key);

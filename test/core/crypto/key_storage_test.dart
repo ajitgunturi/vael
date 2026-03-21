@@ -61,7 +61,9 @@ void main() {
       expect(await keyStorage.hasFek('family-123'), false);
 
       await keyStorage.storeFek(
-          'family-123', Uint8List.fromList(List.generate(32, (i) => i)));
+        'family-123',
+        Uint8List.fromList(List.generate(32, (i) => i)),
+      );
 
       expect(await keyStorage.hasFek('family-123'), true);
     });

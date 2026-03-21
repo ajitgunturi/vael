@@ -1,16 +1,8 @@
 import 'changeset_serializer.dart';
 
-enum ConflictResolution {
-  keepLocal,
-  acceptRemote,
-  mergeBoth,
-  acceptDelete,
-}
+enum ConflictResolution { keepLocal, acceptRemote, mergeBoth, acceptDelete }
 
-enum SchemaCheck {
-  compatible,
-  blocked,
-}
+enum SchemaCheck { compatible, blocked }
 
 /// Resolves conflicts between local and remote sync operations.
 ///

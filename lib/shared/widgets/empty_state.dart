@@ -36,9 +36,9 @@ class EmptyState extends StatelessWidget {
             const SizedBox(height: Spacing.md),
             Text(
               title,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: colors.onSurfaceVariant,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(color: colors.onSurfaceVariant),
               textAlign: TextAlign.center,
             ),
             if (subtitle != null) ...[
@@ -46,8 +46,8 @@ class EmptyState extends StatelessWidget {
               Text(
                 subtitle!,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: colors.onSurfaceVariant,
-                    ),
+                  color: colors.onSurfaceVariant,
+                ),
                 textAlign: TextAlign.center,
               ),
             ],

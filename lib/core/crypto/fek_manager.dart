@@ -17,9 +17,7 @@ class FekManager {
   /// Generates a cryptographically secure random 256-bit FEK.
   Uint8List generateFek() {
     final random = Random.secure();
-    return Uint8List.fromList(
-      List.generate(32, (_) => random.nextInt(256)),
-    );
+    return Uint8List.fromList(List.generate(32, (_) => random.nextInt(256)));
   }
 
   /// Wraps (encrypts) the FEK with the KEK using AES-256-GCM.

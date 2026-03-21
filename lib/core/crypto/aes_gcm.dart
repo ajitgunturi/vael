@@ -26,12 +26,7 @@ class AesGcm {
     final cipher = GCMBlockCipher(AESEngine())
       ..init(
         true,
-        AEADParameters(
-          KeyParameter(key),
-          _tagLength * 8,
-          iv,
-          Uint8List(0),
-        ),
+        AEADParameters(KeyParameter(key), _tagLength * 8, iv, Uint8List(0)),
       );
 
     final output = Uint8List(cipher.getOutputSize(plaintext.length));
@@ -67,18 +62,18 @@ class AesGcm {
     final cipher = GCMBlockCipher(AESEngine())
       ..init(
         false,
-        AEADParameters(
-          KeyParameter(key),
-          _tagLength * 8,
-          iv,
-          Uint8List(0),
-        ),
+        AEADParameters(KeyParameter(key), _tagLength * 8, iv, Uint8List(0)),
       );
 
     try {
       final output = Uint8List(cipher.getOutputSize(encryptedWithTag.length));
       final len = cipher.processBytes(
-          encryptedWithTag, 0, encryptedWithTag.length, output, 0);
+        encryptedWithTag,
+        0,
+        encryptedWithTag.length,
+        output,
+        0,
+      );
       final finalLen = cipher.doFinal(output, len);
       return output.sublist(0, len + finalLen);
     } on InvalidCipherTextException catch (e) {

@@ -22,16 +22,14 @@ class GoalDao extends DatabaseAccessor<AppDatabase> with _$GoalDaoMixin {
   /// Returns a single goal by [id] within [familyId].
   Future<Goal?> getById(String id, String familyId) {
     return (select(goals)
-          ..where(
-              (g) => g.id.equals(id) & g.familyId.equals(familyId)))
+          ..where((g) => g.id.equals(id) & g.familyId.equals(familyId)))
         .getSingleOrNull();
   }
 
   /// Returns goals filtered by [status] within [familyId].
   Future<List<Goal>> getByStatus(String familyId, String status) {
     return (select(goals)
-          ..where(
-              (g) => g.familyId.equals(familyId) & g.status.equals(status)))
+          ..where((g) => g.familyId.equals(familyId) & g.status.equals(status)))
         .get();
   }
 

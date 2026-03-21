@@ -46,21 +46,22 @@ void main() {
       );
     });
 
-    test('export → encrypt → upload → download → decrypt → restore round-trip', () async {
-      final dbBytes = Uint8List.fromList(
-        List.generate(1024, (i) => i % 256),
-      );
+    test(
+      'export → encrypt → upload → download → decrypt → restore round-trip',
+      () async {
+        final dbBytes = Uint8List.fromList(List.generate(1024, (i) => i % 256));
 
-      await snapshotManager.uploadSnapshot(dbBytes);
-      expect(driveClient.uploadedSnapshot, isNotNull);
+        await snapshotManager.uploadSnapshot(dbBytes);
+        expect(driveClient.uploadedSnapshot, isNotNull);
 
-      // Uploaded data should be encrypted (different from raw)
-      expect(driveClient.uploadedSnapshot, isNot(equals(dbBytes)));
+        // Uploaded data should be encrypted (different from raw)
+        expect(driveClient.uploadedSnapshot, isNot(equals(dbBytes)));
 
-      final restored = await snapshotManager.downloadSnapshot();
-      expect(restored, isNotNull);
-      expect(restored, equals(dbBytes));
-    });
+        final restored = await snapshotManager.downloadSnapshot();
+        expect(restored, isNotNull);
+        expect(restored, equals(dbBytes));
+      },
+    );
 
     test('uploaded snapshot is encrypted', () async {
       final dbBytes = Uint8List.fromList([1, 2, 3, 4, 5]);
@@ -87,10 +88,7 @@ void main() {
         fek: wrongFek,
       );
 
-      expect(
-        () => wrongManager.downloadSnapshot(),
-        throwsA(isA<Exception>()),
-      );
+      expect(() => wrongManager.downloadSnapshot(), throwsA(isA<Exception>()));
     });
 
     test('large snapshot (1 MB) round-trips correctly', () async {
