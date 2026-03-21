@@ -16,10 +16,16 @@ class DashboardScreen extends ConsumerWidget {
     super.key,
     required this.familyId,
     this.goals = const [],
+    this.onNavigateToTab,
   });
 
   final String familyId;
   final List<Goal> goals;
+
+  /// Callback to navigate to a tab in the adaptive scaffold.
+  /// Index matches AdaptiveScaffold.destinations: 0=Dashboard, 1=Accounts,
+  /// 2=Transactions, 3=Budget, 4=Goals.
+  final ValueChanged<int>? onNavigateToTab;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -38,7 +44,8 @@ class DashboardScreen extends ConsumerWidget {
         ],
       ),
       body: dataAsync.when(
-        data: (data) => _DashboardBody(data: data, goals: goals),
+        data: (data) => _DashboardBody(
+              data: data, goals: goals, onNavigateToTab: onNavigateToTab),
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Error: $e')),
       ),
@@ -67,19 +74,30 @@ class _ScopeToggle extends StatelessWidget {
 }
 
 class _DashboardBody extends StatelessWidget {
-  const _DashboardBody({required this.data, required this.goals});
+  const _DashboardBody({
+    required this.data,
+    required this.goals,
+    this.onNavigateToTab,
+  });
 
   final DashboardData data;
   final List<Goal> goals;
+  final ValueChanged<int>? onNavigateToTab;
 
   @override
   Widget build(BuildContext context) {
     return ListView(
       padding: const EdgeInsets.all(Spacing.md),
       children: [
-        _HeroNetWorthCard(netWorth: data.netWorth),
+        _HeroNetWorthCard(
+          netWorth: data.netWorth,
+          onTap: onNavigateToTab != null ? () => onNavigateToTab!(1) : null,
+        ),
         const SizedBox(height: Spacing.md),
-        _CompactTilesRow(summary: data.monthlySummary),
+        _CompactTilesRow(
+          summary: data.monthlySummary,
+          onNavigateToTab: onNavigateToTab,
+        ),
         const SizedBox(height: Spacing.md),
         _SavingsRateBadge(rate: data.savingsRate),
         const SizedBox(height: Spacing.md),
@@ -93,9 +111,10 @@ class _DashboardBody extends StatelessWidget {
 
 /// Hero net worth card per `UI_DESIGN.md` §2.2.
 class _HeroNetWorthCard extends StatelessWidget {
-  const _HeroNetWorthCard({required this.netWorth});
+  const _HeroNetWorthCard({required this.netWorth, this.onTap});
 
   final int netWorth;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +125,10 @@ class _HeroNetWorthCard extends StatelessWidget {
     final formatted = formatIndianNumber(netWorth.abs() ~/ 100);
 
     return Card(
-      child: Padding(
+      child: InkWell(
+        borderRadius: BorderRadius.circular(Spacing.cardRadius),
+        onTap: onTap,
+        child: Padding(
         padding: const EdgeInsets.symmetric(
           vertical: Spacing.lg,
           horizontal: Spacing.md,
@@ -128,15 +150,17 @@ class _HeroNetWorthCard extends StatelessWidget {
           ],
         ),
       ),
+      ),
     );
   }
 }
 
 /// Compact side-by-side income / expense / net savings tiles.
 class _CompactTilesRow extends StatelessWidget {
-  const _CompactTilesRow({required this.summary});
+  const _CompactTilesRow({required this.summary, this.onNavigateToTab});
 
   final MonthlySummary summary;
+  final ValueChanged<int>? onNavigateToTab;
 
   @override
   Widget build(BuildContext context) {
@@ -148,6 +172,7 @@ class _CompactTilesRow extends StatelessWidget {
             label: 'Income',
             value: '₹${formatIndianNumber(summary.totalIncome ~/ 100)}',
             color: tokens.income,
+            onTap: onNavigateToTab != null ? () => onNavigateToTab!(2) : null,
           ),
         ),
         const SizedBox(width: Spacing.sm),
@@ -156,6 +181,7 @@ class _CompactTilesRow extends StatelessWidget {
             label: 'Expenses',
             value: '₹${formatIndianNumber(summary.totalExpenses ~/ 100)}',
             color: tokens.expense,
+            onTap: onNavigateToTab != null ? () => onNavigateToTab!(3) : null,
           ),
         ),
         const SizedBox(width: Spacing.sm),
@@ -165,6 +191,7 @@ class _CompactTilesRow extends StatelessWidget {
             value:
                 '${summary.netSavings >= 0 ? '+' : '-'}₹${formatIndianNumber(summary.netSavings.abs() ~/ 100)}',
             color: summary.netSavings >= 0 ? tokens.income : tokens.expense,
+            onTap: onNavigateToTab != null ? () => onNavigateToTab!(2) : null,
           ),
         ),
       ],
@@ -177,28 +204,34 @@ class _CompactTile extends StatelessWidget {
     required this.label,
     required this.value,
     required this.color,
+    this.onTap,
   });
 
   final String label;
   final String value;
   final Color color;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(Spacing.sm),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(label, style: Theme.of(context).textTheme.labelSmall),
-            const SizedBox(height: Spacing.xs),
-            Text(value,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium
-                    ?.copyWith(color: color, fontWeight: FontWeight.w600)),
-          ],
+      child: InkWell(
+        borderRadius: BorderRadius.circular(Spacing.cardRadius),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(Spacing.sm),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(label, style: Theme.of(context).textTheme.labelSmall),
+              const SizedBox(height: Spacing.xs),
+              Text(value,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium
+                      ?.copyWith(color: color, fontWeight: FontWeight.w600)),
+            ],
+          ),
         ),
       ),
     );

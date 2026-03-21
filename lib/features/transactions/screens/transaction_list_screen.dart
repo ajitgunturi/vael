@@ -82,10 +82,15 @@ class _TransactionListScreenState
         onPressed: () => _navigateToForm(context),
         child: const Icon(Icons.add),
       ),
-      body: txnAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Error: $e')),
-        data: (transactions) => _buildBody(context, transactions),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          ref.invalidate(transactionsProvider(widget.familyId));
+        },
+        child: txnAsync.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (e, _) => Center(child: Text('Error: $e')),
+          data: (transactions) => _buildBody(context, transactions),
+        ),
       ),
     );
   }
