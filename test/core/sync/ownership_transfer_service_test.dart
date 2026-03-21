@@ -225,6 +225,41 @@ void main() {
       );
     });
 
+    test(
+      'executeTransfer fails when new owner has no Drive permission',
+      () async {
+        final manifest = _makeManifest();
+        // Remove the member's Drive permission
+        mockAdapter.permissions.removeWhere(
+          (p) => p.email == 'member@test.com',
+        );
+
+        expect(
+          () => service.executeTransfer(
+            manifest: manifest,
+            folderId: 'folder-123',
+            currentUserId: 'u-admin',
+            newOwnerId: 'u-member',
+          ),
+          throwsA(isA<TransferValidationError>()),
+        );
+      },
+    );
+
+    test('TransferAuditEntry serializes to JSON', () {
+      final entry = TransferAuditEntry(
+        action: 'OWNERSHIP_TRANSFERRED',
+        fromUserId: 'u-admin',
+        toUserId: 'u-member',
+        timestamp: DateTime.utc(2026, 3, 21, 10, 0),
+      );
+      final json = entry.toJson();
+      expect(json['action'], 'OWNERSHIP_TRANSFERRED');
+      expect(json['from_user_id'], 'u-admin');
+      expect(json['to_user_id'], 'u-member');
+      expect(json['timestamp'], '2026-03-21T10:00:00.000Z');
+    });
+
     test('TransferResult contains audit entry', () async {
       final manifest = _makeManifest();
 
