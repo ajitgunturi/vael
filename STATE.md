@@ -27,6 +27,34 @@
 - Passphrase setup screen (validation, confirmation, visibility toggle)
 - Sync status screen (device ID, pending count, timestamps, manual controls)
 
-## Test Count: 517 (all green)
+## Test Count: 599 unit/widget (all green) + 29 simulator tests (iPhone) + 23 journey tests (iPad Pro 11-inch) — all green
+
+## Current Work: E2E Simulator Test Suite — COMPLETE
+
+### Branch: feat/simulator-tests
+
+### Delivered
+- `integration_test/` directory with 6 feature-level test files (29 tests, passing on iPhone 17 Pro Max)
+  - `app_smoke_test.dart` (4), `navigation_flow_test.dart` (6), `account_crud_flow_test.dart` (5)
+  - `transaction_flow_test.dart` (6), `budget_flow_test.dart` (4), `theme_rendering_test.dart` (4)
+- `integration_test/simulator_test_app.dart` — test harness (AdaptiveScaffold, in-memory DB, seedTestFamily)
+- iOS build fixes: ICloudPlugin added to pbxproj, AppDelegate optional unwrap, CocoaPods installed, xcode-select → Xcode.app
+- `integration_test` SDK dependency added to pubspec.yaml
+- 5 E2E journey test files (23 tests, all green on iPad Pro 11-inch M5):
+  - `journey_net_worth_test.dart` (5), `journey_balance_cascade_test.dart` (6)
+  - `journey_monthly_summary_test.dart` (5), `journey_budget_actuals_test.dart` (4)
+  - `journey_cross_feature_test.dart` (3)
+- `e2e_helpers.dart` — bounded `settle()` helper replacing `pumpAndSettle` for iPad compatibility
+- AdaptiveScaffold responsive fix: removed nested double-AppBar, proper medium/expanded layouts
+
+### Fixes Applied
+- Dropdown interaction on iPad: `find.byType(DropdownButton<String>).first` for kind selector
+- `pumpAndSettle` hang fix: bounded `settle()` helper handles infinite animations (CircularProgressIndicator)
+- `navigateToTab` uses `.first` to prefer NavigationRail label over inner AppBar title
+- AdaptiveScaffold: removed outer Scaffold+AppBar from medium/expanded layouts (eliminated double AppBar on iPad)
+- Settings icon relocated: compact → BottomNav item; medium → NavigationRail trailing; expanded → sidebar ListTile
+
+### Deferred
+- `journey_loan_detail_test.dart` (3 tests) — deferred to Phase 4
 
 ## Next: Phase 4 — Advanced Features

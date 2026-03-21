@@ -42,44 +42,56 @@ class AdaptiveScaffold extends StatelessWidget {
     );
   }
 
-  PreferredSizeWidget _appBar() {
-    return AppBar(
-      actions: [
-        if (onSettingsTap != null)
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: onSettingsTap,
-            tooltip: 'Settings',
-          ),
-      ],
-    );
-  }
-
   Widget _buildCompact() {
     return Scaffold(
-      appBar: _appBar(),
       body: body,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: selectedIndex,
-        onTap: onDestinationSelected,
+        onTap: (i) {
+          // Settings is appended as the last item on compact layout.
+          if (onSettingsTap != null && i == destinations.length) {
+            onSettingsTap!();
+          } else {
+            onDestinationSelected(i);
+          }
+        },
         type: BottomNavigationBarType.fixed,
         items: [
           for (final d in destinations)
             BottomNavigationBarItem(icon: Icon(d.icon), label: d.label),
+          if (onSettingsTap != null)
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.settings),
+              label: 'Settings',
+            ),
         ],
       ),
     );
   }
 
   Widget _buildMedium() {
-    return Scaffold(
-      appBar: _appBar(),
-      body: Row(
-        children: [
-          NavigationRail(
+    return Row(
+      children: [
+        SafeArea(
+          child: NavigationRail(
             selectedIndex: selectedIndex,
             onDestinationSelected: onDestinationSelected,
             labelType: NavigationRailLabelType.all,
+            trailing: onSettingsTap != null
+                ? Expanded(
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: IconButton(
+                          icon: const Icon(Icons.settings),
+                          onPressed: onSettingsTap,
+                          tooltip: 'Settings',
+                        ),
+                      ),
+                    ),
+                  )
+                : null,
             destinations: [
               for (final d in destinations)
                 NavigationRailDestination(
@@ -88,19 +100,18 @@ class AdaptiveScaffold extends StatelessWidget {
                 ),
             ],
           ),
-          const VerticalDivider(thickness: 1, width: 1),
-          Expanded(child: body),
-        ],
-      ),
+        ),
+        const VerticalDivider(thickness: 1, width: 1),
+        Expanded(child: body),
+      ],
     );
   }
 
   Widget _buildExpanded() {
-    return Scaffold(
-      appBar: _appBar(),
-      body: Row(
-        children: [
-          SizedBox(
+    return Row(
+      children: [
+        SafeArea(
+          child: SizedBox(
             width: 280,
             child: Material(
               child: ListView(
@@ -113,14 +124,22 @@ class AdaptiveScaffold extends StatelessWidget {
                       selected: i == selectedIndex,
                       onTap: () => onDestinationSelected(i),
                     ),
+                  if (onSettingsTap != null) ...[
+                    const Divider(),
+                    ListTile(
+                      leading: const Icon(Icons.settings),
+                      title: const Text('Settings'),
+                      onTap: onSettingsTap,
+                    ),
+                  ],
                 ],
               ),
             ),
           ),
-          const VerticalDivider(thickness: 1, width: 1),
-          Expanded(child: body),
-        ],
-      ),
+        ),
+        const VerticalDivider(thickness: 1, width: 1),
+        Expanded(child: body),
+      ],
     );
   }
 }
