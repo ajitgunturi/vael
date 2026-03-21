@@ -44,7 +44,29 @@
 
 **Exit criteria**: Two devices (e.g., iPhone + Mac) can sync data. Data on Drive is verified encrypted. New device can bootstrap from snapshot.
 
-## Phase 4: Advanced Features (Weeks 9-11)
+## Phase 3.5: Family Backup Access & Ownership Management (Weeks 8-10)
+
+> Full design: [PHASE_3_5_FAMILY_BACKUP_ACCESS.md](PHASE_3_5_FAMILY_BACKUP_ACCESS.md)
+
+| Task | Details |
+|------|---------|
+| Per-member FEK wrapping | Each member gets own wrapped FEK copy — enables individual revocation without re-keying vault |
+| Manifest V2 migration | Owner block, per-member keys, status tracking. Seamless V1 → V2 upgrade |
+| Drive permission service | In-app sharing via Google Drive Permissions API (grant writer, revoke, transfer owner) |
+| Admin invite flow | Admin enters email → app shares Drive folder + updates manifest → member onboards |
+| Member removal + FEK rotation | Revoke Drive access → generate new FEK → re-wrap for remaining members |
+| Ownership transfer | Admin → member transfer via Drive API `transferOwnership` + manifest update + role swap |
+| Permission error handling | Map 403/404 to actionable UI messages, graceful sync pause, no data loss |
+| Admin backup dashboard | Member list with sync status, backup history, add/remove/transfer controls |
+| Individual passphrase support | Members can optionally set their own passphrase instead of shared family one |
+| Cloud storage abstraction | Rename `DriveClientInterface` → `CloudStorageInterface`, add `CloudProvider` enum, provider-aware factory |
+| iCloud Drive support | `ICloudStorage` implementation via platform channel + ubiquity container. Zero-auth backup for Apple devices |
+
+> Cloud storage design: [CLOUD_STORAGE_ABSTRACTION.md](CLOUD_STORAGE_ABSTRACTION.md)
+
+**Exit criteria**: Admin owns Drive folder. Members invited/removed in-app. FEK rotates on removal. Ownership transfers cleanly. Permission errors show clear messages. V1 manifest migrates seamlessly. Apple users can choose iCloud Drive with zero OAuth setup. Android users default to Google Drive.
+
+## Phase 4: Advanced Features (Weeks 11-13)
 
 | Task | Details |
 |------|---------|
@@ -58,7 +80,7 @@
 
 **Exit criteria**: All features from the current web app are available in Vael. Migration from old app verified.
 
-## Phase 5: Polish + Distribution (Weeks 12-14)
+## Phase 5: Polish + Distribution (Weeks 14-16)
 
 | Task | Details |
 |------|---------|

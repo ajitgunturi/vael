@@ -7,11 +7,29 @@ import 'key_storage.dart';
 
 /// Result of first-device setup or passphrase change.
 /// Contains data to be uploaded to Drive manifest.
+/// Result of first-device setup or passphrase change.
+/// Contains data to be uploaded to Drive manifest.
 class CryptoSetupResult {
   final Uint8List wrappedFek;
   final Uint8List salt;
 
   CryptoSetupResult({required this.wrappedFek, required this.salt});
+}
+
+/// Info needed to re-wrap FEK for a member during rotation.
+class MemberKeyInfo {
+  final String passphrase;
+  final Uint8List salt;
+
+  MemberKeyInfo({required this.passphrase, required this.salt});
+}
+
+/// Result of FEK rotation.
+class FekRotationResult {
+  final Uint8List newFek;
+  final Map<String, Uint8List> wrappedFeks;
+
+  FekRotationResult({required this.newFek, required this.wrappedFeks});
 }
 
 /// Coordinates crypto operations across key derivation, FEK management,
@@ -83,6 +101,57 @@ class CryptoOrchestrator {
     await keyStorage.storeFek(familyId, fek);
 
     return CryptoSetupResult(wrappedFek: newWrappedFek, salt: newSalt);
+  }
+
+  /// Wrap the current FEK for a new member with their own passphrase.
+  ///
+  /// Used when adding a member who sets an individual passphrase,
+  /// or when a member re-wraps after initial onboarding.
+  Future<CryptoSetupResult> wrapFekForMember({
+    required String familyId,
+    required String passphrase,
+  }) async {
+    final fek = await keyStorage.getFek(familyId);
+    if (fek == null) throw StateError('No FEK stored for family $familyId');
+    final salt = keyDerivation.generateSalt();
+    final kek = keyDerivation.deriveKey(passphrase, salt);
+    final wrappedFek = fekManager.wrapFek(fek, kek);
+    return CryptoSetupResult(wrappedFek: wrappedFek, salt: salt);
+  }
+
+  /// Rotate FEK: generate new FEK, re-wrap for specified members.
+  ///
+  /// Returns the new FEK and a map of userId → wrappedFek.
+  /// Caller must update the manifest with the new wrapped FEKs.
+  Future<FekRotationResult> rotateFek({
+    required String familyId,
+    required Map<String, MemberKeyInfo> memberKeys,
+  }) async {
+    final newFek = fekManager.generateFek();
+    final wrappedFeks = <String, Uint8List>{};
+
+    for (final entry in memberKeys.entries) {
+      final kek = keyDerivation.deriveKey(
+        entry.value.passphrase,
+        entry.value.salt,
+      );
+      wrappedFeks[entry.key] = fekManager.wrapFek(newFek, kek);
+    }
+
+    await keyStorage.storeFek(familyId, newFek);
+    return FekRotationResult(newFek: newFek, wrappedFeks: wrappedFeks);
+  }
+
+  /// Re-wrap an existing FEK with a new KEK derived from the member's
+  /// passphrase and salt. Used during FEK rotation when we have the
+  /// raw FEK but need to wrap it for each remaining member.
+  Uint8List rewrapFekForMember({
+    required Uint8List fek,
+    required String passphrase,
+    required Uint8List salt,
+  }) {
+    final kek = keyDerivation.deriveKey(passphrase, salt);
+    return fekManager.wrapFek(fek, kek);
   }
 
   /// Encrypts data using the stored FEK for the given family.

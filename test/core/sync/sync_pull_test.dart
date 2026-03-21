@@ -6,15 +6,15 @@ import 'package:vael/core/crypto/aes_gcm.dart';
 import 'package:vael/core/database/database.dart';
 import 'package:vael/core/database/daos/sync_state_dao.dart';
 import 'package:vael/core/sync/changeset_serializer.dart';
-import 'package:vael/core/sync/drive_client_interface.dart';
+import 'package:vael/core/sync/cloud_storage_interface.dart';
 import 'package:vael/core/sync/sync_pull.dart';
 
-class MockDriveClient implements DriveClientInterface {
-  final List<DriveFileEntry> files = [];
+class MockCloudStorage implements CloudStorageInterface {
+  final List<CloudFileEntry> files = [];
   final Map<String, Uint8List> fileData = {};
 
   @override
-  Future<List<DriveFileEntry>> listChangesets({DateTime? after}) async {
+  Future<List<CloudFileEntry>> listChangesets({DateTime? after}) async {
     if (after == null) return files;
     return files.where((f) => f.modifiedTime.isAfter(after)).toList();
   }
@@ -46,7 +46,7 @@ class MockDriveClient implements DriveClientInterface {
     final encrypted = AesGcm().encrypt(bytes, fek);
 
     files.add(
-      DriveFileEntry(
+      CloudFileEntry(
         id: fileId,
         name: '$fileId.enc',
         modifiedTime: modifiedTime,
@@ -60,19 +60,19 @@ void main() {
   group('SyncPull', () {
     late AppDatabase db;
     late SyncStateDao stateDao;
-    late MockDriveClient driveClient;
+    late MockCloudStorage cloudStorage;
     late SyncPull syncPull;
     late Uint8List fek;
 
     setUp(() {
       db = AppDatabase(NativeDatabase.memory());
       stateDao = SyncStateDao(db);
-      driveClient = MockDriveClient();
+      cloudStorage = MockCloudStorage();
       fek = Uint8List.fromList(List.generate(32, (i) => i));
 
       syncPull = SyncPull(
         stateDao: stateDao,
-        driveClient: driveClient,
+        cloudStorage: cloudStorage,
         serializer: ChangesetSerializer(),
         aesGcm: AesGcm(),
         fek: fek,
@@ -89,7 +89,7 @@ void main() {
       final appliedOps = <SyncOperation>[];
       syncPull = SyncPull(
         stateDao: stateDao,
-        driveClient: driveClient,
+        cloudStorage: cloudStorage,
         serializer: ChangesetSerializer(),
         aesGcm: AesGcm(),
         fek: fek,
@@ -97,7 +97,7 @@ void main() {
         applyOperations: (ops) async => appliedOps.addAll(ops),
       );
 
-      driveClient.addEncryptedChangeset(
+      cloudStorage.addEncryptedChangeset(
         'cs-1',
         Changeset(
           deviceId: 'device-A',
@@ -129,7 +129,7 @@ void main() {
       final appliedOps = <SyncOperation>[];
       syncPull = SyncPull(
         stateDao: stateDao,
-        driveClient: driveClient,
+        cloudStorage: cloudStorage,
         serializer: ChangesetSerializer(),
         aesGcm: AesGcm(),
         fek: fek,
@@ -137,7 +137,7 @@ void main() {
         applyOperations: (ops) async => appliedOps.addAll(ops),
       );
 
-      driveClient.addEncryptedChangeset(
+      cloudStorage.addEncryptedChangeset(
         'cs-own',
         Changeset(
           deviceId: 'device-B', // Same device
@@ -164,7 +164,7 @@ void main() {
     test('updates lastPullAt after successful pull', () async {
       await stateDao.initDevice('device-B');
 
-      driveClient.addEncryptedChangeset(
+      cloudStorage.addEncryptedChangeset(
         'cs-1',
         Changeset(
           deviceId: 'device-A',
@@ -188,7 +188,7 @@ void main() {
       await stateDao.recordPull('device-B', DateTime.utc(2026, 3, 20, 9, 0));
 
       // Old changeset (before last pull) — should be skipped by listChangesets
-      driveClient.addEncryptedChangeset(
+      cloudStorage.addEncryptedChangeset(
         'cs-old',
         Changeset(
           deviceId: 'device-A',
@@ -208,7 +208,7 @@ void main() {
       );
 
       // New changeset (after last pull)
-      driveClient.addEncryptedChangeset(
+      cloudStorage.addEncryptedChangeset(
         'cs-new',
         Changeset(
           deviceId: 'device-A',
@@ -230,7 +230,7 @@ void main() {
       final appliedOps = <SyncOperation>[];
       syncPull = SyncPull(
         stateDao: stateDao,
-        driveClient: driveClient,
+        cloudStorage: cloudStorage,
         serializer: ChangesetSerializer(),
         aesGcm: AesGcm(),
         fek: fek,
@@ -250,7 +250,7 @@ void main() {
       final appliedOps = <SyncOperation>[];
       syncPull = SyncPull(
         stateDao: stateDao,
-        driveClient: driveClient,
+        cloudStorage: cloudStorage,
         serializer: ChangesetSerializer(),
         aesGcm: AesGcm(),
         fek: fek,
@@ -269,7 +269,7 @@ void main() {
       final appliedIds = <String>[];
       syncPull = SyncPull(
         stateDao: stateDao,
-        driveClient: driveClient,
+        cloudStorage: cloudStorage,
         serializer: ChangesetSerializer(),
         aesGcm: AesGcm(),
         fek: fek,
@@ -280,7 +280,7 @@ void main() {
       );
 
       // Add in reverse order
-      driveClient.addEncryptedChangeset(
+      cloudStorage.addEncryptedChangeset(
         'cs-2',
         Changeset(
           deviceId: 'device-A',
@@ -298,7 +298,7 @@ void main() {
         fek,
         DateTime.utc(2026, 3, 20, 11, 0),
       );
-      driveClient.addEncryptedChangeset(
+      cloudStorage.addEncryptedChangeset(
         'cs-1',
         Changeset(
           deviceId: 'device-A',

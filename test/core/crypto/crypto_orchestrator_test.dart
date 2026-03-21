@@ -248,5 +248,182 @@ void main() {
         throwsA(isA<StateError>()),
       );
     });
+
+    test('decryptData throws when no FEK stored', () {
+      expect(
+        () => orchestrator.decryptData(
+          'no-such-family',
+          Uint8List.fromList([1, 2, 3]),
+        ),
+        throwsA(isA<StateError>()),
+      );
+    });
+  });
+
+  group('CryptoOrchestrator — Per-Member Wrapping', () {
+    late CryptoOrchestrator orchestrator;
+    late KeyStorage keyStorage;
+
+    setUp(() {
+      keyStorage = KeyStorage(storage: InMemorySecureStorage());
+      orchestrator = CryptoOrchestrator(
+        keyDerivation: KeyDerivation(),
+        fekManager: FekManager(
+          keyDerivation: KeyDerivation(),
+          aesGcm: AesGcm(),
+        ),
+        keyStorage: keyStorage,
+        aesGcm: AesGcm(),
+      );
+    });
+
+    test('wrapFekForMember wraps stored FEK with member passphrase', () async {
+      await orchestrator.setupFirstDevice(
+        familyId: 'family-001',
+        passphrase: 'admin-pass',
+      );
+
+      final result = await orchestrator.wrapFekForMember(
+        familyId: 'family-001',
+        passphrase: 'member-pass',
+      );
+
+      expect(result.wrappedFek, isNotEmpty);
+      expect(result.salt.length, 32);
+
+      // Member can unwrap with their passphrase
+      final kd = KeyDerivation();
+      final kek = kd.deriveKey('member-pass', result.salt);
+      final fm = FekManager(keyDerivation: kd, aesGcm: AesGcm());
+      final unwrapped = fm.unwrapFek(result.wrappedFek, kek);
+
+      // Same FEK as admin's
+      expect(unwrapped, equals(await keyStorage.getFek('family-001')));
+    });
+
+    test('wrapFekForMember throws when no FEK stored', () {
+      expect(
+        () => orchestrator.wrapFekForMember(
+          familyId: 'no-such-family',
+          passphrase: 'pass',
+        ),
+        throwsA(isA<StateError>()),
+      );
+    });
+
+    test('rewrapFekForMember wraps given FEK with passphrase', () async {
+      await orchestrator.setupFirstDevice(
+        familyId: 'family-001',
+        passphrase: 'admin-pass',
+      );
+      final fek = await keyStorage.getFek('family-001');
+      final salt = KeyDerivation().generateSalt();
+
+      final wrapped = orchestrator.rewrapFekForMember(
+        fek: fek!,
+        passphrase: 'member-pass',
+        salt: salt,
+      );
+
+      // Can unwrap to get same FEK
+      final kd = KeyDerivation();
+      final kek = kd.deriveKey('member-pass', salt);
+      final fm = FekManager(keyDerivation: kd, aesGcm: AesGcm());
+      expect(fm.unwrapFek(wrapped, kek), equals(fek));
+    });
+  });
+
+  group('CryptoOrchestrator — FEK Rotation', () {
+    late CryptoOrchestrator orchestrator;
+    late KeyStorage keyStorage;
+
+    setUp(() {
+      keyStorage = KeyStorage(storage: InMemorySecureStorage());
+      orchestrator = CryptoOrchestrator(
+        keyDerivation: KeyDerivation(),
+        fekManager: FekManager(
+          keyDerivation: KeyDerivation(),
+          aesGcm: AesGcm(),
+        ),
+        keyStorage: keyStorage,
+        aesGcm: AesGcm(),
+      );
+    });
+
+    test('rotateFek generates new FEK and wraps for all members', () async {
+      await orchestrator.setupFirstDevice(
+        familyId: 'family-001',
+        passphrase: 'admin-pass',
+      );
+      final oldFek = await keyStorage.getFek('family-001');
+
+      final kd = KeyDerivation();
+      final saltA = kd.generateSalt();
+      final saltB = kd.generateSalt();
+
+      final result = await orchestrator.rotateFek(
+        familyId: 'family-001',
+        memberKeys: {
+          'user-A': MemberKeyInfo(passphrase: 'pass-A', salt: saltA),
+          'user-B': MemberKeyInfo(passphrase: 'pass-B', salt: saltB),
+        },
+      );
+
+      // New FEK is different from old
+      expect(result.newFek, isNot(equals(oldFek)));
+
+      // New FEK stored locally
+      expect(await keyStorage.getFek('family-001'), equals(result.newFek));
+
+      // Both members can unwrap new FEK
+      expect(result.wrappedFeks, hasLength(2));
+
+      final fm = FekManager(keyDerivation: kd, aesGcm: AesGcm());
+      final kekA = kd.deriveKey('pass-A', saltA);
+      expect(
+        fm.unwrapFek(result.wrappedFeks['user-A']!, kekA),
+        equals(result.newFek),
+      );
+
+      final kekB = kd.deriveKey('pass-B', saltB);
+      expect(
+        fm.unwrapFek(result.wrappedFeks['user-B']!, kekB),
+        equals(result.newFek),
+      );
+    });
+
+    test(
+      'data encrypted with old FEK cannot be decrypted after rotation',
+      () async {
+        await orchestrator.setupFirstDevice(
+          familyId: 'family-001',
+          passphrase: 'pass',
+        );
+
+        final plaintext = Uint8List.fromList([10, 20, 30]);
+        final encrypted = await orchestrator.encryptData(
+          'family-001',
+          plaintext,
+        );
+
+        // Rotate
+        final kd = KeyDerivation();
+        await orchestrator.rotateFek(
+          familyId: 'family-001',
+          memberKeys: {
+            'user-A': MemberKeyInfo(
+              passphrase: 'pass',
+              salt: kd.generateSalt(),
+            ),
+          },
+        );
+
+        // Old ciphertext cannot be decrypted with new FEK
+        expect(
+          () => orchestrator.decryptData('family-001', encrypted),
+          throwsA(isA<DecryptionException>()),
+        );
+      },
+    );
   });
 }
