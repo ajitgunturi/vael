@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/database/database.dart';
 import '../../../core/financial/dashboard_aggregation.dart';
 import '../../../shared/theme/color_tokens.dart';
-import '../../../shared/theme/spacing.dart';
 import '../../../shared/utils/account_icons.dart';
 import '../../../shared/utils/formatters.dart';
 import '../providers/account_ui_providers.dart';

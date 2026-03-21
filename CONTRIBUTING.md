@@ -17,12 +17,12 @@ Key constraints:
 
 ```bash
 # Prerequisites: Flutter 3.x, Dart SDK
-flutter pub get
-dart run build_runner build --delete-conflicting-outputs
-flutter test
+make setup                       # Install deps + activate pre-commit hooks
+make build-runner                # Generate drift code
+make check                       # Format + lint + test
 ```
 
-Use `make check` to run both analysis and tests in one step.
+The `make setup` command activates pre-commit hooks (`.githooks/`) that run format check, static analysis, and the full test suite before every commit. This prevents CI failures from reaching the remote.
 
 ## TDD Is Mandatory
 

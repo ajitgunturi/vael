@@ -35,9 +35,9 @@ All financial data is encrypted client-side before leaving the device. Google Dr
 ## Development
 
 ```bash
-flutter pub get                  # Install dependencies
+make setup                       # Install deps + activate git hooks
 make build-runner                # Generate drift code
-make check                       # Lint + test in one step
+make check                       # Format + lint + test in one step
 make coverage                    # Test with coverage report
 ```
 

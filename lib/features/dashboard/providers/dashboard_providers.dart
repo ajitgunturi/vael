@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/database/database.dart';
 import '../../../core/database/daos/account_dao.dart';
 import '../../../core/database/daos/transaction_dao.dart';
 import '../../../core/financial/dashboard_aggregation.dart';

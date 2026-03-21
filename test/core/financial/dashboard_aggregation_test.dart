@@ -220,7 +220,6 @@ void main() {
         balance: 0,
       );
 
-      final transactions = <Transaction>[];
       // Income
       await _insertTransaction(
         id: 'tx1',

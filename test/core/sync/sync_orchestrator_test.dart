@@ -10,7 +10,6 @@ import 'package:vael/core/crypto/key_storage.dart';
 import 'package:vael/core/database/database.dart';
 import 'package:vael/core/database/daos/sync_changelog_dao.dart';
 import 'package:vael/core/database/daos/sync_state_dao.dart';
-import 'package:vael/core/sync/changeset_serializer.dart';
 import 'package:vael/core/sync/drive_client_interface.dart';
 import 'package:vael/core/sync/sync_orchestrator.dart';
 

@@ -1,4 +1,4 @@
-.PHONY: test build-runner coverage analyze clean get
+.PHONY: test build-runner coverage analyze clean get setup format check
 
 FLUTTER := flutter
 
@@ -28,5 +28,13 @@ clean:
 format:
 	dart format lib test
 
-check: analyze test
+check: format-check analyze test
 	@echo "All checks passed."
+
+format-check:
+	dart format --set-exit-if-changed lib test
+
+setup:
+	$(FLUTTER) pub get
+	git config core.hooksPath .githooks
+	@echo "Done. Git hooks active from .githooks/"

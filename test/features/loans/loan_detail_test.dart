@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vael/core/database/database.dart';
 import 'package:vael/core/financial/amortization.dart';
-import 'package:vael/core/financial/amortization_row.dart';
 import 'package:vael/features/loans/providers/loan_providers.dart';
 import 'package:vael/features/loans/screens/loan_detail_screen.dart';
 

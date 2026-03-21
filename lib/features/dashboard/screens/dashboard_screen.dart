@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/database/database.dart';
 import '../../../core/financial/dashboard_aggregation.dart';
-import '../../../core/financial/goal_tracking.dart';
 import '../../../shared/theme/color_tokens.dart';
 import '../../../shared/theme/spacing.dart';
 import '../../../shared/utils/formatters.dart';
