@@ -52,8 +52,21 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
         .get();
   }
 
+  /// Watches all transactions for [familyId], ordered by date descending.
+  Stream<List<Transaction>> watchAll(String familyId) {
+    return (select(transactions)
+          ..where((t) => t.familyId.equals(familyId))
+          ..orderBy([(t) => OrderingTerm.desc(t.date)]))
+        .watch();
+  }
+
   /// Inserts a new transaction row.
   Future<int> insertTransaction(TransactionsCompanion entry) {
     return into(transactions).insert(entry);
+  }
+
+  /// Deletes a transaction by [id].
+  Future<int> deleteTransaction(String id) {
+    return (delete(transactions)..where((t) => t.id.equals(id))).go();
   }
 }

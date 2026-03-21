@@ -38,6 +38,15 @@ class AccountDao extends DatabaseAccessor<AppDatabase> with _$AccountDaoMixin {
         .get();
   }
 
+  /// Watches all non-deleted accounts belonging to [familyId].
+  /// Re-emits whenever the accounts table changes.
+  Stream<List<Account>> watchAll(String familyId) {
+    return (select(accounts)
+          ..where((a) =>
+              a.familyId.equals(familyId) & a.deletedAt.isNull()))
+        .watch();
+  }
+
   /// Inserts a new account row.
   Future<int> insertAccount(AccountsCompanion entry) {
     return into(accounts).insert(entry);
