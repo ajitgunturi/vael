@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../database/database.dart';
 import '../database/daos/account_dao.dart';
+import '../database/daos/budget_dao.dart';
 
 /// Root provider for the app's drift database.
 ///
@@ -17,4 +18,9 @@ final databaseProvider = Provider<AppDatabase>((ref) {
 /// Derives an [AccountDao] from the database.
 final accountDaoProvider = Provider<AccountDao>((ref) {
   return AccountDao(ref.watch(databaseProvider));
+});
+
+/// Derives a [BudgetDao] from the database.
+final budgetDaoProvider = Provider<BudgetDao>((ref) {
+  return BudgetDao(ref.watch(databaseProvider));
 });

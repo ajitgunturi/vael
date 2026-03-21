@@ -3,6 +3,7 @@ import 'package:drift/drift.dart';
 import 'tables/accounts.dart';
 import 'tables/audit_log.dart';
 import 'tables/balance_snapshots.dart';
+import 'tables/budgets.dart';
 import 'tables/categories.dart';
 import 'tables/families.dart';
 import 'tables/goals.dart';
@@ -20,10 +21,11 @@ part 'database.g.dart';
   BalanceSnapshots,
   AuditLog,
   Goals,
+  Budgets,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e);
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 }
