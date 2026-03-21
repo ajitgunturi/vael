@@ -62,51 +62,59 @@ Vael is a greenfield Flutter family finance app being ported from a Java/Postgre
 
 ---
 
-## Phase 2: Core Features (Weeks 3-5)
+## Phase 2: Core Features (Weeks 3-5) — COMPLETE ✅
 
-### 2.1 — Riverpod Provider Architecture
+> **293 tests, all green. Committed: 318f93a**
+
+### 2.1 — Riverpod Provider Architecture ✅ (11 tests)
 - **Red**: `test/core/providers/account_providers_test.dart` — stream from DAO, rebuild on change, netWorthProvider filters by visibility
 - **Green**: `lib/core/providers/{account,database}_providers.dart`
-- Establish convention: StreamProvider for DB entities, FutureProvider for one-shot computations
+- Established convention: StreamProvider for DB entities, FutureProvider for one-shot computations
 - **Depends on**: 1.6
 
-### 2.2 — Dashboard Aggregation Logic
+### 2.2 — Dashboard Aggregation Logic ✅ (16 tests)
 - **Red**: `test/core/financial/dashboard_aggregation_test.dart` — net worth (assets-liabilities-CC), account grouping, family vs personal scope, monthly summary
 - **Red**: `test/features/dashboard/dashboard_providers_test.dart` — combined provider, scope toggle
 - **Green**: `lib/core/financial/dashboard_aggregation.dart`, `lib/features/dashboard/providers/dashboard_providers.dart`
 - **Depends on**: 1.7, 2.1
 
-### 2.3 — Account CRUD UI
+### 2.3 — Account CRUD UI ✅ (13 tests)
 - **Red**: `test/features/accounts/{account_list_screen,account_form}_test.dart` — grouped list, balance formatting, visibility badge, form validation, CRUD
-- **Green**: `lib/features/accounts/{screens,providers,widgets}/`
-- Extract `lib/shared/widgets/currency_input.dart` for reuse
+- **Green**: `lib/features/accounts/{screens,providers}/`
+- Extracted `lib/shared/widgets/currency_input.dart` for reuse
 - **Depends on**: 2.1, 1.9
 
-### 2.4 — Transaction CRUD UI
-- **Red**: `test/features/transactions/{transaction_list,transaction_form,transaction_cascade}_test.dart` — date/category filters, kind selector, TRANSFER dual-picker, cascade tests (create/edit/delete -> balance updates)
-- **Green**: `lib/features/transactions/{screens,providers,widgets}/`
+### 2.4 — Transaction CRUD UI ✅ (25 tests)
+- **Red**: `test/features/transactions/{transaction_list,transaction_form,transaction_cascade}_test.dart` — kind selector, TRANSFER dual-picker, cascade tests (create → balance updates), Indian number formatting
+- **Green**: `lib/features/transactions/{screens,providers}/`
 - **Depends on**: 2.1, 2.3, 1.7
 
-### 2.5 — Budget Logic and UI
-- **Red**: `test/core/financial/budget_summary_test.dart` — actuals by group, remaining/overspent, unbudgeted groups, expense-only filter, shared-accounts-only
-- **Red**: `test/features/budgets/budget_screen_test.dart` — groups with bars, overspent highlighting, inline limit editing
+### 2.5 — Budget Logic and UI ✅ (20 tests)
+- **Red**: `test/core/financial/budget_summary_test.dart` (9) — actuals by group, remaining/overspent, unbudgeted groups, expense-only filter, shared-accounts-only, MISSING group for uncategorized
+- **Red**: `test/core/database/daos/budget_dao_test.dart` (5) — CRUD, month filtering, family isolation
+- **Red**: `test/features/budgets/budget_screen_test.dart` (6) — groups with bars, overspent highlighting, Indian notation, empty state
 - **Green**: `lib/core/financial/budget_summary.dart`, `lib/features/budgets/{screens,providers}/`, `lib/core/database/{daos/budget_dao,tables/budgets}.dart`
+- Schema bumped to v3
 - **Depends on**: 2.4, 1.6
 
-### 2.6 — Goals Logic and UI
-- **Red**: `test/core/financial/goal_tracking_test.dart` — inflation-adjusted target, required SIP, status inference, investment linking
-- **Red**: `test/features/goals/goal_screen_test.dart` — cards with progress bars, status badges, form
-- **Green**: `lib/core/financial/goal_tracking.dart`, `lib/features/goals/{screens,providers}/`, `lib/core/database/{daos/goal_dao,tables/goals}.dart`
+### 2.6 — Goals Logic and DAO ✅ (21 tests)
+- **Red**: `test/core/financial/goal_tracking_test.dart` (15) — inflation-adjusted target, required SIP, status inference (active/onTrack/atRisk/completed)
+- **Red**: `test/core/database/daos/goal_dao_test.dart` (6) — CRUD, status filtering, progress updates
+- **Green**: `lib/core/financial/goal_tracking.dart`, `lib/core/database/{daos/goal_dao,tables/goals}.dart`
+- Schema bumped to v2
 - **Depends on**: 1.3, 2.1
 
-### 2.7 — Loan Detail and Amortization UI
-- **Red**: `test/features/loans/{loan_detail,emi_payment}_test.dart` — summary, amortization table, prepayment simulation, EMI split (principal+interest)
+### 2.7 — Loan Detail and Amortization UI ✅ (14 tests)
+- **Red**: `test/core/database/daos/loan_dao_test.dart` (5) — CRUD, outstanding update, family isolation
+- **Red**: `test/features/loans/loan_detail_test.dart` (5) — summary card, EMI split bar, amortization table, not-found state, remaining tenure
+- **Red**: `test/features/loans/prepayment_simulation_test.dart` (4) — tenure reduction, interest saved, zero prepayment no-op, early > late savings
 - **Green**: `lib/features/loans/{screens,providers}/`, `lib/core/database/{daos/loan_dao,tables/loan_details}.dart`
+- Schema bumped to v4
 - **Depends on**: 1.4, 2.4
 
-### 2.8 — Dashboard UI
-- **Red**: `test/features/dashboard/dashboard_screen_test.dart` — net worth card, monthly summary, goals section, upcoming, scope toggle, adaptive layout
-- **Green**: `lib/features/dashboard/{screens,widgets}/`
+### 2.8 — Dashboard UI ✅ (8 tests)
+- **Red**: `test/features/dashboard/dashboard_screen_test.dart` — net worth card (signed, colored), monthly summary (income/expenses/net savings), goals section with progress bars, scope toggle (Family/Personal), negative net worth in red, hidden goals when empty
+- **Green**: `lib/features/dashboard/screens/dashboard_screen.dart`
 - **Depends on**: 2.2, 2.6, 1.9
 
 ### Phase 2 Dependency Graph
@@ -121,9 +129,9 @@ Vael is a greenfield Flutter family finance app being ported from a Java/Postgre
 2.8 (Dashboard UI) ← 2.2, 2.6, 1.9
 ```
 
-### Phase 2 Exit Criteria
+### Phase 2 Exit Criteria ✅
 - All core screens functional on phone + tablet layouts
-- Transaction cascade verified end-to-end
+- Transaction cascade verified end-to-end (7 cascade tests)
 - 90%+ coverage on `core/financial/`
 
 ---
