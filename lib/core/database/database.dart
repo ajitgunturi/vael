@@ -7,6 +7,7 @@ import 'tables/budgets.dart';
 import 'tables/categories.dart';
 import 'tables/families.dart';
 import 'tables/goals.dart';
+import 'tables/loan_details.dart';
 import 'tables/transactions.dart';
 import 'tables/users.dart';
 
@@ -22,10 +23,11 @@ part 'database.g.dart';
   AuditLog,
   Goals,
   Budgets,
+  LoanDetails,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e);
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 }
