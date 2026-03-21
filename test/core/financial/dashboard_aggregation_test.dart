@@ -256,6 +256,116 @@ void main() {
     });
   });
 
+  group('NetWorthHistory', () {
+    test('computes net worth per date from snapshots', () async {
+      await _seedFamily('fam_a');
+      final savings = await _insertAccount(
+          id: 'sav', familyId: 'fam_a', type: 'savings', balance: 500000);
+      final loan = await _insertAccount(
+          id: 'loan', familyId: 'fam_a', type: 'loan', balance: 200000);
+
+      // Insert snapshots
+      await db.into(db.balanceSnapshots).insert(BalanceSnapshotsCompanion.insert(
+            id: 's1', accountId: 'sav',
+            snapshotDate: DateTime(2025, 1, 1), balance: 300000,
+            familyId: 'fam_a',
+          ));
+      await db.into(db.balanceSnapshots).insert(BalanceSnapshotsCompanion.insert(
+            id: 's2', accountId: 'loan',
+            snapshotDate: DateTime(2025, 1, 1), balance: 250000,
+            familyId: 'fam_a',
+          ));
+      await db.into(db.balanceSnapshots).insert(BalanceSnapshotsCompanion.insert(
+            id: 's3', accountId: 'sav',
+            snapshotDate: DateTime(2025, 2, 1), balance: 400000,
+            familyId: 'fam_a',
+          ));
+      await db.into(db.balanceSnapshots).insert(BalanceSnapshotsCompanion.insert(
+            id: 's4', accountId: 'loan',
+            snapshotDate: DateTime(2025, 2, 1), balance: 240000,
+            familyId: 'fam_a',
+          ));
+
+      final snapshots = await db.select(db.balanceSnapshots).get();
+      final history = DashboardAggregation.computeNetWorthHistory(
+        snapshots, [savings, loan],
+      );
+
+      expect(history.length, 2);
+      // Jan: 300000 - 250000 = 50000
+      expect(history[0].netWorth, 50000);
+      expect(history[0].date, DateTime(2025, 1, 1));
+      // Feb: 400000 - 240000 = 160000
+      expect(history[1].netWorth, 160000);
+      expect(history[1].date, DateTime(2025, 2, 1));
+    });
+
+    test('returns empty list for no snapshots', () {
+      final history = DashboardAggregation.computeNetWorthHistory([], []);
+      expect(history, isEmpty);
+    });
+
+    test('results are sorted chronologically', () async {
+      await _seedFamily('fam_a');
+      final savings = await _insertAccount(
+          id: 'sav', familyId: 'fam_a', type: 'savings', balance: 100000);
+
+      // Insert out of order
+      await db.into(db.balanceSnapshots).insert(BalanceSnapshotsCompanion.insert(
+            id: 's2', accountId: 'sav',
+            snapshotDate: DateTime(2025, 3, 1), balance: 300000,
+            familyId: 'fam_a',
+          ));
+      await db.into(db.balanceSnapshots).insert(BalanceSnapshotsCompanion.insert(
+            id: 's1', accountId: 'sav',
+            snapshotDate: DateTime(2025, 1, 1), balance: 100000,
+            familyId: 'fam_a',
+          ));
+
+      final snapshots = await db.select(db.balanceSnapshots).get();
+      final history = DashboardAggregation.computeNetWorthHistory(
+        snapshots, [savings],
+      );
+
+      expect(history[0].date.isBefore(history[1].date), isTrue);
+    });
+  });
+
+  group('SavingsRate', () {
+    test('computes savings rate as percentage of income', () {
+      final summary = MonthlySummary(
+        totalIncome: 5000000,
+        totalExpenses: 3000000,
+      );
+      // (5M - 3M) / 5M * 100 = 40%
+      expect(DashboardAggregation.computeSavingsRate(summary), 40.0);
+    });
+
+    test('returns 0 when income is zero', () {
+      final summary = MonthlySummary(
+        totalIncome: 0,
+        totalExpenses: 100000,
+      );
+      expect(DashboardAggregation.computeSavingsRate(summary), 0.0);
+    });
+
+    test('returns negative when expenses exceed income', () {
+      final summary = MonthlySummary(
+        totalIncome: 100000,
+        totalExpenses: 150000,
+      );
+      expect(DashboardAggregation.computeSavingsRate(summary), -50.0);
+    });
+
+    test('returns 100 when no expenses', () {
+      final summary = MonthlySummary(
+        totalIncome: 500000,
+        totalExpenses: 0,
+      );
+      expect(DashboardAggregation.computeSavingsRate(summary), 100.0);
+    });
+  });
+
   group('ScopeFiltering', () {
     test('family scope includes shared and familyWide, excludes private',
         () async {

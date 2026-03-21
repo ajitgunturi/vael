@@ -114,6 +114,57 @@ class DashboardAggregation {
     return MonthlySummary(totalIncome: income, totalExpenses: expenses);
   }
 
+  /// Computes net worth over time from balance snapshots.
+  ///
+  /// Groups snapshots by date, sums assets minus liabilities per date.
+  /// Returns list of (date, netWorth) pairs sorted chronologically.
+  static List<({DateTime date, int netWorth})> computeNetWorthHistory(
+    List<BalanceSnapshot> snapshots,
+    List<Account> accounts,
+  ) {
+    // Build a map of accountId -> type for asset/liability classification.
+    final accountTypes = <String, String>{};
+    for (final a in accounts) {
+      accountTypes[a.id] = a.type;
+    }
+
+    // Group snapshots by date (day granularity).
+    final byDate = <DateTime, Map<String, int>>{};
+    for (final s in snapshots) {
+      final day = DateTime(
+          s.snapshotDate.year, s.snapshotDate.month, s.snapshotDate.day);
+      byDate.putIfAbsent(day, () => {});
+      byDate[day]![s.accountId] = s.balance;
+    }
+
+    // Compute net worth per date.
+    final result = <({DateTime date, int netWorth})>[];
+    for (final entry in byDate.entries) {
+      int netWorth = 0;
+      for (final accountEntry in entry.value.entries) {
+        final type = accountTypes[accountEntry.key];
+        if (_assetTypes.contains(type)) {
+          netWorth += accountEntry.value;
+        } else if (_liabilityTypes.contains(type)) {
+          netWorth -= accountEntry.value;
+        }
+      }
+      result.add((date: entry.key, netWorth: netWorth));
+    }
+
+    result.sort((a, b) => a.date.compareTo(b.date));
+    return result;
+  }
+
+  /// Computes savings rate as a percentage.
+  ///
+  /// Formula: (income - expenses) / income * 100.
+  /// Returns 0 if income is zero (avoids division by zero).
+  static double computeSavingsRate(MonthlySummary summary) {
+    if (summary.totalIncome == 0) return 0.0;
+    return (summary.netSavings / summary.totalIncome) * 100;
+  }
+
   /// Filters accounts by scope.
   ///
   /// - [DashboardScope.family]: shared + familyWide (excludes private_)

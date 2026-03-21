@@ -11,16 +11,21 @@ final dashboardScopeProvider = StateProvider<DashboardScope>(
   (ref) => DashboardScope.family,
 );
 
-/// Combined dashboard data: grouped accounts, net worth, monthly summary.
+/// Combined dashboard data: grouped accounts, net worth, monthly summary,
+/// savings rate, and net worth history for chart.
 class DashboardData {
   final AccountGroups grouped;
   final int netWorth;
   final MonthlySummary monthlySummary;
+  final double savingsRate;
+  final List<({DateTime date, int netWorth})> netWorthHistory;
 
   const DashboardData({
     required this.grouped,
     required this.netWorth,
     required this.monthlySummary,
+    this.savingsRate = 0.0,
+    this.netWorthHistory = const [],
   });
 }
 
@@ -57,10 +62,13 @@ final dashboardDataProvider =
     );
     final summary = DashboardAggregation.monthlySummary(transactions);
 
+    final savingsRate = DashboardAggregation.computeSavingsRate(summary);
+
     return DashboardData(
       grouped: grouped,
       netWorth: netWorth,
       monthlySummary: summary,
+      savingsRate: savingsRate,
     );
   });
 });
