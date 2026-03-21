@@ -35,11 +35,14 @@ All financial data is encrypted client-side before leaving the device. Google Dr
 ## Development
 
 ```bash
-make setup                       # Install deps + activate git hooks
+cp .env.example .env             # Fill in Google OAuth client IDs (get from maintainer)
+make setup                       # Install deps + bootstrap credentials + activate git hooks
 make build-runner                # Generate drift code
 make check                       # Format + lint + test in one step
-make coverage                    # Test with coverage report
+make run-macos                   # Run on macOS (client IDs injected from .env)
 ```
+
+Credentials setup details in [CONTRIBUTING.md](CONTRIBUTING.md). Google Cloud project setup in [docs/GOOGLE_CLOUD_SETUP.md](docs/GOOGLE_CLOUD_SETUP.md).
 
 **517 tests** covering financial math, encryption round-trips, sync push/pull, conflict resolution, and UI.
 

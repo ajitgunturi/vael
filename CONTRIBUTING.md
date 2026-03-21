@@ -15,14 +15,46 @@ Key constraints:
 
 ## Development Setup
 
+### Prerequisites
+
+- Flutter 3.x, Dart SDK
+- A `.env` file with Google OAuth client IDs (see below)
+
+### First-Time Setup
+
 ```bash
-# Prerequisites: Flutter 3.x, Dart SDK
-make setup                       # Install deps + activate pre-commit hooks
+git clone <repo>
+cp .env.example .env             # Fill in values (see "Credentials" below)
+make setup                       # Install deps + bootstrap config + activate git hooks
 make build-runner                # Generate drift code
 make check                       # Format + lint + test
 ```
 
-The `make setup` command activates pre-commit hooks (`.githooks/`) that run format check, static analysis, and the full test suite before every commit. This prevents CI failures from reaching the remote.
+### Credentials
+
+Vael uses Google Sign-In for Drive sync. OAuth client IDs are **not** checked into git — they live in a `.env` file that you create locally.
+
+1. Get the `.env` file from a project maintainer (shared via secure channel — AirDrop, Signal, or password manager)
+2. Place it at the repo root: `cp /path/to/shared/.env .env`
+3. Run `make bootstrap` (or `make setup`, which runs bootstrap automatically)
+
+This generates the platform config files (`GoogleService-Info.plist`, `key.properties`) from your `.env`. These generated files are gitignored.
+
+If you need to create credentials from scratch (new Google Cloud project), see [docs/GOOGLE_CLOUD_SETUP.md](docs/GOOGLE_CLOUD_SETUP.md).
+
+Your Google account must also be added as a **test user** in the Google Cloud Console OAuth consent screen — ask a maintainer to add your email.
+
+### Running the App
+
+```bash
+make run-macos                   # macOS (injects client ID from .env automatically)
+make run-ios                     # iOS (uses generated GoogleService-Info.plist)
+make run-android                 # Android (uses SHA-1 registered in Cloud Console)
+```
+
+### Pre-Commit Hooks
+
+`make setup` activates pre-commit hooks (`.githooks/`) that run format check, static analysis, and the full test suite before every commit. This prevents CI failures from reaching the remote.
 
 ## TDD Is Mandatory
 

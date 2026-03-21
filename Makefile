@@ -1,9 +1,19 @@
-.PHONY: test build-runner coverage analyze clean get setup format check
+.PHONY: test build-runner coverage analyze clean get setup format check bootstrap run-macos run-ios run-android
 
 FLUTTER := flutter
 
+# Load .env if it exists (for build-time dart-defines)
+ifneq (,$(wildcard .env))
+  include .env
+  export
+endif
+
 get:
 	$(FLUTTER) pub get
+
+bootstrap:
+	@echo "Generating platform config files from .env..."
+	@./scripts/bootstrap.sh
 
 test:
 	$(FLUTTER) test
@@ -37,4 +47,16 @@ format-check:
 setup:
 	$(FLUTTER) pub get
 	git config core.hooksPath .githooks
+	@if [ -f .env ]; then ./scripts/bootstrap.sh; else echo "NOTE: No .env file. Copy .env.example to .env and run 'make bootstrap'"; fi
 	@echo "Done. Git hooks active from .githooks/"
+
+# ─── Platform run targets ────────────────────────────────────────────────────
+
+run-macos:
+	$(FLUTTER) run -d macos --dart-define=GOOGLE_CLIENT_ID_MACOS=$(GOOGLE_CLIENT_ID_MACOS) --dart-define=GOOGLE_CLIENT_SECRET_MACOS=$(GOOGLE_CLIENT_SECRET_MACOS)
+
+run-ios:
+	$(FLUTTER) run -d iPhone
+
+run-android:
+	$(FLUTTER) run -d android
