@@ -27,7 +27,7 @@
 - Passphrase setup screen (validation, confirmation, visibility toggle)
 - Sync status screen (device ID, pending count, timestamps, manual controls)
 
-## Test Count: 599 unit/widget (all green) + 29 simulator tests (iPhone) + 23 journey tests (iPad Pro 11-inch) — all green
+## Test Count: 599 unit/widget (all green) + 29 simulator tests (iPhone) + 23 journey tests (iPad Pro 11-inch) + 38 retroactive E2E tests (iPhone) — all green
 
 ## Current Work: E2E Simulator Test Suite — COMPLETE
 
