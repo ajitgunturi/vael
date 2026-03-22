@@ -56,12 +56,12 @@ Plans:
   3. FI Calculator works standalone with editable placeholder inputs even without a life profile configured
   4. User can see projected net worth at ages 30, 40, 50, 60, 70 with ON_TRACK/BEHIND/AHEAD status
   5. User can set custom target amounts for any milestone age and see status recalculate
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 07-01: TBD
-- [ ] 07-02: TBD
-- [ ] 07-03: TBD
+- [ ] 07-01-PLAN.md -- Pure-math engines (FiCalculator, MilestoneEngine), Drift table, DAO, schema v10 migration
+- [ ] 07-02-PLAN.md -- FI Calculator screen with hero card, secondary cards, 4 sensitivity sliders, standalone mode
+- [ ] 07-03-PLAN.md -- Milestone Dashboard screen with decade cards, status chips, edit sheet, Settings navigation wiring
 
 ### Phase 8: Asset Allocation & Purchase Planning
 **Goal**: User can see target vs actual asset allocation with rebalancing guidance, and model the financial impact of major life purchases
@@ -178,7 +178,7 @@ Note: Phases 9-10-11 (cash management track) depend on Phase 6 but not on Phases
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 6. Life Profile & Income Model | 3/3 | Complete | 2026-03-23 |
-| 7. FI Calculator & Net Worth Milestones | 0/? | Not started | - |
+| 7. FI Calculator & Net Worth Milestones | 0/3 | Planned | - |
 | 8. Asset Allocation & Purchase Planning | 0/? | Not started | - |
 | 9. Emergency Fund & Cash Tiers | 0/? | Not started | - |
 | 10. Sinking Funds & Savings Rate | 0/? | Not started | - |
