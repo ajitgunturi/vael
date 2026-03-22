@@ -6322,6 +6322,790 @@ class InvestmentHoldingsCompanion extends UpdateCompanion<InvestmentHolding> {
   }
 }
 
+class $LifeProfilesTable extends LifeProfiles
+    with TableInfo<$LifeProfilesTable, LifeProfile> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LifeProfilesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _familyIdMeta = const VerificationMeta(
+    'familyId',
+  );
+  @override
+  late final GeneratedColumn<String> familyId = GeneratedColumn<String>(
+    'family_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES families (id)',
+    ),
+  );
+  static const VerificationMeta _dateOfBirthMeta = const VerificationMeta(
+    'dateOfBirth',
+  );
+  @override
+  late final GeneratedColumn<DateTime> dateOfBirth = GeneratedColumn<DateTime>(
+    'date_of_birth',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _plannedRetirementAgeMeta =
+      const VerificationMeta('plannedRetirementAge');
+  @override
+  late final GeneratedColumn<int> plannedRetirementAge = GeneratedColumn<int>(
+    'planned_retirement_age',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(60),
+  );
+  static const VerificationMeta _riskProfileMeta = const VerificationMeta(
+    'riskProfile',
+  );
+  @override
+  late final GeneratedColumn<String> riskProfile = GeneratedColumn<String>(
+    'risk_profile',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('MODERATE'),
+  );
+  static const VerificationMeta _annualIncomeGrowthBpMeta =
+      const VerificationMeta('annualIncomeGrowthBp');
+  @override
+  late final GeneratedColumn<int> annualIncomeGrowthBp = GeneratedColumn<int>(
+    'annual_income_growth_bp',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(800),
+  );
+  static const VerificationMeta _expectedInflationBpMeta =
+      const VerificationMeta('expectedInflationBp');
+  @override
+  late final GeneratedColumn<int> expectedInflationBp = GeneratedColumn<int>(
+    'expected_inflation_bp',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(600),
+  );
+  static const VerificationMeta _safeWithdrawalRateBpMeta =
+      const VerificationMeta('safeWithdrawalRateBp');
+  @override
+  late final GeneratedColumn<int> safeWithdrawalRateBp = GeneratedColumn<int>(
+    'safe_withdrawal_rate_bp',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(300),
+  );
+  static const VerificationMeta _hikeMonthMeta = const VerificationMeta(
+    'hikeMonth',
+  );
+  @override
+  late final GeneratedColumn<int> hikeMonth = GeneratedColumn<int>(
+    'hike_month',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(4),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> deletedAt = GeneratedColumn<DateTime>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    userId,
+    familyId,
+    dateOfBirth,
+    plannedRetirementAge,
+    riskProfile,
+    annualIncomeGrowthBp,
+    expectedInflationBp,
+    safeWithdrawalRateBp,
+    hikeMonth,
+    createdAt,
+    updatedAt,
+    deletedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'life_profiles';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<LifeProfile> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('family_id')) {
+      context.handle(
+        _familyIdMeta,
+        familyId.isAcceptableOrUnknown(data['family_id']!, _familyIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_familyIdMeta);
+    }
+    if (data.containsKey('date_of_birth')) {
+      context.handle(
+        _dateOfBirthMeta,
+        dateOfBirth.isAcceptableOrUnknown(
+          data['date_of_birth']!,
+          _dateOfBirthMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_dateOfBirthMeta);
+    }
+    if (data.containsKey('planned_retirement_age')) {
+      context.handle(
+        _plannedRetirementAgeMeta,
+        plannedRetirementAge.isAcceptableOrUnknown(
+          data['planned_retirement_age']!,
+          _plannedRetirementAgeMeta,
+        ),
+      );
+    }
+    if (data.containsKey('risk_profile')) {
+      context.handle(
+        _riskProfileMeta,
+        riskProfile.isAcceptableOrUnknown(
+          data['risk_profile']!,
+          _riskProfileMeta,
+        ),
+      );
+    }
+    if (data.containsKey('annual_income_growth_bp')) {
+      context.handle(
+        _annualIncomeGrowthBpMeta,
+        annualIncomeGrowthBp.isAcceptableOrUnknown(
+          data['annual_income_growth_bp']!,
+          _annualIncomeGrowthBpMeta,
+        ),
+      );
+    }
+    if (data.containsKey('expected_inflation_bp')) {
+      context.handle(
+        _expectedInflationBpMeta,
+        expectedInflationBp.isAcceptableOrUnknown(
+          data['expected_inflation_bp']!,
+          _expectedInflationBpMeta,
+        ),
+      );
+    }
+    if (data.containsKey('safe_withdrawal_rate_bp')) {
+      context.handle(
+        _safeWithdrawalRateBpMeta,
+        safeWithdrawalRateBp.isAcceptableOrUnknown(
+          data['safe_withdrawal_rate_bp']!,
+          _safeWithdrawalRateBpMeta,
+        ),
+      );
+    }
+    if (data.containsKey('hike_month')) {
+      context.handle(
+        _hikeMonthMeta,
+        hikeMonth.isAcceptableOrUnknown(data['hike_month']!, _hikeMonthMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    if (data.containsKey('deleted_at')) {
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  LifeProfile map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LifeProfile(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      familyId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}family_id'],
+      )!,
+      dateOfBirth: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date_of_birth'],
+      )!,
+      plannedRetirementAge: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}planned_retirement_age'],
+      )!,
+      riskProfile: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}risk_profile'],
+      )!,
+      annualIncomeGrowthBp: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}annual_income_growth_bp'],
+      )!,
+      expectedInflationBp: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}expected_inflation_bp'],
+      )!,
+      safeWithdrawalRateBp: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}safe_withdrawal_rate_bp'],
+      )!,
+      hikeMonth: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}hike_month'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}deleted_at'],
+      ),
+    );
+  }
+
+  @override
+  $LifeProfilesTable createAlias(String alias) {
+    return $LifeProfilesTable(attachedDatabase, alias);
+  }
+}
+
+class LifeProfile extends DataClass implements Insertable<LifeProfile> {
+  final String id;
+  final String userId;
+  final String familyId;
+  final DateTime dateOfBirth;
+  final int plannedRetirementAge;
+  final String riskProfile;
+  final int annualIncomeGrowthBp;
+  final int expectedInflationBp;
+  final int safeWithdrawalRateBp;
+  final int hikeMonth;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final DateTime? deletedAt;
+  const LifeProfile({
+    required this.id,
+    required this.userId,
+    required this.familyId,
+    required this.dateOfBirth,
+    required this.plannedRetirementAge,
+    required this.riskProfile,
+    required this.annualIncomeGrowthBp,
+    required this.expectedInflationBp,
+    required this.safeWithdrawalRateBp,
+    required this.hikeMonth,
+    required this.createdAt,
+    required this.updatedAt,
+    this.deletedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['user_id'] = Variable<String>(userId);
+    map['family_id'] = Variable<String>(familyId);
+    map['date_of_birth'] = Variable<DateTime>(dateOfBirth);
+    map['planned_retirement_age'] = Variable<int>(plannedRetirementAge);
+    map['risk_profile'] = Variable<String>(riskProfile);
+    map['annual_income_growth_bp'] = Variable<int>(annualIncomeGrowthBp);
+    map['expected_inflation_bp'] = Variable<int>(expectedInflationBp);
+    map['safe_withdrawal_rate_bp'] = Variable<int>(safeWithdrawalRateBp);
+    map['hike_month'] = Variable<int>(hikeMonth);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt);
+    }
+    return map;
+  }
+
+  LifeProfilesCompanion toCompanion(bool nullToAbsent) {
+    return LifeProfilesCompanion(
+      id: Value(id),
+      userId: Value(userId),
+      familyId: Value(familyId),
+      dateOfBirth: Value(dateOfBirth),
+      plannedRetirementAge: Value(plannedRetirementAge),
+      riskProfile: Value(riskProfile),
+      annualIncomeGrowthBp: Value(annualIncomeGrowthBp),
+      expectedInflationBp: Value(expectedInflationBp),
+      safeWithdrawalRateBp: Value(safeWithdrawalRateBp),
+      hikeMonth: Value(hikeMonth),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
+    );
+  }
+
+  factory LifeProfile.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LifeProfile(
+      id: serializer.fromJson<String>(json['id']),
+      userId: serializer.fromJson<String>(json['userId']),
+      familyId: serializer.fromJson<String>(json['familyId']),
+      dateOfBirth: serializer.fromJson<DateTime>(json['dateOfBirth']),
+      plannedRetirementAge: serializer.fromJson<int>(
+        json['plannedRetirementAge'],
+      ),
+      riskProfile: serializer.fromJson<String>(json['riskProfile']),
+      annualIncomeGrowthBp: serializer.fromJson<int>(
+        json['annualIncomeGrowthBp'],
+      ),
+      expectedInflationBp: serializer.fromJson<int>(
+        json['expectedInflationBp'],
+      ),
+      safeWithdrawalRateBp: serializer.fromJson<int>(
+        json['safeWithdrawalRateBp'],
+      ),
+      hikeMonth: serializer.fromJson<int>(json['hikeMonth']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'userId': serializer.toJson<String>(userId),
+      'familyId': serializer.toJson<String>(familyId),
+      'dateOfBirth': serializer.toJson<DateTime>(dateOfBirth),
+      'plannedRetirementAge': serializer.toJson<int>(plannedRetirementAge),
+      'riskProfile': serializer.toJson<String>(riskProfile),
+      'annualIncomeGrowthBp': serializer.toJson<int>(annualIncomeGrowthBp),
+      'expectedInflationBp': serializer.toJson<int>(expectedInflationBp),
+      'safeWithdrawalRateBp': serializer.toJson<int>(safeWithdrawalRateBp),
+      'hikeMonth': serializer.toJson<int>(hikeMonth),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'deletedAt': serializer.toJson<DateTime?>(deletedAt),
+    };
+  }
+
+  LifeProfile copyWith({
+    String? id,
+    String? userId,
+    String? familyId,
+    DateTime? dateOfBirth,
+    int? plannedRetirementAge,
+    String? riskProfile,
+    int? annualIncomeGrowthBp,
+    int? expectedInflationBp,
+    int? safeWithdrawalRateBp,
+    int? hikeMonth,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    Value<DateTime?> deletedAt = const Value.absent(),
+  }) => LifeProfile(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    familyId: familyId ?? this.familyId,
+    dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+    plannedRetirementAge: plannedRetirementAge ?? this.plannedRetirementAge,
+    riskProfile: riskProfile ?? this.riskProfile,
+    annualIncomeGrowthBp: annualIncomeGrowthBp ?? this.annualIncomeGrowthBp,
+    expectedInflationBp: expectedInflationBp ?? this.expectedInflationBp,
+    safeWithdrawalRateBp: safeWithdrawalRateBp ?? this.safeWithdrawalRateBp,
+    hikeMonth: hikeMonth ?? this.hikeMonth,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
+  );
+  LifeProfile copyWithCompanion(LifeProfilesCompanion data) {
+    return LifeProfile(
+      id: data.id.present ? data.id.value : this.id,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      familyId: data.familyId.present ? data.familyId.value : this.familyId,
+      dateOfBirth: data.dateOfBirth.present
+          ? data.dateOfBirth.value
+          : this.dateOfBirth,
+      plannedRetirementAge: data.plannedRetirementAge.present
+          ? data.plannedRetirementAge.value
+          : this.plannedRetirementAge,
+      riskProfile: data.riskProfile.present
+          ? data.riskProfile.value
+          : this.riskProfile,
+      annualIncomeGrowthBp: data.annualIncomeGrowthBp.present
+          ? data.annualIncomeGrowthBp.value
+          : this.annualIncomeGrowthBp,
+      expectedInflationBp: data.expectedInflationBp.present
+          ? data.expectedInflationBp.value
+          : this.expectedInflationBp,
+      safeWithdrawalRateBp: data.safeWithdrawalRateBp.present
+          ? data.safeWithdrawalRateBp.value
+          : this.safeWithdrawalRateBp,
+      hikeMonth: data.hikeMonth.present ? data.hikeMonth.value : this.hikeMonth,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LifeProfile(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('familyId: $familyId, ')
+          ..write('dateOfBirth: $dateOfBirth, ')
+          ..write('plannedRetirementAge: $plannedRetirementAge, ')
+          ..write('riskProfile: $riskProfile, ')
+          ..write('annualIncomeGrowthBp: $annualIncomeGrowthBp, ')
+          ..write('expectedInflationBp: $expectedInflationBp, ')
+          ..write('safeWithdrawalRateBp: $safeWithdrawalRateBp, ')
+          ..write('hikeMonth: $hikeMonth, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    userId,
+    familyId,
+    dateOfBirth,
+    plannedRetirementAge,
+    riskProfile,
+    annualIncomeGrowthBp,
+    expectedInflationBp,
+    safeWithdrawalRateBp,
+    hikeMonth,
+    createdAt,
+    updatedAt,
+    deletedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LifeProfile &&
+          other.id == this.id &&
+          other.userId == this.userId &&
+          other.familyId == this.familyId &&
+          other.dateOfBirth == this.dateOfBirth &&
+          other.plannedRetirementAge == this.plannedRetirementAge &&
+          other.riskProfile == this.riskProfile &&
+          other.annualIncomeGrowthBp == this.annualIncomeGrowthBp &&
+          other.expectedInflationBp == this.expectedInflationBp &&
+          other.safeWithdrawalRateBp == this.safeWithdrawalRateBp &&
+          other.hikeMonth == this.hikeMonth &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.deletedAt == this.deletedAt);
+}
+
+class LifeProfilesCompanion extends UpdateCompanion<LifeProfile> {
+  final Value<String> id;
+  final Value<String> userId;
+  final Value<String> familyId;
+  final Value<DateTime> dateOfBirth;
+  final Value<int> plannedRetirementAge;
+  final Value<String> riskProfile;
+  final Value<int> annualIncomeGrowthBp;
+  final Value<int> expectedInflationBp;
+  final Value<int> safeWithdrawalRateBp;
+  final Value<int> hikeMonth;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<DateTime?> deletedAt;
+  final Value<int> rowid;
+  const LifeProfilesCompanion({
+    this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.familyId = const Value.absent(),
+    this.dateOfBirth = const Value.absent(),
+    this.plannedRetirementAge = const Value.absent(),
+    this.riskProfile = const Value.absent(),
+    this.annualIncomeGrowthBp = const Value.absent(),
+    this.expectedInflationBp = const Value.absent(),
+    this.safeWithdrawalRateBp = const Value.absent(),
+    this.hikeMonth = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  LifeProfilesCompanion.insert({
+    required String id,
+    required String userId,
+    required String familyId,
+    required DateTime dateOfBirth,
+    this.plannedRetirementAge = const Value.absent(),
+    this.riskProfile = const Value.absent(),
+    this.annualIncomeGrowthBp = const Value.absent(),
+    this.expectedInflationBp = const Value.absent(),
+    this.safeWithdrawalRateBp = const Value.absent(),
+    this.hikeMonth = const Value.absent(),
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    this.deletedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       familyId = Value(familyId),
+       dateOfBirth = Value(dateOfBirth),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<LifeProfile> custom({
+    Expression<String>? id,
+    Expression<String>? userId,
+    Expression<String>? familyId,
+    Expression<DateTime>? dateOfBirth,
+    Expression<int>? plannedRetirementAge,
+    Expression<String>? riskProfile,
+    Expression<int>? annualIncomeGrowthBp,
+    Expression<int>? expectedInflationBp,
+    Expression<int>? safeWithdrawalRateBp,
+    Expression<int>? hikeMonth,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? deletedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      if (familyId != null) 'family_id': familyId,
+      if (dateOfBirth != null) 'date_of_birth': dateOfBirth,
+      if (plannedRetirementAge != null)
+        'planned_retirement_age': plannedRetirementAge,
+      if (riskProfile != null) 'risk_profile': riskProfile,
+      if (annualIncomeGrowthBp != null)
+        'annual_income_growth_bp': annualIncomeGrowthBp,
+      if (expectedInflationBp != null)
+        'expected_inflation_bp': expectedInflationBp,
+      if (safeWithdrawalRateBp != null)
+        'safe_withdrawal_rate_bp': safeWithdrawalRateBp,
+      if (hikeMonth != null) 'hike_month': hikeMonth,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (deletedAt != null) 'deleted_at': deletedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  LifeProfilesCompanion copyWith({
+    Value<String>? id,
+    Value<String>? userId,
+    Value<String>? familyId,
+    Value<DateTime>? dateOfBirth,
+    Value<int>? plannedRetirementAge,
+    Value<String>? riskProfile,
+    Value<int>? annualIncomeGrowthBp,
+    Value<int>? expectedInflationBp,
+    Value<int>? safeWithdrawalRateBp,
+    Value<int>? hikeMonth,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<DateTime?>? deletedAt,
+    Value<int>? rowid,
+  }) {
+    return LifeProfilesCompanion(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      familyId: familyId ?? this.familyId,
+      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+      plannedRetirementAge: plannedRetirementAge ?? this.plannedRetirementAge,
+      riskProfile: riskProfile ?? this.riskProfile,
+      annualIncomeGrowthBp: annualIncomeGrowthBp ?? this.annualIncomeGrowthBp,
+      expectedInflationBp: expectedInflationBp ?? this.expectedInflationBp,
+      safeWithdrawalRateBp: safeWithdrawalRateBp ?? this.safeWithdrawalRateBp,
+      hikeMonth: hikeMonth ?? this.hikeMonth,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (familyId.present) {
+      map['family_id'] = Variable<String>(familyId.value);
+    }
+    if (dateOfBirth.present) {
+      map['date_of_birth'] = Variable<DateTime>(dateOfBirth.value);
+    }
+    if (plannedRetirementAge.present) {
+      map['planned_retirement_age'] = Variable<int>(plannedRetirementAge.value);
+    }
+    if (riskProfile.present) {
+      map['risk_profile'] = Variable<String>(riskProfile.value);
+    }
+    if (annualIncomeGrowthBp.present) {
+      map['annual_income_growth_bp'] = Variable<int>(
+        annualIncomeGrowthBp.value,
+      );
+    }
+    if (expectedInflationBp.present) {
+      map['expected_inflation_bp'] = Variable<int>(expectedInflationBp.value);
+    }
+    if (safeWithdrawalRateBp.present) {
+      map['safe_withdrawal_rate_bp'] = Variable<int>(
+        safeWithdrawalRateBp.value,
+      );
+    }
+    if (hikeMonth.present) {
+      map['hike_month'] = Variable<int>(hikeMonth.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LifeProfilesCompanion(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('familyId: $familyId, ')
+          ..write('dateOfBirth: $dateOfBirth, ')
+          ..write('plannedRetirementAge: $plannedRetirementAge, ')
+          ..write('riskProfile: $riskProfile, ')
+          ..write('annualIncomeGrowthBp: $annualIncomeGrowthBp, ')
+          ..write('expectedInflationBp: $expectedInflationBp, ')
+          ..write('safeWithdrawalRateBp: $safeWithdrawalRateBp, ')
+          ..write('hikeMonth: $hikeMonth, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $RecurringRulesTable extends RecurringRules
     with TableInfo<$RecurringRulesTable, RecurringRule> {
   @override
@@ -8280,6 +9064,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $LoanDetailsTable loanDetails = $LoanDetailsTable(this);
   late final $InvestmentHoldingsTable investmentHoldings =
       $InvestmentHoldingsTable(this);
+  late final $LifeProfilesTable lifeProfiles = $LifeProfilesTable(this);
   late final $RecurringRulesTable recurringRules = $RecurringRulesTable(this);
   late final $SyncChangelogTable syncChangelog = $SyncChangelogTable(this);
   late final $SyncStateTableTable syncStateTable = $SyncStateTableTable(this);
@@ -8300,6 +9085,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     budgets,
     loanDetails,
     investmentHoldings,
+    lifeProfiles,
     recurringRules,
     syncChangelog,
     syncStateTable,
@@ -8535,6 +9321,24 @@ final class $$FamiliesTableReferences
     final cache = $_typedResult.readTableOrNull(
       _investmentHoldingsRefsTable($_db),
     );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$LifeProfilesTable, List<LifeProfile>>
+  _lifeProfilesRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.lifeProfiles,
+    aliasName: $_aliasNameGenerator(db.families.id, db.lifeProfiles.familyId),
+  );
+
+  $$LifeProfilesTableProcessedTableManager get lifeProfilesRefs {
+    final manager = $$LifeProfilesTableTableManager(
+      $_db,
+      $_db.lifeProfiles,
+    ).filter((f) => f.familyId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_lifeProfilesRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -8854,6 +9658,31 @@ class $$FamiliesTableFilterComposer
           }) => $$InvestmentHoldingsTableFilterComposer(
             $db: $db,
             $table: $db.investmentHoldings,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> lifeProfilesRefs(
+    Expression<bool> Function($$LifeProfilesTableFilterComposer f) f,
+  ) {
+    final $$LifeProfilesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.lifeProfiles,
+      getReferencedColumn: (t) => t.familyId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LifeProfilesTableFilterComposer(
+            $db: $db,
+            $table: $db.lifeProfiles,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -9218,6 +10047,31 @@ class $$FamiliesTableAnnotationComposer
     return f(composer);
   }
 
+  Expression<T> lifeProfilesRefs<T extends Object>(
+    Expression<T> Function($$LifeProfilesTableAnnotationComposer a) f,
+  ) {
+    final $$LifeProfilesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.lifeProfiles,
+      getReferencedColumn: (t) => t.familyId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LifeProfilesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.lifeProfiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
   Expression<T> recurringRulesRefs<T extends Object>(
     Expression<T> Function($$RecurringRulesTableAnnotationComposer a) f,
   ) {
@@ -9269,6 +10123,7 @@ class $$FamiliesTableTableManager
             bool budgetsRefs,
             bool loanDetailsRefs,
             bool investmentHoldingsRefs,
+            bool lifeProfilesRefs,
             bool recurringRulesRefs,
           })
         > {
@@ -9332,6 +10187,7 @@ class $$FamiliesTableTableManager
                 budgetsRefs = false,
                 loanDetailsRefs = false,
                 investmentHoldingsRefs = false,
+                lifeProfilesRefs = false,
                 recurringRulesRefs = false,
               }) {
                 return PrefetchHooks(
@@ -9348,6 +10204,7 @@ class $$FamiliesTableTableManager
                     if (budgetsRefs) db.budgets,
                     if (loanDetailsRefs) db.loanDetails,
                     if (investmentHoldingsRefs) db.investmentHoldings,
+                    if (lifeProfilesRefs) db.lifeProfiles,
                     if (recurringRulesRefs) db.recurringRules,
                   ],
                   addJoins: null,
@@ -9576,6 +10433,27 @@ class $$FamiliesTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (lifeProfilesRefs)
+                        await $_getPrefetchedData<
+                          Family,
+                          $FamiliesTable,
+                          LifeProfile
+                        >(
+                          currentTable: table,
+                          referencedTable: $$FamiliesTableReferences
+                              ._lifeProfilesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$FamiliesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).lifeProfilesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.familyId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                       if (recurringRulesRefs)
                         await $_getPrefetchedData<
                           Family,
@@ -9629,6 +10507,7 @@ typedef $$FamiliesTableProcessedTableManager =
         bool budgetsRefs,
         bool loanDetailsRefs,
         bool investmentHoldingsRefs,
+        bool lifeProfilesRefs,
         bool recurringRulesRefs,
       })
     >;
@@ -15562,6 +16441,489 @@ typedef $$InvestmentHoldingsTableProcessedTableManager =
         bool familyId,
       })
     >;
+typedef $$LifeProfilesTableCreateCompanionBuilder =
+    LifeProfilesCompanion Function({
+      required String id,
+      required String userId,
+      required String familyId,
+      required DateTime dateOfBirth,
+      Value<int> plannedRetirementAge,
+      Value<String> riskProfile,
+      Value<int> annualIncomeGrowthBp,
+      Value<int> expectedInflationBp,
+      Value<int> safeWithdrawalRateBp,
+      Value<int> hikeMonth,
+      required DateTime createdAt,
+      required DateTime updatedAt,
+      Value<DateTime?> deletedAt,
+      Value<int> rowid,
+    });
+typedef $$LifeProfilesTableUpdateCompanionBuilder =
+    LifeProfilesCompanion Function({
+      Value<String> id,
+      Value<String> userId,
+      Value<String> familyId,
+      Value<DateTime> dateOfBirth,
+      Value<int> plannedRetirementAge,
+      Value<String> riskProfile,
+      Value<int> annualIncomeGrowthBp,
+      Value<int> expectedInflationBp,
+      Value<int> safeWithdrawalRateBp,
+      Value<int> hikeMonth,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<DateTime?> deletedAt,
+      Value<int> rowid,
+    });
+
+final class $$LifeProfilesTableReferences
+    extends BaseReferences<_$AppDatabase, $LifeProfilesTable, LifeProfile> {
+  $$LifeProfilesTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $FamiliesTable _familyIdTable(_$AppDatabase db) =>
+      db.families.createAlias(
+        $_aliasNameGenerator(db.lifeProfiles.familyId, db.families.id),
+      );
+
+  $$FamiliesTableProcessedTableManager get familyId {
+    final $_column = $_itemColumn<String>('family_id')!;
+
+    final manager = $$FamiliesTableTableManager(
+      $_db,
+      $_db.families,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_familyIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$LifeProfilesTableFilterComposer
+    extends Composer<_$AppDatabase, $LifeProfilesTable> {
+  $$LifeProfilesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get dateOfBirth => $composableBuilder(
+    column: $table.dateOfBirth,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get plannedRetirementAge => $composableBuilder(
+    column: $table.plannedRetirementAge,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get riskProfile => $composableBuilder(
+    column: $table.riskProfile,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get annualIncomeGrowthBp => $composableBuilder(
+    column: $table.annualIncomeGrowthBp,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get expectedInflationBp => $composableBuilder(
+    column: $table.expectedInflationBp,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get safeWithdrawalRateBp => $composableBuilder(
+    column: $table.safeWithdrawalRateBp,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get hikeMonth => $composableBuilder(
+    column: $table.hikeMonth,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$FamiliesTableFilterComposer get familyId {
+    final $$FamiliesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.familyId,
+      referencedTable: $db.families,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$FamiliesTableFilterComposer(
+            $db: $db,
+            $table: $db.families,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$LifeProfilesTableOrderingComposer
+    extends Composer<_$AppDatabase, $LifeProfilesTable> {
+  $$LifeProfilesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get dateOfBirth => $composableBuilder(
+    column: $table.dateOfBirth,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get plannedRetirementAge => $composableBuilder(
+    column: $table.plannedRetirementAge,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get riskProfile => $composableBuilder(
+    column: $table.riskProfile,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get annualIncomeGrowthBp => $composableBuilder(
+    column: $table.annualIncomeGrowthBp,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get expectedInflationBp => $composableBuilder(
+    column: $table.expectedInflationBp,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get safeWithdrawalRateBp => $composableBuilder(
+    column: $table.safeWithdrawalRateBp,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get hikeMonth => $composableBuilder(
+    column: $table.hikeMonth,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$FamiliesTableOrderingComposer get familyId {
+    final $$FamiliesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.familyId,
+      referencedTable: $db.families,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$FamiliesTableOrderingComposer(
+            $db: $db,
+            $table: $db.families,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$LifeProfilesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $LifeProfilesTable> {
+  $$LifeProfilesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get dateOfBirth => $composableBuilder(
+    column: $table.dateOfBirth,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get plannedRetirementAge => $composableBuilder(
+    column: $table.plannedRetirementAge,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get riskProfile => $composableBuilder(
+    column: $table.riskProfile,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get annualIncomeGrowthBp => $composableBuilder(
+    column: $table.annualIncomeGrowthBp,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get expectedInflationBp => $composableBuilder(
+    column: $table.expectedInflationBp,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get safeWithdrawalRateBp => $composableBuilder(
+    column: $table.safeWithdrawalRateBp,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get hikeMonth =>
+      $composableBuilder(column: $table.hikeMonth, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
+
+  $$FamiliesTableAnnotationComposer get familyId {
+    final $$FamiliesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.familyId,
+      referencedTable: $db.families,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$FamiliesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.families,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$LifeProfilesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $LifeProfilesTable,
+          LifeProfile,
+          $$LifeProfilesTableFilterComposer,
+          $$LifeProfilesTableOrderingComposer,
+          $$LifeProfilesTableAnnotationComposer,
+          $$LifeProfilesTableCreateCompanionBuilder,
+          $$LifeProfilesTableUpdateCompanionBuilder,
+          (LifeProfile, $$LifeProfilesTableReferences),
+          LifeProfile,
+          PrefetchHooks Function({bool familyId})
+        > {
+  $$LifeProfilesTableTableManager(_$AppDatabase db, $LifeProfilesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$LifeProfilesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$LifeProfilesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$LifeProfilesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> userId = const Value.absent(),
+                Value<String> familyId = const Value.absent(),
+                Value<DateTime> dateOfBirth = const Value.absent(),
+                Value<int> plannedRetirementAge = const Value.absent(),
+                Value<String> riskProfile = const Value.absent(),
+                Value<int> annualIncomeGrowthBp = const Value.absent(),
+                Value<int> expectedInflationBp = const Value.absent(),
+                Value<int> safeWithdrawalRateBp = const Value.absent(),
+                Value<int> hikeMonth = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => LifeProfilesCompanion(
+                id: id,
+                userId: userId,
+                familyId: familyId,
+                dateOfBirth: dateOfBirth,
+                plannedRetirementAge: plannedRetirementAge,
+                riskProfile: riskProfile,
+                annualIncomeGrowthBp: annualIncomeGrowthBp,
+                expectedInflationBp: expectedInflationBp,
+                safeWithdrawalRateBp: safeWithdrawalRateBp,
+                hikeMonth: hikeMonth,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                deletedAt: deletedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String userId,
+                required String familyId,
+                required DateTime dateOfBirth,
+                Value<int> plannedRetirementAge = const Value.absent(),
+                Value<String> riskProfile = const Value.absent(),
+                Value<int> annualIncomeGrowthBp = const Value.absent(),
+                Value<int> expectedInflationBp = const Value.absent(),
+                Value<int> safeWithdrawalRateBp = const Value.absent(),
+                Value<int> hikeMonth = const Value.absent(),
+                required DateTime createdAt,
+                required DateTime updatedAt,
+                Value<DateTime?> deletedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => LifeProfilesCompanion.insert(
+                id: id,
+                userId: userId,
+                familyId: familyId,
+                dateOfBirth: dateOfBirth,
+                plannedRetirementAge: plannedRetirementAge,
+                riskProfile: riskProfile,
+                annualIncomeGrowthBp: annualIncomeGrowthBp,
+                expectedInflationBp: expectedInflationBp,
+                safeWithdrawalRateBp: safeWithdrawalRateBp,
+                hikeMonth: hikeMonth,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                deletedAt: deletedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$LifeProfilesTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({familyId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (familyId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.familyId,
+                                referencedTable: $$LifeProfilesTableReferences
+                                    ._familyIdTable(db),
+                                referencedColumn: $$LifeProfilesTableReferences
+                                    ._familyIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$LifeProfilesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $LifeProfilesTable,
+      LifeProfile,
+      $$LifeProfilesTableFilterComposer,
+      $$LifeProfilesTableOrderingComposer,
+      $$LifeProfilesTableAnnotationComposer,
+      $$LifeProfilesTableCreateCompanionBuilder,
+      $$LifeProfilesTableUpdateCompanionBuilder,
+      (LifeProfile, $$LifeProfilesTableReferences),
+      LifeProfile,
+      PrefetchHooks Function({bool familyId})
+    >;
 typedef $$RecurringRulesTableCreateCompanionBuilder =
     RecurringRulesCompanion Function({
       required String id,
@@ -16929,6 +18291,8 @@ class $AppDatabaseManager {
       $$LoanDetailsTableTableManager(_db, _db.loanDetails);
   $$InvestmentHoldingsTableTableManager get investmentHoldings =>
       $$InvestmentHoldingsTableTableManager(_db, _db.investmentHoldings);
+  $$LifeProfilesTableTableManager get lifeProfiles =>
+      $$LifeProfilesTableTableManager(_db, _db.lifeProfiles);
   $$RecurringRulesTableTableManager get recurringRules =>
       $$RecurringRulesTableTableManager(_db, _db.recurringRules);
   $$SyncChangelogTableTableManager get syncChangelog =>

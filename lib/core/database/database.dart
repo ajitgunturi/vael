@@ -9,6 +9,7 @@ import 'tables/category_groups.dart';
 import 'tables/families.dart';
 import 'tables/goals.dart';
 import 'tables/investment_holdings.dart';
+import 'tables/life_profiles.dart';
 import 'tables/loan_details.dart';
 import 'tables/recurring_rules.dart';
 import 'tables/sync_changelog.dart';
@@ -32,6 +33,7 @@ part 'database.g.dart';
     Budgets,
     LoanDetails,
     InvestmentHoldings,
+    LifeProfiles,
     RecurringRules,
     SyncChangelog,
     SyncStateTable,
@@ -41,7 +43,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e);
 
   @override
-  int get schemaVersion => 8;
+  int get schemaVersion => 9;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -55,6 +57,10 @@ class AppDatabase extends _$AppDatabase {
       // v7 -> v8: add category_groups table
       if (from < 8) {
         await m.createTable(categoryGroups);
+      }
+      // v8 -> v9: add life_profiles table
+      if (from < 9) {
+        await m.createTable(lifeProfiles);
       }
     },
     beforeOpen: (details) async {
@@ -78,6 +84,10 @@ class AppDatabase extends _$AppDatabase {
       await customStatement(
         'CREATE INDEX IF NOT EXISTS idx_accounts_family '
         'ON accounts (family_id)',
+      );
+      await customStatement(
+        'CREATE INDEX IF NOT EXISTS idx_life_profiles_user_family '
+        'ON life_profiles (user_id, family_id)',
       );
     },
   );

@@ -4,9 +4,9 @@ import 'package:vael/core/database/database.dart';
 
 void main() {
   group('Schema migration', () {
-    test('schema version is 8', () {
+    test('schema version is 9', () {
       final db = AppDatabase(NativeDatabase.memory());
-      expect(db.schemaVersion, 8);
+      expect(db.schemaVersion, 9);
       db.close();
     });
 
