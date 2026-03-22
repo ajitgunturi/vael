@@ -11,6 +11,7 @@ import 'tables/goals.dart';
 import 'tables/investment_holdings.dart';
 import 'tables/life_profiles.dart';
 import 'tables/loan_details.dart';
+import 'tables/net_worth_milestones.dart';
 import 'tables/recurring_rules.dart';
 import 'tables/sync_changelog.dart';
 import 'tables/sync_state.dart';
@@ -34,6 +35,7 @@ part 'database.g.dart';
     LoanDetails,
     InvestmentHoldings,
     LifeProfiles,
+    NetWorthMilestones,
     RecurringRules,
     SyncChangelog,
     SyncStateTable,
@@ -43,7 +45,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e);
 
   @override
-  int get schemaVersion => 9;
+  int get schemaVersion => 10;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -62,6 +64,10 @@ class AppDatabase extends _$AppDatabase {
       if (from < 9) {
         await m.createTable(lifeProfiles);
         await m.addColumn(recurringRules, recurringRules.isSecondaryIncome);
+      }
+      // v9 -> v10: add net_worth_milestones table
+      if (from < 10) {
+        await m.createTable(netWorthMilestones);
       }
     },
     beforeOpen: (details) async {

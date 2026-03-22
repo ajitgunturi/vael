@@ -7106,6 +7106,636 @@ class LifeProfilesCompanion extends UpdateCompanion<LifeProfile> {
   }
 }
 
+class $NetWorthMilestonesTable extends NetWorthMilestones
+    with TableInfo<$NetWorthMilestonesTable, NetWorthMilestone> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $NetWorthMilestonesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _familyIdMeta = const VerificationMeta(
+    'familyId',
+  );
+  @override
+  late final GeneratedColumn<String> familyId = GeneratedColumn<String>(
+    'family_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES families (id)',
+    ),
+  );
+  static const VerificationMeta _lifeProfileIdMeta = const VerificationMeta(
+    'lifeProfileId',
+  );
+  @override
+  late final GeneratedColumn<String> lifeProfileId = GeneratedColumn<String>(
+    'life_profile_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES life_profiles (id)',
+    ),
+  );
+  static const VerificationMeta _targetAgeMeta = const VerificationMeta(
+    'targetAge',
+  );
+  @override
+  late final GeneratedColumn<int> targetAge = GeneratedColumn<int>(
+    'target_age',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _targetAmountPaiseMeta = const VerificationMeta(
+    'targetAmountPaise',
+  );
+  @override
+  late final GeneratedColumn<int> targetAmountPaise = GeneratedColumn<int>(
+    'target_amount_paise',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _isCustomTargetMeta = const VerificationMeta(
+    'isCustomTarget',
+  );
+  @override
+  late final GeneratedColumn<bool> isCustomTarget = GeneratedColumn<bool>(
+    'is_custom_target',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_custom_target" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> deletedAt = GeneratedColumn<DateTime>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    userId,
+    familyId,
+    lifeProfileId,
+    targetAge,
+    targetAmountPaise,
+    isCustomTarget,
+    createdAt,
+    updatedAt,
+    deletedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'net_worth_milestones';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<NetWorthMilestone> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('family_id')) {
+      context.handle(
+        _familyIdMeta,
+        familyId.isAcceptableOrUnknown(data['family_id']!, _familyIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_familyIdMeta);
+    }
+    if (data.containsKey('life_profile_id')) {
+      context.handle(
+        _lifeProfileIdMeta,
+        lifeProfileId.isAcceptableOrUnknown(
+          data['life_profile_id']!,
+          _lifeProfileIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_lifeProfileIdMeta);
+    }
+    if (data.containsKey('target_age')) {
+      context.handle(
+        _targetAgeMeta,
+        targetAge.isAcceptableOrUnknown(data['target_age']!, _targetAgeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_targetAgeMeta);
+    }
+    if (data.containsKey('target_amount_paise')) {
+      context.handle(
+        _targetAmountPaiseMeta,
+        targetAmountPaise.isAcceptableOrUnknown(
+          data['target_amount_paise']!,
+          _targetAmountPaiseMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_targetAmountPaiseMeta);
+    }
+    if (data.containsKey('is_custom_target')) {
+      context.handle(
+        _isCustomTargetMeta,
+        isCustomTarget.isAcceptableOrUnknown(
+          data['is_custom_target']!,
+          _isCustomTargetMeta,
+        ),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    if (data.containsKey('deleted_at')) {
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  NetWorthMilestone map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return NetWorthMilestone(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      familyId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}family_id'],
+      )!,
+      lifeProfileId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}life_profile_id'],
+      )!,
+      targetAge: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}target_age'],
+      )!,
+      targetAmountPaise: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}target_amount_paise'],
+      )!,
+      isCustomTarget: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_custom_target'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}deleted_at'],
+      ),
+    );
+  }
+
+  @override
+  $NetWorthMilestonesTable createAlias(String alias) {
+    return $NetWorthMilestonesTable(attachedDatabase, alias);
+  }
+}
+
+class NetWorthMilestone extends DataClass
+    implements Insertable<NetWorthMilestone> {
+  final String id;
+  final String userId;
+  final String familyId;
+  final String lifeProfileId;
+  final int targetAge;
+  final int targetAmountPaise;
+  final bool isCustomTarget;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final DateTime? deletedAt;
+  const NetWorthMilestone({
+    required this.id,
+    required this.userId,
+    required this.familyId,
+    required this.lifeProfileId,
+    required this.targetAge,
+    required this.targetAmountPaise,
+    required this.isCustomTarget,
+    required this.createdAt,
+    required this.updatedAt,
+    this.deletedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['user_id'] = Variable<String>(userId);
+    map['family_id'] = Variable<String>(familyId);
+    map['life_profile_id'] = Variable<String>(lifeProfileId);
+    map['target_age'] = Variable<int>(targetAge);
+    map['target_amount_paise'] = Variable<int>(targetAmountPaise);
+    map['is_custom_target'] = Variable<bool>(isCustomTarget);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt);
+    }
+    return map;
+  }
+
+  NetWorthMilestonesCompanion toCompanion(bool nullToAbsent) {
+    return NetWorthMilestonesCompanion(
+      id: Value(id),
+      userId: Value(userId),
+      familyId: Value(familyId),
+      lifeProfileId: Value(lifeProfileId),
+      targetAge: Value(targetAge),
+      targetAmountPaise: Value(targetAmountPaise),
+      isCustomTarget: Value(isCustomTarget),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
+    );
+  }
+
+  factory NetWorthMilestone.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return NetWorthMilestone(
+      id: serializer.fromJson<String>(json['id']),
+      userId: serializer.fromJson<String>(json['userId']),
+      familyId: serializer.fromJson<String>(json['familyId']),
+      lifeProfileId: serializer.fromJson<String>(json['lifeProfileId']),
+      targetAge: serializer.fromJson<int>(json['targetAge']),
+      targetAmountPaise: serializer.fromJson<int>(json['targetAmountPaise']),
+      isCustomTarget: serializer.fromJson<bool>(json['isCustomTarget']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'userId': serializer.toJson<String>(userId),
+      'familyId': serializer.toJson<String>(familyId),
+      'lifeProfileId': serializer.toJson<String>(lifeProfileId),
+      'targetAge': serializer.toJson<int>(targetAge),
+      'targetAmountPaise': serializer.toJson<int>(targetAmountPaise),
+      'isCustomTarget': serializer.toJson<bool>(isCustomTarget),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'deletedAt': serializer.toJson<DateTime?>(deletedAt),
+    };
+  }
+
+  NetWorthMilestone copyWith({
+    String? id,
+    String? userId,
+    String? familyId,
+    String? lifeProfileId,
+    int? targetAge,
+    int? targetAmountPaise,
+    bool? isCustomTarget,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    Value<DateTime?> deletedAt = const Value.absent(),
+  }) => NetWorthMilestone(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    familyId: familyId ?? this.familyId,
+    lifeProfileId: lifeProfileId ?? this.lifeProfileId,
+    targetAge: targetAge ?? this.targetAge,
+    targetAmountPaise: targetAmountPaise ?? this.targetAmountPaise,
+    isCustomTarget: isCustomTarget ?? this.isCustomTarget,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
+  );
+  NetWorthMilestone copyWithCompanion(NetWorthMilestonesCompanion data) {
+    return NetWorthMilestone(
+      id: data.id.present ? data.id.value : this.id,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      familyId: data.familyId.present ? data.familyId.value : this.familyId,
+      lifeProfileId: data.lifeProfileId.present
+          ? data.lifeProfileId.value
+          : this.lifeProfileId,
+      targetAge: data.targetAge.present ? data.targetAge.value : this.targetAge,
+      targetAmountPaise: data.targetAmountPaise.present
+          ? data.targetAmountPaise.value
+          : this.targetAmountPaise,
+      isCustomTarget: data.isCustomTarget.present
+          ? data.isCustomTarget.value
+          : this.isCustomTarget,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('NetWorthMilestone(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('familyId: $familyId, ')
+          ..write('lifeProfileId: $lifeProfileId, ')
+          ..write('targetAge: $targetAge, ')
+          ..write('targetAmountPaise: $targetAmountPaise, ')
+          ..write('isCustomTarget: $isCustomTarget, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    userId,
+    familyId,
+    lifeProfileId,
+    targetAge,
+    targetAmountPaise,
+    isCustomTarget,
+    createdAt,
+    updatedAt,
+    deletedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is NetWorthMilestone &&
+          other.id == this.id &&
+          other.userId == this.userId &&
+          other.familyId == this.familyId &&
+          other.lifeProfileId == this.lifeProfileId &&
+          other.targetAge == this.targetAge &&
+          other.targetAmountPaise == this.targetAmountPaise &&
+          other.isCustomTarget == this.isCustomTarget &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.deletedAt == this.deletedAt);
+}
+
+class NetWorthMilestonesCompanion extends UpdateCompanion<NetWorthMilestone> {
+  final Value<String> id;
+  final Value<String> userId;
+  final Value<String> familyId;
+  final Value<String> lifeProfileId;
+  final Value<int> targetAge;
+  final Value<int> targetAmountPaise;
+  final Value<bool> isCustomTarget;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<DateTime?> deletedAt;
+  final Value<int> rowid;
+  const NetWorthMilestonesCompanion({
+    this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.familyId = const Value.absent(),
+    this.lifeProfileId = const Value.absent(),
+    this.targetAge = const Value.absent(),
+    this.targetAmountPaise = const Value.absent(),
+    this.isCustomTarget = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  NetWorthMilestonesCompanion.insert({
+    required String id,
+    required String userId,
+    required String familyId,
+    required String lifeProfileId,
+    required int targetAge,
+    required int targetAmountPaise,
+    this.isCustomTarget = const Value.absent(),
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    this.deletedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       familyId = Value(familyId),
+       lifeProfileId = Value(lifeProfileId),
+       targetAge = Value(targetAge),
+       targetAmountPaise = Value(targetAmountPaise),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<NetWorthMilestone> custom({
+    Expression<String>? id,
+    Expression<String>? userId,
+    Expression<String>? familyId,
+    Expression<String>? lifeProfileId,
+    Expression<int>? targetAge,
+    Expression<int>? targetAmountPaise,
+    Expression<bool>? isCustomTarget,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? deletedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      if (familyId != null) 'family_id': familyId,
+      if (lifeProfileId != null) 'life_profile_id': lifeProfileId,
+      if (targetAge != null) 'target_age': targetAge,
+      if (targetAmountPaise != null) 'target_amount_paise': targetAmountPaise,
+      if (isCustomTarget != null) 'is_custom_target': isCustomTarget,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (deletedAt != null) 'deleted_at': deletedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  NetWorthMilestonesCompanion copyWith({
+    Value<String>? id,
+    Value<String>? userId,
+    Value<String>? familyId,
+    Value<String>? lifeProfileId,
+    Value<int>? targetAge,
+    Value<int>? targetAmountPaise,
+    Value<bool>? isCustomTarget,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<DateTime?>? deletedAt,
+    Value<int>? rowid,
+  }) {
+    return NetWorthMilestonesCompanion(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      familyId: familyId ?? this.familyId,
+      lifeProfileId: lifeProfileId ?? this.lifeProfileId,
+      targetAge: targetAge ?? this.targetAge,
+      targetAmountPaise: targetAmountPaise ?? this.targetAmountPaise,
+      isCustomTarget: isCustomTarget ?? this.isCustomTarget,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (familyId.present) {
+      map['family_id'] = Variable<String>(familyId.value);
+    }
+    if (lifeProfileId.present) {
+      map['life_profile_id'] = Variable<String>(lifeProfileId.value);
+    }
+    if (targetAge.present) {
+      map['target_age'] = Variable<int>(targetAge.value);
+    }
+    if (targetAmountPaise.present) {
+      map['target_amount_paise'] = Variable<int>(targetAmountPaise.value);
+    }
+    if (isCustomTarget.present) {
+      map['is_custom_target'] = Variable<bool>(isCustomTarget.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('NetWorthMilestonesCompanion(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('familyId: $familyId, ')
+          ..write('lifeProfileId: $lifeProfileId, ')
+          ..write('targetAge: $targetAge, ')
+          ..write('targetAmountPaise: $targetAmountPaise, ')
+          ..write('isCustomTarget: $isCustomTarget, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $RecurringRulesTable extends RecurringRules
     with TableInfo<$RecurringRulesTable, RecurringRule> {
   @override
@@ -9119,6 +9749,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $InvestmentHoldingsTable investmentHoldings =
       $InvestmentHoldingsTable(this);
   late final $LifeProfilesTable lifeProfiles = $LifeProfilesTable(this);
+  late final $NetWorthMilestonesTable netWorthMilestones =
+      $NetWorthMilestonesTable(this);
   late final $RecurringRulesTable recurringRules = $RecurringRulesTable(this);
   late final $SyncChangelogTable syncChangelog = $SyncChangelogTable(this);
   late final $SyncStateTableTable syncStateTable = $SyncStateTableTable(this);
@@ -9140,6 +9772,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     loanDetails,
     investmentHoldings,
     lifeProfiles,
+    netWorthMilestones,
     recurringRules,
     syncChangelog,
     syncStateTable,
@@ -9393,6 +10026,30 @@ final class $$FamiliesTableReferences
     ).filter((f) => f.familyId.id.sqlEquals($_itemColumn<String>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_lifeProfilesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$NetWorthMilestonesTable, List<NetWorthMilestone>>
+  _netWorthMilestonesRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.netWorthMilestones,
+        aliasName: $_aliasNameGenerator(
+          db.families.id,
+          db.netWorthMilestones.familyId,
+        ),
+      );
+
+  $$NetWorthMilestonesTableProcessedTableManager get netWorthMilestonesRefs {
+    final manager = $$NetWorthMilestonesTableTableManager(
+      $_db,
+      $_db.netWorthMilestones,
+    ).filter((f) => f.familyId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _netWorthMilestonesRefsTable($_db),
+    );
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -9737,6 +10394,31 @@ class $$FamiliesTableFilterComposer
           }) => $$LifeProfilesTableFilterComposer(
             $db: $db,
             $table: $db.lifeProfiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> netWorthMilestonesRefs(
+    Expression<bool> Function($$NetWorthMilestonesTableFilterComposer f) f,
+  ) {
+    final $$NetWorthMilestonesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.netWorthMilestones,
+      getReferencedColumn: (t) => t.familyId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$NetWorthMilestonesTableFilterComposer(
+            $db: $db,
+            $table: $db.netWorthMilestones,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -10126,6 +10808,32 @@ class $$FamiliesTableAnnotationComposer
     return f(composer);
   }
 
+  Expression<T> netWorthMilestonesRefs<T extends Object>(
+    Expression<T> Function($$NetWorthMilestonesTableAnnotationComposer a) f,
+  ) {
+    final $$NetWorthMilestonesTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.netWorthMilestones,
+          getReferencedColumn: (t) => t.familyId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$NetWorthMilestonesTableAnnotationComposer(
+                $db: $db,
+                $table: $db.netWorthMilestones,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
   Expression<T> recurringRulesRefs<T extends Object>(
     Expression<T> Function($$RecurringRulesTableAnnotationComposer a) f,
   ) {
@@ -10178,6 +10886,7 @@ class $$FamiliesTableTableManager
             bool loanDetailsRefs,
             bool investmentHoldingsRefs,
             bool lifeProfilesRefs,
+            bool netWorthMilestonesRefs,
             bool recurringRulesRefs,
           })
         > {
@@ -10242,6 +10951,7 @@ class $$FamiliesTableTableManager
                 loanDetailsRefs = false,
                 investmentHoldingsRefs = false,
                 lifeProfilesRefs = false,
+                netWorthMilestonesRefs = false,
                 recurringRulesRefs = false,
               }) {
                 return PrefetchHooks(
@@ -10259,6 +10969,7 @@ class $$FamiliesTableTableManager
                     if (loanDetailsRefs) db.loanDetails,
                     if (investmentHoldingsRefs) db.investmentHoldings,
                     if (lifeProfilesRefs) db.lifeProfiles,
+                    if (netWorthMilestonesRefs) db.netWorthMilestones,
                     if (recurringRulesRefs) db.recurringRules,
                   ],
                   addJoins: null,
@@ -10508,6 +11219,27 @@ class $$FamiliesTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (netWorthMilestonesRefs)
+                        await $_getPrefetchedData<
+                          Family,
+                          $FamiliesTable,
+                          NetWorthMilestone
+                        >(
+                          currentTable: table,
+                          referencedTable: $$FamiliesTableReferences
+                              ._netWorthMilestonesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$FamiliesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).netWorthMilestonesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.familyId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                       if (recurringRulesRefs)
                         await $_getPrefetchedData<
                           Family,
@@ -10562,6 +11294,7 @@ typedef $$FamiliesTableProcessedTableManager =
         bool loanDetailsRefs,
         bool investmentHoldingsRefs,
         bool lifeProfilesRefs,
+        bool netWorthMilestonesRefs,
         bool recurringRulesRefs,
       })
     >;
@@ -16552,6 +17285,30 @@ final class $$LifeProfilesTableReferences
       manager.$state.copyWith(prefetchedData: [item]),
     );
   }
+
+  static MultiTypedResultKey<$NetWorthMilestonesTable, List<NetWorthMilestone>>
+  _netWorthMilestonesRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.netWorthMilestones,
+        aliasName: $_aliasNameGenerator(
+          db.lifeProfiles.id,
+          db.netWorthMilestones.lifeProfileId,
+        ),
+      );
+
+  $$NetWorthMilestonesTableProcessedTableManager get netWorthMilestonesRefs {
+    final manager = $$NetWorthMilestonesTableTableManager(
+      $_db,
+      $_db.netWorthMilestones,
+    ).filter((f) => f.lifeProfileId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _netWorthMilestonesRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$LifeProfilesTableFilterComposer
@@ -16644,6 +17401,31 @@ class $$LifeProfilesTableFilterComposer
           ),
     );
     return composer;
+  }
+
+  Expression<bool> netWorthMilestonesRefs(
+    Expression<bool> Function($$NetWorthMilestonesTableFilterComposer f) f,
+  ) {
+    final $$NetWorthMilestonesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.netWorthMilestones,
+      getReferencedColumn: (t) => t.lifeProfileId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$NetWorthMilestonesTableFilterComposer(
+            $db: $db,
+            $table: $db.netWorthMilestones,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
   }
 }
 
@@ -16819,6 +17601,32 @@ class $$LifeProfilesTableAnnotationComposer
     );
     return composer;
   }
+
+  Expression<T> netWorthMilestonesRefs<T extends Object>(
+    Expression<T> Function($$NetWorthMilestonesTableAnnotationComposer a) f,
+  ) {
+    final $$NetWorthMilestonesTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.netWorthMilestones,
+          getReferencedColumn: (t) => t.lifeProfileId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$NetWorthMilestonesTableAnnotationComposer(
+                $db: $db,
+                $table: $db.netWorthMilestones,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$LifeProfilesTableTableManager
@@ -16834,7 +17642,7 @@ class $$LifeProfilesTableTableManager
           $$LifeProfilesTableUpdateCompanionBuilder,
           (LifeProfile, $$LifeProfilesTableReferences),
           LifeProfile,
-          PrefetchHooks Function({bool familyId})
+          PrefetchHooks Function({bool familyId, bool netWorthMilestonesRefs})
         > {
   $$LifeProfilesTableTableManager(_$AppDatabase db, $LifeProfilesTable table)
     : super(
@@ -16919,7 +17727,544 @@ class $$LifeProfilesTableTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({familyId = false}) {
+          prefetchHooksCallback:
+              ({familyId = false, netWorthMilestonesRefs = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (netWorthMilestonesRefs) db.netWorthMilestones,
+                  ],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (familyId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.familyId,
+                                    referencedTable:
+                                        $$LifeProfilesTableReferences
+                                            ._familyIdTable(db),
+                                    referencedColumn:
+                                        $$LifeProfilesTableReferences
+                                            ._familyIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (netWorthMilestonesRefs)
+                        await $_getPrefetchedData<
+                          LifeProfile,
+                          $LifeProfilesTable,
+                          NetWorthMilestone
+                        >(
+                          currentTable: table,
+                          referencedTable: $$LifeProfilesTableReferences
+                              ._netWorthMilestonesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$LifeProfilesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).netWorthMilestonesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.lifeProfileId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$LifeProfilesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $LifeProfilesTable,
+      LifeProfile,
+      $$LifeProfilesTableFilterComposer,
+      $$LifeProfilesTableOrderingComposer,
+      $$LifeProfilesTableAnnotationComposer,
+      $$LifeProfilesTableCreateCompanionBuilder,
+      $$LifeProfilesTableUpdateCompanionBuilder,
+      (LifeProfile, $$LifeProfilesTableReferences),
+      LifeProfile,
+      PrefetchHooks Function({bool familyId, bool netWorthMilestonesRefs})
+    >;
+typedef $$NetWorthMilestonesTableCreateCompanionBuilder =
+    NetWorthMilestonesCompanion Function({
+      required String id,
+      required String userId,
+      required String familyId,
+      required String lifeProfileId,
+      required int targetAge,
+      required int targetAmountPaise,
+      Value<bool> isCustomTarget,
+      required DateTime createdAt,
+      required DateTime updatedAt,
+      Value<DateTime?> deletedAt,
+      Value<int> rowid,
+    });
+typedef $$NetWorthMilestonesTableUpdateCompanionBuilder =
+    NetWorthMilestonesCompanion Function({
+      Value<String> id,
+      Value<String> userId,
+      Value<String> familyId,
+      Value<String> lifeProfileId,
+      Value<int> targetAge,
+      Value<int> targetAmountPaise,
+      Value<bool> isCustomTarget,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<DateTime?> deletedAt,
+      Value<int> rowid,
+    });
+
+final class $$NetWorthMilestonesTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $NetWorthMilestonesTable,
+          NetWorthMilestone
+        > {
+  $$NetWorthMilestonesTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $FamiliesTable _familyIdTable(_$AppDatabase db) =>
+      db.families.createAlias(
+        $_aliasNameGenerator(db.netWorthMilestones.familyId, db.families.id),
+      );
+
+  $$FamiliesTableProcessedTableManager get familyId {
+    final $_column = $_itemColumn<String>('family_id')!;
+
+    final manager = $$FamiliesTableTableManager(
+      $_db,
+      $_db.families,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_familyIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $LifeProfilesTable _lifeProfileIdTable(_$AppDatabase db) =>
+      db.lifeProfiles.createAlias(
+        $_aliasNameGenerator(
+          db.netWorthMilestones.lifeProfileId,
+          db.lifeProfiles.id,
+        ),
+      );
+
+  $$LifeProfilesTableProcessedTableManager get lifeProfileId {
+    final $_column = $_itemColumn<String>('life_profile_id')!;
+
+    final manager = $$LifeProfilesTableTableManager(
+      $_db,
+      $_db.lifeProfiles,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_lifeProfileIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$NetWorthMilestonesTableFilterComposer
+    extends Composer<_$AppDatabase, $NetWorthMilestonesTable> {
+  $$NetWorthMilestonesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get targetAge => $composableBuilder(
+    column: $table.targetAge,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get targetAmountPaise => $composableBuilder(
+    column: $table.targetAmountPaise,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isCustomTarget => $composableBuilder(
+    column: $table.isCustomTarget,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$FamiliesTableFilterComposer get familyId {
+    final $$FamiliesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.familyId,
+      referencedTable: $db.families,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$FamiliesTableFilterComposer(
+            $db: $db,
+            $table: $db.families,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$LifeProfilesTableFilterComposer get lifeProfileId {
+    final $$LifeProfilesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.lifeProfileId,
+      referencedTable: $db.lifeProfiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LifeProfilesTableFilterComposer(
+            $db: $db,
+            $table: $db.lifeProfiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$NetWorthMilestonesTableOrderingComposer
+    extends Composer<_$AppDatabase, $NetWorthMilestonesTable> {
+  $$NetWorthMilestonesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get targetAge => $composableBuilder(
+    column: $table.targetAge,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get targetAmountPaise => $composableBuilder(
+    column: $table.targetAmountPaise,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isCustomTarget => $composableBuilder(
+    column: $table.isCustomTarget,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$FamiliesTableOrderingComposer get familyId {
+    final $$FamiliesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.familyId,
+      referencedTable: $db.families,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$FamiliesTableOrderingComposer(
+            $db: $db,
+            $table: $db.families,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$LifeProfilesTableOrderingComposer get lifeProfileId {
+    final $$LifeProfilesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.lifeProfileId,
+      referencedTable: $db.lifeProfiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LifeProfilesTableOrderingComposer(
+            $db: $db,
+            $table: $db.lifeProfiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$NetWorthMilestonesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $NetWorthMilestonesTable> {
+  $$NetWorthMilestonesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<int> get targetAge =>
+      $composableBuilder(column: $table.targetAge, builder: (column) => column);
+
+  GeneratedColumn<int> get targetAmountPaise => $composableBuilder(
+    column: $table.targetAmountPaise,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isCustomTarget => $composableBuilder(
+    column: $table.isCustomTarget,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
+
+  $$FamiliesTableAnnotationComposer get familyId {
+    final $$FamiliesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.familyId,
+      referencedTable: $db.families,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$FamiliesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.families,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$LifeProfilesTableAnnotationComposer get lifeProfileId {
+    final $$LifeProfilesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.lifeProfileId,
+      referencedTable: $db.lifeProfiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LifeProfilesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.lifeProfiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$NetWorthMilestonesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $NetWorthMilestonesTable,
+          NetWorthMilestone,
+          $$NetWorthMilestonesTableFilterComposer,
+          $$NetWorthMilestonesTableOrderingComposer,
+          $$NetWorthMilestonesTableAnnotationComposer,
+          $$NetWorthMilestonesTableCreateCompanionBuilder,
+          $$NetWorthMilestonesTableUpdateCompanionBuilder,
+          (NetWorthMilestone, $$NetWorthMilestonesTableReferences),
+          NetWorthMilestone,
+          PrefetchHooks Function({bool familyId, bool lifeProfileId})
+        > {
+  $$NetWorthMilestonesTableTableManager(
+    _$AppDatabase db,
+    $NetWorthMilestonesTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$NetWorthMilestonesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$NetWorthMilestonesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$NetWorthMilestonesTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> userId = const Value.absent(),
+                Value<String> familyId = const Value.absent(),
+                Value<String> lifeProfileId = const Value.absent(),
+                Value<int> targetAge = const Value.absent(),
+                Value<int> targetAmountPaise = const Value.absent(),
+                Value<bool> isCustomTarget = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => NetWorthMilestonesCompanion(
+                id: id,
+                userId: userId,
+                familyId: familyId,
+                lifeProfileId: lifeProfileId,
+                targetAge: targetAge,
+                targetAmountPaise: targetAmountPaise,
+                isCustomTarget: isCustomTarget,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                deletedAt: deletedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String userId,
+                required String familyId,
+                required String lifeProfileId,
+                required int targetAge,
+                required int targetAmountPaise,
+                Value<bool> isCustomTarget = const Value.absent(),
+                required DateTime createdAt,
+                required DateTime updatedAt,
+                Value<DateTime?> deletedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => NetWorthMilestonesCompanion.insert(
+                id: id,
+                userId: userId,
+                familyId: familyId,
+                lifeProfileId: lifeProfileId,
+                targetAge: targetAge,
+                targetAmountPaise: targetAmountPaise,
+                isCustomTarget: isCustomTarget,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                deletedAt: deletedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$NetWorthMilestonesTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({familyId = false, lifeProfileId = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [],
@@ -16944,11 +18289,28 @@ class $$LifeProfilesTableTableManager
                           state.withJoin(
                                 currentTable: table,
                                 currentColumn: table.familyId,
-                                referencedTable: $$LifeProfilesTableReferences
-                                    ._familyIdTable(db),
-                                referencedColumn: $$LifeProfilesTableReferences
-                                    ._familyIdTable(db)
-                                    .id,
+                                referencedTable:
+                                    $$NetWorthMilestonesTableReferences
+                                        ._familyIdTable(db),
+                                referencedColumn:
+                                    $$NetWorthMilestonesTableReferences
+                                        ._familyIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+                    if (lifeProfileId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.lifeProfileId,
+                                referencedTable:
+                                    $$NetWorthMilestonesTableReferences
+                                        ._lifeProfileIdTable(db),
+                                referencedColumn:
+                                    $$NetWorthMilestonesTableReferences
+                                        ._lifeProfileIdTable(db)
+                                        .id,
                               )
                               as T;
                     }
@@ -16964,19 +18326,19 @@ class $$LifeProfilesTableTableManager
       );
 }
 
-typedef $$LifeProfilesTableProcessedTableManager =
+typedef $$NetWorthMilestonesTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $LifeProfilesTable,
-      LifeProfile,
-      $$LifeProfilesTableFilterComposer,
-      $$LifeProfilesTableOrderingComposer,
-      $$LifeProfilesTableAnnotationComposer,
-      $$LifeProfilesTableCreateCompanionBuilder,
-      $$LifeProfilesTableUpdateCompanionBuilder,
-      (LifeProfile, $$LifeProfilesTableReferences),
-      LifeProfile,
-      PrefetchHooks Function({bool familyId})
+      $NetWorthMilestonesTable,
+      NetWorthMilestone,
+      $$NetWorthMilestonesTableFilterComposer,
+      $$NetWorthMilestonesTableOrderingComposer,
+      $$NetWorthMilestonesTableAnnotationComposer,
+      $$NetWorthMilestonesTableCreateCompanionBuilder,
+      $$NetWorthMilestonesTableUpdateCompanionBuilder,
+      (NetWorthMilestone, $$NetWorthMilestonesTableReferences),
+      NetWorthMilestone,
+      PrefetchHooks Function({bool familyId, bool lifeProfileId})
     >;
 typedef $$RecurringRulesTableCreateCompanionBuilder =
     RecurringRulesCompanion Function({
@@ -18368,6 +19730,8 @@ class $AppDatabaseManager {
       $$InvestmentHoldingsTableTableManager(_db, _db.investmentHoldings);
   $$LifeProfilesTableTableManager get lifeProfiles =>
       $$LifeProfilesTableTableManager(_db, _db.lifeProfiles);
+  $$NetWorthMilestonesTableTableManager get netWorthMilestones =>
+      $$NetWorthMilestonesTableTableManager(_db, _db.netWorthMilestones);
   $$RecurringRulesTableTableManager get recurringRules =>
       $$RecurringRulesTableTableManager(_db, _db.recurringRules);
   $$SyncChangelogTableTableManager get syncChangelog =>
