@@ -26,8 +26,8 @@ Requirements for the financial planning extension (Phases 6-8). Each maps to roa
 - [x] **FI-01**: User can see their FI number (annual expenses / SWR adjusted for inflation to retirement)
 - [x] **FI-02**: User can see years-to-FI based on current portfolio, savings rate, and returns
 - [x] **FI-03**: User can see Coast FI number (portfolio value today that compounds to FI number with zero additional contributions)
-- [ ] **FI-04**: User can adjust withdrawal rate, return rate, and inflation via sliders to see sensitivity impact
-- [ ] **FI-05**: FI Calculator works as standalone even without life profile (editable placeholder inputs)
+- [x] **FI-04**: User can adjust withdrawal rate, return rate, and inflation via sliders to see sensitivity impact
+- [x] **FI-05**: FI Calculator works as standalone even without life profile (editable placeholder inputs)
 
 ### Asset Allocation
 
@@ -181,8 +181,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FI-01 | Phase 7 | Complete |
 | FI-02 | Phase 7 | Complete |
 | FI-03 | Phase 7 | Complete |
-| FI-04 | Phase 7 | Pending |
-| FI-05 | Phase 7 | Pending |
+| FI-04 | Phase 7 | Complete |
+| FI-05 | Phase 7 | Complete |
 | MILE-01 | Phase 7 | Complete |
 | MILE-02 | Phase 7 | Complete |
 | MILE-03 | Phase 7 | Complete |
