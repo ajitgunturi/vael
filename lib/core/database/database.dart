@@ -58,9 +58,10 @@ class AppDatabase extends _$AppDatabase {
       if (from < 8) {
         await m.createTable(categoryGroups);
       }
-      // v8 -> v9: add life_profiles table
+      // v8 -> v9: add life_profiles table + isSecondaryIncome column
       if (from < 9) {
         await m.createTable(lifeProfiles);
+        await m.addColumn(recurringRules, recurringRules.isSecondaryIncome);
       }
     },
     beforeOpen: (details) async {

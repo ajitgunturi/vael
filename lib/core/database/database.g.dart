@@ -7318,6 +7318,21 @@ class $RecurringRulesTable extends RecurringRules
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _isSecondaryIncomeMeta = const VerificationMeta(
+    'isSecondaryIncome',
+  );
+  @override
+  late final GeneratedColumn<bool> isSecondaryIncome = GeneratedColumn<bool>(
+    'is_secondary_income',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_secondary_income" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -7338,6 +7353,7 @@ class $RecurringRulesTable extends RecurringRules
     userId,
     createdAt,
     deletedAt,
+    isSecondaryIncome,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -7488,6 +7504,15 @@ class $RecurringRulesTable extends RecurringRules
         deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
       );
     }
+    if (data.containsKey('is_secondary_income')) {
+      context.handle(
+        _isSecondaryIncomeMeta,
+        isSecondaryIncome.isAcceptableOrUnknown(
+          data['is_secondary_income']!,
+          _isSecondaryIncomeMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -7569,6 +7594,10 @@ class $RecurringRulesTable extends RecurringRules
         DriftSqlType.dateTime,
         data['${effectivePrefix}deleted_at'],
       ),
+      isSecondaryIncome: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_secondary_income'],
+      )!,
     );
   }
 
@@ -7597,6 +7626,7 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
   final String userId;
   final DateTime createdAt;
   final DateTime? deletedAt;
+  final bool isSecondaryIncome;
   const RecurringRule({
     required this.id,
     required this.name,
@@ -7616,6 +7646,7 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
     required this.userId,
     required this.createdAt,
     this.deletedAt,
+    required this.isSecondaryIncome,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -7650,6 +7681,7 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
     if (!nullToAbsent || deletedAt != null) {
       map['deleted_at'] = Variable<DateTime>(deletedAt);
     }
+    map['is_secondary_income'] = Variable<bool>(isSecondaryIncome);
     return map;
   }
 
@@ -7685,6 +7717,7 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
       deletedAt: deletedAt == null && nullToAbsent
           ? const Value.absent()
           : Value(deletedAt),
+      isSecondaryIncome: Value(isSecondaryIncome),
     );
   }
 
@@ -7716,6 +7749,7 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
       userId: serializer.fromJson<String>(json['userId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
+      isSecondaryIncome: serializer.fromJson<bool>(json['isSecondaryIncome']),
     );
   }
   @override
@@ -7740,6 +7774,7 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
       'userId': serializer.toJson<String>(userId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'deletedAt': serializer.toJson<DateTime?>(deletedAt),
+      'isSecondaryIncome': serializer.toJson<bool>(isSecondaryIncome),
     };
   }
 
@@ -7762,6 +7797,7 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
     String? userId,
     DateTime? createdAt,
     Value<DateTime?> deletedAt = const Value.absent(),
+    bool? isSecondaryIncome,
   }) => RecurringRule(
     id: id ?? this.id,
     name: name ?? this.name,
@@ -7783,6 +7819,7 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
     userId: userId ?? this.userId,
     createdAt: createdAt ?? this.createdAt,
     deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
+    isSecondaryIncome: isSecondaryIncome ?? this.isSecondaryIncome,
   );
   RecurringRule copyWithCompanion(RecurringRulesCompanion data) {
     return RecurringRule(
@@ -7814,6 +7851,9 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
       userId: data.userId.present ? data.userId.value : this.userId,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
+      isSecondaryIncome: data.isSecondaryIncome.present
+          ? data.isSecondaryIncome.value
+          : this.isSecondaryIncome,
     );
   }
 
@@ -7837,7 +7877,8 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
           ..write('familyId: $familyId, ')
           ..write('userId: $userId, ')
           ..write('createdAt: $createdAt, ')
-          ..write('deletedAt: $deletedAt')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('isSecondaryIncome: $isSecondaryIncome')
           ..write(')'))
         .toString();
   }
@@ -7862,6 +7903,7 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
     userId,
     createdAt,
     deletedAt,
+    isSecondaryIncome,
   );
   @override
   bool operator ==(Object other) =>
@@ -7884,7 +7926,8 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
           other.familyId == this.familyId &&
           other.userId == this.userId &&
           other.createdAt == this.createdAt &&
-          other.deletedAt == this.deletedAt);
+          other.deletedAt == this.deletedAt &&
+          other.isSecondaryIncome == this.isSecondaryIncome);
 }
 
 class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
@@ -7906,6 +7949,7 @@ class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
   final Value<String> userId;
   final Value<DateTime> createdAt;
   final Value<DateTime?> deletedAt;
+  final Value<bool> isSecondaryIncome;
   final Value<int> rowid;
   const RecurringRulesCompanion({
     this.id = const Value.absent(),
@@ -7926,6 +7970,7 @@ class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
     this.userId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
+    this.isSecondaryIncome = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   RecurringRulesCompanion.insert({
@@ -7947,6 +7992,7 @@ class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
     required String userId,
     required DateTime createdAt,
     this.deletedAt = const Value.absent(),
+    this.isSecondaryIncome = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        name = Value(name),
@@ -7977,6 +8023,7 @@ class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
     Expression<String>? userId,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? deletedAt,
+    Expression<bool>? isSecondaryIncome,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -7999,6 +8046,7 @@ class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
       if (userId != null) 'user_id': userId,
       if (createdAt != null) 'created_at': createdAt,
       if (deletedAt != null) 'deleted_at': deletedAt,
+      if (isSecondaryIncome != null) 'is_secondary_income': isSecondaryIncome,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -8022,6 +8070,7 @@ class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
     Value<String>? userId,
     Value<DateTime>? createdAt,
     Value<DateTime?>? deletedAt,
+    Value<bool>? isSecondaryIncome,
     Value<int>? rowid,
   }) {
     return RecurringRulesCompanion(
@@ -8043,6 +8092,7 @@ class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
       userId: userId ?? this.userId,
       createdAt: createdAt ?? this.createdAt,
       deletedAt: deletedAt ?? this.deletedAt,
+      isSecondaryIncome: isSecondaryIncome ?? this.isSecondaryIncome,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -8106,6 +8156,9 @@ class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
     if (deletedAt.present) {
       map['deleted_at'] = Variable<DateTime>(deletedAt.value);
     }
+    if (isSecondaryIncome.present) {
+      map['is_secondary_income'] = Variable<bool>(isSecondaryIncome.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -8133,6 +8186,7 @@ class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
           ..write('userId: $userId, ')
           ..write('createdAt: $createdAt, ')
           ..write('deletedAt: $deletedAt, ')
+          ..write('isSecondaryIncome: $isSecondaryIncome, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -16944,6 +16998,7 @@ typedef $$RecurringRulesTableCreateCompanionBuilder =
       required String userId,
       required DateTime createdAt,
       Value<DateTime?> deletedAt,
+      Value<bool> isSecondaryIncome,
       Value<int> rowid,
     });
 typedef $$RecurringRulesTableUpdateCompanionBuilder =
@@ -16966,6 +17021,7 @@ typedef $$RecurringRulesTableUpdateCompanionBuilder =
       Value<String> userId,
       Value<DateTime> createdAt,
       Value<DateTime?> deletedAt,
+      Value<bool> isSecondaryIncome,
       Value<int> rowid,
     });
 
@@ -17130,6 +17186,11 @@ class $$RecurringRulesTableFilterComposer
 
   ColumnFilters<DateTime> get deletedAt => $composableBuilder(
     column: $table.deletedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isSecondaryIncome => $composableBuilder(
+    column: $table.isSecondaryIncome,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -17305,6 +17366,11 @@ class $$RecurringRulesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get isSecondaryIncome => $composableBuilder(
+    column: $table.isSecondaryIncome,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$AccountsTableOrderingComposer get accountId {
     final $$AccountsTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -17455,6 +17521,11 @@ class $$RecurringRulesTableAnnotationComposer
   GeneratedColumn<DateTime> get deletedAt =>
       $composableBuilder(column: $table.deletedAt, builder: (column) => column);
 
+  GeneratedColumn<bool> get isSecondaryIncome => $composableBuilder(
+    column: $table.isSecondaryIncome,
+    builder: (column) => column,
+  );
+
   $$AccountsTableAnnotationComposer get accountId {
     final $$AccountsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
@@ -17601,6 +17672,7 @@ class $$RecurringRulesTableTableManager
                 Value<String> userId = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime?> deletedAt = const Value.absent(),
+                Value<bool> isSecondaryIncome = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => RecurringRulesCompanion(
                 id: id,
@@ -17621,6 +17693,7 @@ class $$RecurringRulesTableTableManager
                 userId: userId,
                 createdAt: createdAt,
                 deletedAt: deletedAt,
+                isSecondaryIncome: isSecondaryIncome,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -17643,6 +17716,7 @@ class $$RecurringRulesTableTableManager
                 required String userId,
                 required DateTime createdAt,
                 Value<DateTime?> deletedAt = const Value.absent(),
+                Value<bool> isSecondaryIncome = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => RecurringRulesCompanion.insert(
                 id: id,
@@ -17663,6 +17737,7 @@ class $$RecurringRulesTableTableManager
                 userId: userId,
                 createdAt: createdAt,
                 deletedAt: deletedAt,
+                isSecondaryIncome: isSecondaryIncome,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
