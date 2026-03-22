@@ -9,7 +9,9 @@ import '../../../core/sync/sync_orchestrator.dart';
 import '../../../shared/theme/spacing.dart';
 import '../../../shared/theme/theme_mode_provider.dart';
 import '../../planning/providers/life_profile_provider.dart';
+import '../../planning/screens/fi_calculator_screen.dart';
 import '../../planning/screens/life_profile_wizard_screen.dart';
+import '../../planning/screens/milestone_dashboard_screen.dart';
 import 'category_management_screen.dart';
 import 'family_backup_screen.dart';
 import 'passphrase_setup_screen.dart';
@@ -79,6 +81,18 @@ class SettingsScreen extends ConsumerWidget {
             subtitle: 'Age, retirement, risk & growth rates',
             onTap: () => _openLifeProfile(context, ref),
           ),
+          _SettingsTile(
+            icon: Icons.calculate_outlined,
+            title: 'FI Calculator',
+            subtitle: 'Financial independence number & timeline',
+            onTap: () => _openFiCalculator(context, ref),
+          ),
+          _SettingsTile(
+            icon: Icons.flag_outlined,
+            title: 'Milestones',
+            subtitle: 'Net worth targets by decade',
+            onTap: () => _openMilestones(context, ref),
+          ),
           const Divider(),
           _ThemeModeTile(ref: ref),
           const Divider(),
@@ -108,6 +122,23 @@ class SettingsScreen extends ConsumerWidget {
           familyId: familyId,
           existingProfile: existing,
         ),
+      ),
+    );
+  }
+
+  void _openFiCalculator(BuildContext context, WidgetRef ref) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => FiCalculatorScreen(familyId: familyId, userId: userId),
+      ),
+    );
+  }
+
+  void _openMilestones(BuildContext context, WidgetRef ref) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) =>
+            MilestoneDashboardScreen(familyId: familyId, userId: userId),
       ),
     );
   }

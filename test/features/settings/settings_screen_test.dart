@@ -39,6 +39,12 @@ void main() {
 
     testWidgets('shows Sign Out tile', (tester) async {
       await tester.pumpWidget(buildScreen());
+      await tester.scrollUntilVisible(
+        find.text('Sign Out'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pump();
       expect(find.text('Sign Out'), findsOneWidget);
       expect(find.byIcon(Icons.logout), findsOneWidget);
     });
@@ -110,10 +116,13 @@ void main() {
       await tester.pumpAndSettle();
 
       // Tap Sign Out (scroll into view first since Financial Planning section may push it off-screen)
-      final signOut = find.text('Sign Out');
-      await tester.ensureVisible(signOut);
+      await tester.scrollUntilVisible(
+        find.text('Sign Out'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
       await tester.pumpAndSettle();
-      await tester.tap(signOut);
+      await tester.tap(find.text('Sign Out'));
       await tester.pumpAndSettle();
 
       // Session providers should be cleared

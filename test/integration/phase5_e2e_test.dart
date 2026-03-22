@@ -126,6 +126,12 @@ void main() {
 
       expect(find.text('Settings'), findsOneWidget);
       expect(find.text('Family Backup'), findsOneWidget);
+      await tester.scrollUntilVisible(
+        find.text('Sign Out'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pump();
       expect(find.text('Sign Out'), findsOneWidget);
     });
 
@@ -169,10 +175,13 @@ void main() {
       await tester.tap(find.byIcon(Icons.settings));
       await tester.pumpAndSettle();
 
-      final signOut = find.text('Sign Out');
-      await tester.ensureVisible(signOut);
+      await tester.scrollUntilVisible(
+        find.text('Sign Out'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
       await tester.pumpAndSettle();
-      await tester.tap(signOut);
+      await tester.tap(find.text('Sign Out'));
       await tester.pumpAndSettle();
 
       expect(container.read(sessionFamilyIdProvider), isNull);
