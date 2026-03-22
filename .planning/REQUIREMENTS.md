@@ -16,16 +16,16 @@ Requirements for the financial planning extension (Phases 6-8). Each maps to roa
 
 ### Net Worth Milestones
 
-- [ ] **MILE-01**: User can see projected net worth milestones at ages 30, 40, 50, 60, and 70 based on current data and growth assumptions
-- [ ] **MILE-02**: Each milestone shows ON_TRACK, BEHIND, or AHEAD status comparing actual vs projected trajectory
-- [ ] **MILE-03**: Milestone projections use compound growth formula with blended return rates from actual investment holdings
-- [ ] **MILE-04**: User can set custom target amounts for any milestone age
+- [x] **MILE-01**: User can see projected net worth milestones at ages 30, 40, 50, 60, and 70 based on current data and growth assumptions
+- [x] **MILE-02**: Each milestone shows ON_TRACK, BEHIND, or AHEAD status comparing actual vs projected trajectory
+- [x] **MILE-03**: Milestone projections use compound growth formula with blended return rates from actual investment holdings
+- [x] **MILE-04**: User can set custom target amounts for any milestone age
 
 ### Financial Independence
 
-- [ ] **FI-01**: User can see their FI number (annual expenses / SWR adjusted for inflation to retirement)
-- [ ] **FI-02**: User can see years-to-FI based on current portfolio, savings rate, and returns
-- [ ] **FI-03**: User can see Coast FI number (portfolio value today that compounds to FI number with zero additional contributions)
+- [x] **FI-01**: User can see their FI number (annual expenses / SWR adjusted for inflation to retirement)
+- [x] **FI-02**: User can see years-to-FI based on current portfolio, savings rate, and returns
+- [x] **FI-03**: User can see Coast FI number (portfolio value today that compounds to FI number with zero additional contributions)
 - [ ] **FI-04**: User can adjust withdrawal rate, return rate, and inflation via sliders to see sensitivity impact
 - [ ] **FI-05**: FI Calculator works as standalone even without life profile (editable placeholder inputs)
 
@@ -178,15 +178,15 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INCOME-02 | Phase 6 | Complete |
 | INCOME-03 | Phase 6 | Complete |
 | INCOME-04 | Phase 6 | Complete |
-| FI-01 | Phase 7 | Pending |
-| FI-02 | Phase 7 | Pending |
-| FI-03 | Phase 7 | Pending |
+| FI-01 | Phase 7 | Complete |
+| FI-02 | Phase 7 | Complete |
+| FI-03 | Phase 7 | Complete |
 | FI-04 | Phase 7 | Pending |
 | FI-05 | Phase 7 | Pending |
-| MILE-01 | Phase 7 | Pending |
-| MILE-02 | Phase 7 | Pending |
-| MILE-03 | Phase 7 | Pending |
-| MILE-04 | Phase 7 | Pending |
+| MILE-01 | Phase 7 | Complete |
+| MILE-02 | Phase 7 | Complete |
+| MILE-03 | Phase 7 | Complete |
+| MILE-04 | Phase 7 | Complete |
 | ALLOC-01 | Phase 8 | Pending |
 | ALLOC-02 | Phase 8 | Pending |
 | ALLOC-03 | Phase 8 | Pending |

@@ -178,7 +178,7 @@ Note: Phases 9-10-11 (cash management track) depend on Phase 6 but not on Phases
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 6. Life Profile & Income Model | 3/3 | Complete | 2026-03-23 |
-| 7. FI Calculator & Net Worth Milestones | 0/3 | Planned | - |
+| 7. FI Calculator & Net Worth Milestones | 1/3 | In Progress|  |
 | 8. Asset Allocation & Purchase Planning | 0/? | Not started | - |
 | 9. Emergency Fund & Cash Tiers | 0/? | Not started | - |
 | 10. Sinking Funds & Savings Rate | 0/? | Not started | - |
