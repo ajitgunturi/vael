@@ -1,4 +1,7 @@
+import 'dart:async';
 import 'dart:typed_data';
+
+import 'package:drift/drift.dart';
 
 import '../crypto/aes_gcm.dart';
 import '../crypto/key_storage.dart';
@@ -65,14 +68,14 @@ class SyncOrchestrator {
   final String? userId;
   final String? userEmail;
   final bool isAdmin;
-  final Future<void> Function(List<SyncOperation> ops)? onOperationsApplied;
 
   /// Called when a FEK generation change is detected in the manifest.
-  /// The caller should prompt for passphrase and re-unwrap the new FEK.
   Future<void> Function(int newGeneration)? onFekRotationDetected;
 
   ManifestV2? _cachedManifest;
   int? _lastKnownFekGeneration;
+  Timer? _pushTimer;
+  Timer? _pullTimer;
 
   SyncOrchestrator({
     required this.db,
@@ -85,7 +88,6 @@ class SyncOrchestrator {
     this.userId,
     this.userEmail,
     this.isAdmin = false,
-    this.onOperationsApplied,
     this.onFekRotationDetected,
   });
 
@@ -96,6 +98,27 @@ class SyncOrchestrator {
   Future<void> initialize() async {
     await stateDao.initDevice(deviceId);
     await _loadManifest();
+  }
+
+  /// M12: Starts periodic sync — push every 30s, pull every 60s.
+  void startPeriodicSync() {
+    stopPeriodicSync();
+    _pushTimer = Timer.periodic(
+      const Duration(seconds: 30),
+      (_) => push().catchError((_) {}),
+    );
+    _pullTimer = Timer.periodic(
+      const Duration(seconds: 60),
+      (_) => pull().catchError((_) {}),
+    );
+  }
+
+  /// Stops periodic sync timers.
+  void stopPeriodicSync() {
+    _pushTimer?.cancel();
+    _pullTimer?.cancel();
+    _pushTimer = null;
+    _pullTimer = null;
   }
 
   /// Pushes unsynced local changes to Drive, then updates lastSyncAt.
@@ -114,17 +137,24 @@ class SyncOrchestrator {
     await _updateLastSyncAt();
   }
 
-  /// Pulls new changes from Drive, applies them, then updates lastSyncAt.
+  /// Pulls new changes from Drive, resolves conflicts, applies them,
+  /// then updates lastSyncAt.
   Future<void> pull() async {
     final fek = await _requireFek();
     final pull = SyncPull(
       stateDao: stateDao,
+      changelogDao: changelogDao,
       cloudStorage: cloudStorage,
       serializer: ChangesetSerializer(),
       aesGcm: AesGcm(),
       fek: fek,
       deviceId: deviceId,
-      applyOperations: onOperationsApplied ?? (_) async {},
+      applyOperations: _applyOperations,
+      snapshotManager: SnapshotManager(
+        cloudStorage: cloudStorage,
+        aesGcm: AesGcm(),
+        fek: fek,
+      ),
     );
     await pull.pull();
     await _updateLastSyncAt();
@@ -190,6 +220,119 @@ class SyncOrchestrator {
       ownerEmail: _cachedManifest!.owner.email,
       members: _cachedManifest!.members.values.toList(),
     );
+  }
+
+  // --- C3: Apply remote operations to local database ---
+
+  Future<void> _applyOperations(List<SyncOperation> ops) async {
+    for (final op in ops) {
+      // Skip snapshot restore markers — handled by caller
+      if (op.table == '_snapshot_restore') continue;
+
+      switch (op.op) {
+        case OpType.insert:
+        case OpType.update:
+          await _upsertEntity(op.table, op.id, op.data ?? {});
+        case OpType.delete:
+          await _deleteEntity(op.table, op.id);
+      }
+    }
+  }
+
+  Future<void> _upsertEntity(
+    String table,
+    String id,
+    Map<String, dynamic> data,
+  ) async {
+    switch (table) {
+      case 'accounts':
+        await db
+            .into(db.accounts)
+            .insertOnConflictUpdate(
+              AccountsCompanion(
+                id: Value(id),
+                name: Value(data['name'] as String? ?? ''),
+                type: Value(data['type'] as String? ?? 'savings'),
+                balance: Value(data['balance'] as int? ?? 0),
+                currency: Value(data['currency'] as String? ?? 'INR'),
+                visibility: Value(data['visibility'] as String? ?? 'shared'),
+                familyId: Value(data['family_id'] as String? ?? familyId),
+                userId: Value(data['user_id'] as String? ?? ''),
+              ),
+            );
+      case 'transactions':
+        await db
+            .into(db.transactions)
+            .insertOnConflictUpdate(
+              TransactionsCompanion(
+                id: Value(id),
+                amount: Value(data['amount'] as int? ?? 0),
+                date: Value(
+                  DateTime.tryParse(data['date'] as String? ?? '') ??
+                      DateTime.now(),
+                ),
+                description: Value(data['description'] as String?),
+                accountId: Value(data['account_id'] as String? ?? ''),
+                kind: Value(data['kind'] as String? ?? 'expense'),
+                familyId: Value(data['family_id'] as String? ?? familyId),
+              ),
+            );
+      case 'budgets':
+        await db
+            .into(db.budgets)
+            .insertOnConflictUpdate(
+              BudgetsCompanion(
+                id: Value(id),
+                familyId: Value(data['family_id'] as String? ?? familyId),
+                year: Value(data['year'] as int? ?? DateTime.now().year),
+                month: Value(data['month'] as int? ?? DateTime.now().month),
+                categoryGroup: Value(data['category_group'] as String? ?? ''),
+                limitAmount: Value(data['limit_amount'] as int? ?? 0),
+              ),
+            );
+      case 'goals':
+        await db
+            .into(db.goals)
+            .insertOnConflictUpdate(
+              GoalsCompanion(
+                id: Value(id),
+                name: Value(data['name'] as String? ?? ''),
+                targetAmount: Value(data['target_amount'] as int? ?? 0),
+                targetDate: Value(
+                  DateTime.tryParse(data['target_date'] as String? ?? '') ??
+                      DateTime.now(),
+                ),
+                currentSavings: Value(data['current_savings'] as int? ?? 0),
+                inflationRate: Value(data['inflation_rate'] as double? ?? 0.06),
+                priority: Value(data['priority'] as int? ?? 1),
+                status: Value(data['status'] as String? ?? 'active'),
+                familyId: Value(data['family_id'] as String? ?? familyId),
+                createdAt: Value(
+                  DateTime.tryParse(data['created_at'] as String? ?? '') ??
+                      DateTime.now(),
+                ),
+              ),
+            );
+      // Additional tables can be added as needed
+    }
+  }
+
+  Future<void> _deleteEntity(String table, String id) async {
+    switch (table) {
+      case 'accounts':
+        // Soft delete
+        await (db.update(db.accounts)..where((a) => a.id.equals(id))).write(
+          AccountsCompanion(deletedAt: Value(DateTime.now())),
+        );
+      case 'transactions':
+        await (db.update(db.transactions)..where((t) => t.id.equals(id))).write(
+          TransactionsCompanion(deletedAt: Value(DateTime.now())),
+        );
+      case 'budgets':
+        await (db.delete(db.budgets)..where((b) => b.id.equals(id))).go();
+      case 'goals':
+        await (db.delete(db.goals)..where((g) => g.id.equals(id))).go();
+    }
   }
 
   // --- Private helpers ---

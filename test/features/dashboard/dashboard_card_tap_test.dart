@@ -36,6 +36,7 @@ void main() {
         theme: AppTheme.light(),
         home: DashboardScreen(
           familyId: 'fam_a',
+          userId: 'user_a',
           onNavigateToTab: onNavigateToTab,
         ),
       ),

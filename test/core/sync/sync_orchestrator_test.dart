@@ -58,6 +58,15 @@ class InMemoryCloudStorage implements CloudStorageInterface {
   Future<void> writeManifest(Map<String, dynamic> m) async {
     manifest = m;
   }
+
+  @override
+  CloudProvider get provider => CloudProvider.googleDrive;
+  @override
+  bool get supportsSharing => true;
+  @override
+  Future<void> writeSchemaVersion(int version) async {}
+  @override
+  Future<int?> readSchemaVersion() async => null;
 }
 
 void main() {
@@ -160,9 +169,32 @@ void main() {
 
       await orchestrator.push();
 
-      // Device B pulls
+      // Device B pulls — operations are now applied to db2 directly
       final db2 = AppDatabase(NativeDatabase.memory());
-      final pulledOps = <String>[];
+
+      // Seed required family FK for device B's DB
+      await db2
+          .into(db2.families)
+          .insert(
+            FamiliesCompanion.insert(
+              id: 'family-001',
+              name: 'Test',
+              createdAt: DateTime(2025),
+            ),
+          );
+      await db2
+          .into(db2.accounts)
+          .insert(
+            AccountsCompanion.insert(
+              id: '',
+              name: 'Default',
+              type: 'savings',
+              balance: 0,
+              visibility: 'shared',
+              familyId: 'family-001',
+              userId: 'user-admin',
+            ),
+          );
 
       final orchestratorB = SyncOrchestrator(
         db: db2,
@@ -173,14 +205,13 @@ void main() {
         familyId: 'family-001',
         deviceId: 'device-B',
         userId: 'user-admin',
-        onOperationsApplied: (ops) async {
-          pulledOps.addAll(ops.map((o) => o.id));
-        },
       );
       await orchestratorB.initialize();
       await orchestratorB.pull();
 
-      expect(pulledOps, contains('txn-001'));
+      // Verify the transaction was applied to device B's DB
+      final txns = await db2.select(db2.transactions).get();
+      expect(txns.map((t) => t.id), contains('txn-001'));
 
       await db2.close();
     });
@@ -383,7 +414,6 @@ void main() {
         familyId: 'family-001',
         deviceId: 'device-A',
         userId: 'u-admin',
-        onOperationsApplied: (_) async {},
       );
       await orchestrator.initialize();
       await orchestrator.pull();

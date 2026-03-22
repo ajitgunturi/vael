@@ -6,6 +6,10 @@ import '../../../core/financial/dashboard_aggregation.dart';
 import '../../../shared/theme/color_tokens.dart';
 import '../../../shared/theme/spacing.dart';
 import '../../../shared/utils/formatters.dart';
+import '../../investments/screens/investment_portfolio_screen.dart';
+import '../../projections/screens/projection_screen.dart';
+import '../../recurring/screens/recurring_rules_screen.dart';
+import '../../transactions/screens/transaction_form_screen.dart';
 import '../providers/dashboard_providers.dart';
 
 /// Main dashboard showing net worth hero, monthly tiles, quick actions,
@@ -14,11 +18,13 @@ class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({
     super.key,
     required this.familyId,
+    required this.userId,
     this.goals = const [],
     this.onNavigateToTab,
   });
 
   final String familyId;
+  final String userId;
   final List<Goal> goals;
 
   /// Callback to navigate to a tab in the adaptive scaffold.
@@ -44,6 +50,8 @@ class DashboardScreen extends ConsumerWidget {
       body: dataAsync.when(
         data: (data) => _DashboardBody(
           data: data,
+          familyId: familyId,
+          userId: userId,
           goals: goals,
           onNavigateToTab: onNavigateToTab,
         ),
@@ -76,11 +84,15 @@ class _ScopeToggle extends StatelessWidget {
 class _DashboardBody extends StatelessWidget {
   const _DashboardBody({
     required this.data,
+    required this.familyId,
+    required this.userId,
     required this.goals,
     this.onNavigateToTab,
   });
 
   final DashboardData data;
+  final String familyId;
+  final String userId;
   final List<Goal> goals;
   final ValueChanged<int>? onNavigateToTab;
 
@@ -101,7 +113,11 @@ class _DashboardBody extends StatelessWidget {
         const SizedBox(height: Spacing.md),
         _SavingsRateBadge(rate: data.savingsRate),
         const SizedBox(height: Spacing.md),
-        const _QuickActionsRow(),
+        _QuickActionsRow(
+          familyId: familyId,
+          userId: userId,
+          onNavigateToTab: onNavigateToTab,
+        ),
         const SizedBox(height: Spacing.md),
         if (goals.isNotEmpty) _GoalsSection(goals: goals),
       ],
@@ -279,27 +295,88 @@ class _SavingsRateBadge extends StatelessWidget {
   }
 }
 
-/// Quick action tonal buttons.
+/// Quick action tonal buttons — entry points for key features and orphaned screens.
 class _QuickActionsRow extends StatelessWidget {
-  const _QuickActionsRow();
+  const _QuickActionsRow({
+    required this.familyId,
+    required this.userId,
+    this.onNavigateToTab,
+  });
+
+  final String familyId;
+  final String userId;
+  final ValueChanged<int>? onNavigateToTab;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       children: [
-        Expanded(
-          child: FilledButton.tonalIcon(
-            onPressed: () {},
-            icon: const Icon(Icons.add),
-            label: const Text('Add Transaction'),
-          ),
+        Row(
+          children: [
+            Expanded(
+              child: FilledButton.tonalIcon(
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => TransactionFormScreen(
+                      familyId: familyId,
+                      userId: userId,
+                    ),
+                  ),
+                ),
+                icon: const Icon(Icons.add),
+                label: const Text('Add Transaction'),
+              ),
+            ),
+            const SizedBox(width: Spacing.sm),
+            Expanded(
+              child: FilledButton.tonalIcon(
+                onPressed: () => onNavigateToTab?.call(1),
+                icon: const Icon(Icons.account_balance),
+                label: const Text('View Accounts'),
+              ),
+            ),
+          ],
         ),
-        const SizedBox(width: Spacing.sm),
-        Expanded(
+        const SizedBox(height: Spacing.sm),
+        Row(
+          children: [
+            Expanded(
+              child: FilledButton.tonalIcon(
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) =>
+                        InvestmentPortfolioScreen(familyId: familyId),
+                  ),
+                ),
+                icon: const Icon(Icons.pie_chart),
+                label: const Text('Investments'),
+              ),
+            ),
+            const SizedBox(width: Spacing.sm),
+            Expanded(
+              child: FilledButton.tonalIcon(
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => RecurringRulesScreen(familyId: familyId),
+                  ),
+                ),
+                icon: const Icon(Icons.repeat),
+                label: const Text('Recurring'),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: Spacing.sm),
+        SizedBox(
+          width: double.infinity,
           child: FilledButton.tonalIcon(
-            onPressed: () {},
-            icon: const Icon(Icons.account_balance),
-            label: const Text('View Accounts'),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => ProjectionScreen(familyId: familyId),
+              ),
+            ),
+            icon: const Icon(Icons.trending_up),
+            label: const Text('60-Month Projection'),
           ),
         ),
       ],

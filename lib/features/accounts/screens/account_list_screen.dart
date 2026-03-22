@@ -6,7 +6,9 @@ import '../../../core/financial/dashboard_aggregation.dart';
 import '../../../shared/theme/color_tokens.dart';
 import '../../../shared/utils/account_icons.dart';
 import '../../../shared/utils/formatters.dart';
+import '../../loans/screens/loan_detail_screen.dart';
 import '../providers/account_ui_providers.dart';
+import 'account_detail_screen.dart';
 import 'account_form_screen.dart';
 
 /// Displays accounts grouped by type (banking, investments, loans, credit cards).
@@ -67,13 +69,29 @@ class AccountListScreen extends ConsumerWidget {
       padding: const EdgeInsets.only(bottom: 80),
       children: [
         if (grouped.banking.isNotEmpty)
-          _AccountSection(title: 'Banking', accounts: grouped.banking),
+          _AccountSection(
+            title: 'Banking',
+            accounts: grouped.banking,
+            familyId: familyId,
+          ),
         if (grouped.investments.isNotEmpty)
-          _AccountSection(title: 'Investments', accounts: grouped.investments),
+          _AccountSection(
+            title: 'Investments',
+            accounts: grouped.investments,
+            familyId: familyId,
+          ),
         if (grouped.loans.isNotEmpty)
-          _AccountSection(title: 'Loans', accounts: grouped.loans),
+          _AccountSection(
+            title: 'Loans',
+            accounts: grouped.loans,
+            familyId: familyId,
+          ),
         if (grouped.creditCards.isNotEmpty)
-          _AccountSection(title: 'Credit Cards', accounts: grouped.creditCards),
+          _AccountSection(
+            title: 'Credit Cards',
+            accounts: grouped.creditCards,
+            familyId: familyId,
+          ),
       ],
     );
   }
@@ -91,10 +109,15 @@ class AccountListScreen extends ConsumerWidget {
 }
 
 class _AccountSection extends StatelessWidget {
-  const _AccountSection({required this.title, required this.accounts});
+  const _AccountSection({
+    required this.title,
+    required this.accounts,
+    required this.familyId,
+  });
 
   final String title;
   final List<Account> accounts;
+  final String familyId;
 
   @override
   Widget build(BuildContext context) {
@@ -107,16 +130,18 @@ class _AccountSection extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
           child: Text(title, style: theme.textTheme.titleSmall),
         ),
-        for (final account in accounts) _AccountTile(account: account),
+        for (final account in accounts)
+          _AccountTile(account: account, familyId: familyId),
       ],
     );
   }
 }
 
 class _AccountTile extends StatelessWidget {
-  const _AccountTile({required this.account});
+  const _AccountTile({required this.account, required this.familyId});
 
   final Account account;
+  final String familyId;
 
   @override
   Widget build(BuildContext context) {
@@ -128,6 +153,7 @@ class _AccountTile extends StatelessWidget {
     final isLiability = AccountIcons.isLiability(account.type);
 
     return ListTile(
+      onTap: () => _onTap(context),
       leading: Icon(
         AccountIcons.iconFor(account.type),
         color: colors.onSurfaceVariant,
@@ -144,14 +170,38 @@ class _AccountTile extends StatelessWidget {
     );
   }
 
+  void _onTap(BuildContext context) {
+    final isLoan =
+        account.type == 'homeLoan' ||
+        account.type == 'personalLoan' ||
+        account.type == 'carLoan' ||
+        account.type == 'educationLoan' ||
+        account.type == 'loan';
+    if (isLoan) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) =>
+              LoanDetailScreen(accountId: account.id, familyId: familyId),
+        ),
+      );
+    } else {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) =>
+              AccountDetailScreen(account: account, familyId: familyId),
+        ),
+      );
+    }
+  }
+
   String _visibilityLabel(String visibility) {
     switch (visibility) {
       case 'shared':
         return 'Shared';
-      case 'private_':
-        return 'Private';
-      case 'familyWide':
-        return 'Family Wide';
+      case 'hidden':
+        return 'Hidden';
+      case 'nameOnly':
+        return 'Name Only';
       default:
         return visibility;
     }

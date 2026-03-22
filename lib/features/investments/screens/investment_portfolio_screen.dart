@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/database/database.dart';
 import '../../../core/financial/investment_valuation.dart';
 import '../../../shared/theme/color_tokens.dart' show ColorTokens;
 import '../../../shared/utils/formatters.dart';
+import '../providers/investment_providers.dart';
 import 'investment_form_screen.dart';
 
 /// Displays investment portfolio with bucket cards and summary.
@@ -14,6 +16,8 @@ class InvestmentPortfolioScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final holdingsAsync = ref.watch(investmentHoldingsProvider(familyId));
+
     return Scaffold(
       appBar: AppBar(title: const Text('Investments')),
       floatingActionButton: FloatingActionButton(
@@ -24,17 +28,22 @@ class InvestmentPortfolioScreen extends ConsumerWidget {
         ),
         child: const Icon(Icons.add),
       ),
-      body: const _PortfolioBody(),
+      body: holdingsAsync.when(
+        data: (holdings) => holdings.isEmpty
+            ? const _EmptyBody()
+            : _PortfolioList(holdings: holdings),
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (e, _) => Center(child: Text('Error: $e')),
+      ),
     );
   }
 }
 
-class _PortfolioBody extends StatelessWidget {
-  const _PortfolioBody();
+class _EmptyBody extends StatelessWidget {
+  const _EmptyBody();
 
   @override
   Widget build(BuildContext context) {
-    // Placeholder — will be wired to Riverpod provider in integration
     return const Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -46,6 +55,49 @@ class _PortfolioBody extends StatelessWidget {
           Text('Tap + to add your first bucket'),
         ],
       ),
+    );
+  }
+}
+
+class _PortfolioList extends StatelessWidget {
+  const _PortfolioList({required this.holdings});
+
+  final List<InvestmentHolding> holdings;
+
+  @override
+  Widget build(BuildContext context) {
+    // Compute summary
+    final totalInvested = holdings.fold<int>(
+      0,
+      (sum, h) => sum + h.investedAmount,
+    );
+    final totalCurrent = holdings.fold<int>(
+      0,
+      (sum, h) => sum + h.currentValue,
+    );
+
+    return ListView(
+      padding: const EdgeInsets.only(bottom: 80),
+      children: [
+        PortfolioSummaryCard(
+          summary: PortfolioSummary(
+            totalInvested: totalInvested,
+            totalCurrentValue: totalCurrent,
+            totalGain: totalCurrent - totalInvested,
+            overallReturnPercent: totalInvested > 0
+                ? ((totalCurrent - totalInvested) / totalInvested * 100)
+                : 0.0,
+          ),
+        ),
+        for (final h in holdings)
+          BucketCard(
+            name: h.name,
+            bucketType: h.bucketType,
+            investedAmount: h.investedAmount,
+            currentValue: h.currentValue,
+            returnRate: h.expectedReturnRate,
+          ),
+      ],
     );
   }
 }

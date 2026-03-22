@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:vael/core/database/database.dart';
 import 'package:vael/core/financial/dashboard_aggregation.dart';
 import 'package:vael/core/providers/database_providers.dart';
+import 'package:vael/core/providers/session_providers.dart';
 import 'package:vael/features/dashboard/providers/dashboard_providers.dart';
 
 void main() {
@@ -191,7 +192,7 @@ void main() {
         familyId: 'fam_a',
         type: 'savings',
         balance: 300000,
-        visibility: 'private_',
+        visibility: 'hidden',
       );
 
       // Default scope is family
@@ -202,6 +203,61 @@ void main() {
       final state = sub.read();
       final data = state.value!;
       // Only shared account in net worth
+      expect(data.netWorth, 500000);
+      expect(data.grouped.banking, hasLength(1));
+    });
+
+    test('personal scope filters to current user accounts only', () async {
+      await _seedFamily('fam_a');
+
+      // Insert a second user in the same family
+      await db
+          .into(db.users)
+          .insert(
+            UsersCompanion.insert(
+              id: 'user2_fam_a',
+              email: 'user2@test.com',
+              displayName: 'User 2',
+              role: 'member',
+              familyId: 'fam_a',
+            ),
+          );
+
+      // Account owned by user_fam_a
+      await _insertAccount(
+        id: 'my_acc',
+        familyId: 'fam_a',
+        type: 'savings',
+        balance: 500000,
+      );
+
+      // Account owned by user2 — insert directly to set different userId
+      await db
+          .into(db.accounts)
+          .insert(
+            AccountsCompanion(
+              id: const Value('other_acc'),
+              name: const Value('Other Account'),
+              type: const Value('savings'),
+              balance: const Value(300000),
+              visibility: const Value('shared'),
+              familyId: const Value('fam_a'),
+              userId: const Value('user2_fam_a'),
+            ),
+          );
+
+      // Set session userId and switch to personal scope
+      container.read(sessionUserIdProvider.notifier).set('user_fam_a');
+      container
+          .read(dashboardScopeProvider.notifier)
+          .set(DashboardScope.personal);
+
+      final sub = container.listen(dashboardDataProvider('fam_a'), (_, __) {});
+      await Future<void>.delayed(Duration.zero);
+
+      final state = sub.read();
+      final data = state.value!;
+      // Only user_fam_a's account should be visible
       expect(data.netWorth, 500000);
       expect(data.grouped.banking, hasLength(1));
     });

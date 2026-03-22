@@ -118,6 +118,10 @@ class GoalTracking {
   }
 
   /// Computes a full goal snapshot with all derived fields.
+  ///
+  /// [linkedInvestmentValue] — if the goal has linked investment holdings,
+  /// pass their aggregate currentValue (paise). It is added to
+  /// [currentSavings] when computing progress, SIP requirement, and status.
   static GoalSnapshot computeSnapshot({
     required int targetAmount,
     required int currentSavings,
@@ -126,7 +130,10 @@ class GoalTracking {
     required int monthsRemaining,
     required int totalMonths,
     required double expectedMonthlyReturn,
+    int linkedInvestmentValue = 0,
   }) {
+    final effectiveSavings = currentSavings + linkedInvestmentValue;
+
     final adjusted = inflationAdjustedTarget(
       targetAmount: targetAmount,
       inflationRate: inflationRate,
@@ -135,20 +142,20 @@ class GoalTracking {
 
     final sip = requiredMonthlySip(
       inflationAdjustedTarget: adjusted,
-      currentSavings: currentSavings,
+      currentSavings: effectiveSavings,
       monthsRemaining: monthsRemaining,
       expectedMonthlyReturn: expectedMonthlyReturn,
     );
 
     final status = inferStatus(
-      currentSavings: currentSavings,
+      currentSavings: effectiveSavings,
       inflationAdjustedTarget: adjusted,
       monthsRemaining: monthsRemaining,
       totalMonths: totalMonths,
     );
 
     final progress = adjusted > 0
-        ? (currentSavings / adjusted * 100).clamp(0.0, 100.0)
+        ? (effectiveSavings / adjusted * 100).clamp(0.0, 100.0)
         : 0.0;
 
     return GoalSnapshot(

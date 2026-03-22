@@ -55,7 +55,7 @@ class _SimulatorTestAppState extends State<SimulatorTestApp> {
   Widget _bodyForIndex(int index) {
     final now = DateTime.now();
     return switch (index) {
-      0 => const DashboardScreen(familyId: kTestFamilyId),
+      0 => const DashboardScreen(familyId: kTestFamilyId, userId: kTestUserId),
       1 => const AccountListScreen(familyId: kTestFamilyId),
       2 => const TransactionListScreen(
           familyId: kTestFamilyId,

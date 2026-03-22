@@ -21,7 +21,7 @@ abstract class DriveApiAdapter {
 ///
 /// Folder layout:
 /// ```
-/// Vael/
+/// 6d11beccfd0f0ab4/
 /// ├── .meta/manifest.json
 /// ├── changesets/*.enc
 /// └── snapshots/latest.enc
@@ -29,7 +29,17 @@ abstract class DriveApiAdapter {
 class GoogleDriveStorage implements CloudStorageInterface {
   final DriveApiAdapter api;
 
+  /// Opaque root folder name — SHA-256 prefix of 'vael_sync_storage'.
+  /// Avoids leaking product semantics on the user's Drive.
+  static const _rootFolderName = '6d11beccfd0f0ab4';
+
   GoogleDriveStorage({required this.api});
+
+  @override
+  CloudProvider get provider => CloudProvider.googleDrive;
+
+  @override
+  bool get supportsSharing => true;
 
   @override
   Future<void> uploadChangeset(String fileName, Uint8List data) async {
@@ -100,10 +110,41 @@ class GoogleDriveStorage implements CloudStorageInterface {
     }
   }
 
+  @override
+  Future<void> writeSchemaVersion(int version) async {
+    final metaId = await _ensureMetaFolder();
+    final data = Uint8List.fromList(
+      utf8.encode(jsonEncode({'schema_version': version})),
+    );
+    final existing = await api.findFile(
+      'schema_version.json',
+      parentId: metaId,
+    );
+    if (existing != null) {
+      await api.updateFile(existing, data);
+    } else {
+      await api.uploadFile('schema_version.json', data, parentId: metaId);
+    }
+  }
+
+  @override
+  Future<int?> readSchemaVersion() async {
+    final metaId = await api.findFolder(
+      '.meta',
+      parentId: await _vaelFolderId(),
+    );
+    if (metaId == null) return null;
+    final fileId = await api.findFile('schema_version.json', parentId: metaId);
+    if (fileId == null) return null;
+    final data = await api.downloadFile(fileId);
+    final json = jsonDecode(utf8.decode(data)) as Map<String, dynamic>;
+    return json['schema_version'] as int?;
+  }
+
   Future<String> _vaelFolderId() async {
-    final id = await api.findFolder('Vael');
+    final id = await api.findFolder(_rootFolderName);
     if (id != null) return id;
-    return api.createFolder('Vael');
+    return api.createFolder(_rootFolderName);
   }
 
   Future<String> _ensureChangesetFolder() async {

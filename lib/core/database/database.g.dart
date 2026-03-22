@@ -1800,6 +1800,325 @@ class CategoriesCompanion extends UpdateCompanion<Category> {
   }
 }
 
+class $CategoryGroupsTable extends CategoryGroups
+    with TableInfo<$CategoryGroupsTable, CategoryGroup> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CategoryGroupsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _displayOrderMeta = const VerificationMeta(
+    'displayOrder',
+  );
+  @override
+  late final GeneratedColumn<int> displayOrder = GeneratedColumn<int>(
+    'display_order',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _familyIdMeta = const VerificationMeta(
+    'familyId',
+  );
+  @override
+  late final GeneratedColumn<String> familyId = GeneratedColumn<String>(
+    'family_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES families (id)',
+    ),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, name, displayOrder, familyId];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'category_groups';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<CategoryGroup> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('display_order')) {
+      context.handle(
+        _displayOrderMeta,
+        displayOrder.isAcceptableOrUnknown(
+          data['display_order']!,
+          _displayOrderMeta,
+        ),
+      );
+    }
+    if (data.containsKey('family_id')) {
+      context.handle(
+        _familyIdMeta,
+        familyId.isAcceptableOrUnknown(data['family_id']!, _familyIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_familyIdMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id, familyId};
+  @override
+  CategoryGroup map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CategoryGroup(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      displayOrder: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}display_order'],
+      )!,
+      familyId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}family_id'],
+      )!,
+    );
+  }
+
+  @override
+  $CategoryGroupsTable createAlias(String alias) {
+    return $CategoryGroupsTable(attachedDatabase, alias);
+  }
+}
+
+class CategoryGroup extends DataClass implements Insertable<CategoryGroup> {
+  /// Slug identifier, e.g. 'HOME_EXPENSES'.
+  final String id;
+
+  /// Human-readable display name, e.g. 'Home Expenses'.
+  final String name;
+
+  /// Sort order for UI rendering.
+  final int displayOrder;
+  final String familyId;
+  const CategoryGroup({
+    required this.id,
+    required this.name,
+    required this.displayOrder,
+    required this.familyId,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['name'] = Variable<String>(name);
+    map['display_order'] = Variable<int>(displayOrder);
+    map['family_id'] = Variable<String>(familyId);
+    return map;
+  }
+
+  CategoryGroupsCompanion toCompanion(bool nullToAbsent) {
+    return CategoryGroupsCompanion(
+      id: Value(id),
+      name: Value(name),
+      displayOrder: Value(displayOrder),
+      familyId: Value(familyId),
+    );
+  }
+
+  factory CategoryGroup.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CategoryGroup(
+      id: serializer.fromJson<String>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      displayOrder: serializer.fromJson<int>(json['displayOrder']),
+      familyId: serializer.fromJson<String>(json['familyId']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'name': serializer.toJson<String>(name),
+      'displayOrder': serializer.toJson<int>(displayOrder),
+      'familyId': serializer.toJson<String>(familyId),
+    };
+  }
+
+  CategoryGroup copyWith({
+    String? id,
+    String? name,
+    int? displayOrder,
+    String? familyId,
+  }) => CategoryGroup(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    displayOrder: displayOrder ?? this.displayOrder,
+    familyId: familyId ?? this.familyId,
+  );
+  CategoryGroup copyWithCompanion(CategoryGroupsCompanion data) {
+    return CategoryGroup(
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      displayOrder: data.displayOrder.present
+          ? data.displayOrder.value
+          : this.displayOrder,
+      familyId: data.familyId.present ? data.familyId.value : this.familyId,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CategoryGroup(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('displayOrder: $displayOrder, ')
+          ..write('familyId: $familyId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, name, displayOrder, familyId);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CategoryGroup &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.displayOrder == this.displayOrder &&
+          other.familyId == this.familyId);
+}
+
+class CategoryGroupsCompanion extends UpdateCompanion<CategoryGroup> {
+  final Value<String> id;
+  final Value<String> name;
+  final Value<int> displayOrder;
+  final Value<String> familyId;
+  final Value<int> rowid;
+  const CategoryGroupsCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.displayOrder = const Value.absent(),
+    this.familyId = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  CategoryGroupsCompanion.insert({
+    required String id,
+    required String name,
+    this.displayOrder = const Value.absent(),
+    required String familyId,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       name = Value(name),
+       familyId = Value(familyId);
+  static Insertable<CategoryGroup> custom({
+    Expression<String>? id,
+    Expression<String>? name,
+    Expression<int>? displayOrder,
+    Expression<String>? familyId,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (displayOrder != null) 'display_order': displayOrder,
+      if (familyId != null) 'family_id': familyId,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  CategoryGroupsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? name,
+    Value<int>? displayOrder,
+    Value<String>? familyId,
+    Value<int>? rowid,
+  }) {
+    return CategoryGroupsCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      displayOrder: displayOrder ?? this.displayOrder,
+      familyId: familyId ?? this.familyId,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (displayOrder.present) {
+      map['display_order'] = Variable<int>(displayOrder.value);
+    }
+    if (familyId.present) {
+      map['family_id'] = Variable<String>(familyId.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CategoryGroupsCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('displayOrder: $displayOrder, ')
+          ..write('familyId: $familyId, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $TransactionsTable extends Transactions
     with TableInfo<$TransactionsTable, Transaction> {
   @override
@@ -1931,6 +2250,17 @@ class $TransactionsTable extends Transactions
       'REFERENCES families (id)',
     ),
   );
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> deletedAt = GeneratedColumn<DateTime>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -1944,6 +2274,7 @@ class $TransactionsTable extends Transactions
     reconciliationKind,
     metadata,
     familyId,
+    deletedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -2041,6 +2372,12 @@ class $TransactionsTable extends Transactions
     } else if (isInserting) {
       context.missing(_familyIdMeta);
     }
+    if (data.containsKey('deleted_at')) {
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
+    }
     return context;
   }
 
@@ -2094,6 +2431,10 @@ class $TransactionsTable extends Transactions
         DriftSqlType.string,
         data['${effectivePrefix}family_id'],
       )!,
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}deleted_at'],
+      ),
     );
   }
 
@@ -2115,6 +2456,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
   final String? reconciliationKind;
   final String? metadata;
   final String familyId;
+  final DateTime? deletedAt;
   const Transaction({
     required this.id,
     required this.amount,
@@ -2127,6 +2469,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     this.reconciliationKind,
     this.metadata,
     required this.familyId,
+    this.deletedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -2152,6 +2495,9 @@ class Transaction extends DataClass implements Insertable<Transaction> {
       map['metadata'] = Variable<String>(metadata);
     }
     map['family_id'] = Variable<String>(familyId);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt);
+    }
     return map;
   }
 
@@ -2178,6 +2524,9 @@ class Transaction extends DataClass implements Insertable<Transaction> {
           ? const Value.absent()
           : Value(metadata),
       familyId: Value(familyId),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
     );
   }
 
@@ -2200,6 +2549,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
       ),
       metadata: serializer.fromJson<String?>(json['metadata']),
       familyId: serializer.fromJson<String>(json['familyId']),
+      deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
     );
   }
   @override
@@ -2217,6 +2567,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
       'reconciliationKind': serializer.toJson<String?>(reconciliationKind),
       'metadata': serializer.toJson<String?>(metadata),
       'familyId': serializer.toJson<String>(familyId),
+      'deletedAt': serializer.toJson<DateTime?>(deletedAt),
     };
   }
 
@@ -2232,6 +2583,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     Value<String?> reconciliationKind = const Value.absent(),
     Value<String?> metadata = const Value.absent(),
     String? familyId,
+    Value<DateTime?> deletedAt = const Value.absent(),
   }) => Transaction(
     id: id ?? this.id,
     amount: amount ?? this.amount,
@@ -2246,6 +2598,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
         : this.reconciliationKind,
     metadata: metadata.present ? metadata.value : this.metadata,
     familyId: familyId ?? this.familyId,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
   );
   Transaction copyWithCompanion(TransactionsCompanion data) {
     return Transaction(
@@ -2268,6 +2621,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
           : this.reconciliationKind,
       metadata: data.metadata.present ? data.metadata.value : this.metadata,
       familyId: data.familyId.present ? data.familyId.value : this.familyId,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
     );
   }
 
@@ -2284,7 +2638,8 @@ class Transaction extends DataClass implements Insertable<Transaction> {
           ..write('kind: $kind, ')
           ..write('reconciliationKind: $reconciliationKind, ')
           ..write('metadata: $metadata, ')
-          ..write('familyId: $familyId')
+          ..write('familyId: $familyId, ')
+          ..write('deletedAt: $deletedAt')
           ..write(')'))
         .toString();
   }
@@ -2302,6 +2657,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     reconciliationKind,
     metadata,
     familyId,
+    deletedAt,
   );
   @override
   bool operator ==(Object other) =>
@@ -2317,7 +2673,8 @@ class Transaction extends DataClass implements Insertable<Transaction> {
           other.kind == this.kind &&
           other.reconciliationKind == this.reconciliationKind &&
           other.metadata == this.metadata &&
-          other.familyId == this.familyId);
+          other.familyId == this.familyId &&
+          other.deletedAt == this.deletedAt);
 }
 
 class TransactionsCompanion extends UpdateCompanion<Transaction> {
@@ -2332,6 +2689,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
   final Value<String?> reconciliationKind;
   final Value<String?> metadata;
   final Value<String> familyId;
+  final Value<DateTime?> deletedAt;
   final Value<int> rowid;
   const TransactionsCompanion({
     this.id = const Value.absent(),
@@ -2345,6 +2703,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
     this.reconciliationKind = const Value.absent(),
     this.metadata = const Value.absent(),
     this.familyId = const Value.absent(),
+    this.deletedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   TransactionsCompanion.insert({
@@ -2359,6 +2718,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
     this.reconciliationKind = const Value.absent(),
     this.metadata = const Value.absent(),
     required String familyId,
+    this.deletedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        amount = Value(amount),
@@ -2378,6 +2738,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
     Expression<String>? reconciliationKind,
     Expression<String>? metadata,
     Expression<String>? familyId,
+    Expression<DateTime>? deletedAt,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -2392,6 +2753,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
       if (reconciliationKind != null) 'reconciliation_kind': reconciliationKind,
       if (metadata != null) 'metadata': metadata,
       if (familyId != null) 'family_id': familyId,
+      if (deletedAt != null) 'deleted_at': deletedAt,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -2408,6 +2770,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
     Value<String?>? reconciliationKind,
     Value<String?>? metadata,
     Value<String>? familyId,
+    Value<DateTime?>? deletedAt,
     Value<int>? rowid,
   }) {
     return TransactionsCompanion(
@@ -2422,6 +2785,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
       reconciliationKind: reconciliationKind ?? this.reconciliationKind,
       metadata: metadata ?? this.metadata,
       familyId: familyId ?? this.familyId,
+      deletedAt: deletedAt ?? this.deletedAt,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -2462,6 +2826,9 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
     if (familyId.present) {
       map['family_id'] = Variable<String>(familyId.value);
     }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -2482,6 +2849,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
           ..write('reconciliationKind: $reconciliationKind, ')
           ..write('metadata: $metadata, ')
           ..write('familyId: $familyId, ')
+          ..write('deletedAt: $deletedAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -6155,6 +6523,17 @@ class $RecurringRulesTable extends RecurringRules
     type: DriftSqlType.dateTime,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> deletedAt = GeneratedColumn<DateTime>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -6174,6 +6553,7 @@ class $RecurringRulesTable extends RecurringRules
     familyId,
     userId,
     createdAt,
+    deletedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -6318,6 +6698,12 @@ class $RecurringRulesTable extends RecurringRules
     } else if (isInserting) {
       context.missing(_createdAtMeta);
     }
+    if (data.containsKey('deleted_at')) {
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
+    }
     return context;
   }
 
@@ -6395,6 +6781,10 @@ class $RecurringRulesTable extends RecurringRules
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
       )!,
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}deleted_at'],
+      ),
     );
   }
 
@@ -6422,6 +6812,7 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
   final String familyId;
   final String userId;
   final DateTime createdAt;
+  final DateTime? deletedAt;
   const RecurringRule({
     required this.id,
     required this.name,
@@ -6440,6 +6831,7 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
     required this.familyId,
     required this.userId,
     required this.createdAt,
+    this.deletedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -6471,6 +6863,9 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
     map['family_id'] = Variable<String>(familyId);
     map['user_id'] = Variable<String>(userId);
     map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt);
+    }
     return map;
   }
 
@@ -6503,6 +6898,9 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
       familyId: Value(familyId),
       userId: Value(userId),
       createdAt: Value(createdAt),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
     );
   }
 
@@ -6533,6 +6931,7 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
       familyId: serializer.fromJson<String>(json['familyId']),
       userId: serializer.fromJson<String>(json['userId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
     );
   }
   @override
@@ -6556,6 +6955,7 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
       'familyId': serializer.toJson<String>(familyId),
       'userId': serializer.toJson<String>(userId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
+      'deletedAt': serializer.toJson<DateTime?>(deletedAt),
     };
   }
 
@@ -6577,6 +6977,7 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
     String? familyId,
     String? userId,
     DateTime? createdAt,
+    Value<DateTime?> deletedAt = const Value.absent(),
   }) => RecurringRule(
     id: id ?? this.id,
     name: name ?? this.name,
@@ -6597,6 +6998,7 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
     familyId: familyId ?? this.familyId,
     userId: userId ?? this.userId,
     createdAt: createdAt ?? this.createdAt,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
   );
   RecurringRule copyWithCompanion(RecurringRulesCompanion data) {
     return RecurringRule(
@@ -6627,6 +7029,7 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
       familyId: data.familyId.present ? data.familyId.value : this.familyId,
       userId: data.userId.present ? data.userId.value : this.userId,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
     );
   }
 
@@ -6649,7 +7052,8 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
           ..write('annualEscalationRate: $annualEscalationRate, ')
           ..write('familyId: $familyId, ')
           ..write('userId: $userId, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('deletedAt: $deletedAt')
           ..write(')'))
         .toString();
   }
@@ -6673,6 +7077,7 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
     familyId,
     userId,
     createdAt,
+    deletedAt,
   );
   @override
   bool operator ==(Object other) =>
@@ -6694,7 +7099,8 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
           other.annualEscalationRate == this.annualEscalationRate &&
           other.familyId == this.familyId &&
           other.userId == this.userId &&
-          other.createdAt == this.createdAt);
+          other.createdAt == this.createdAt &&
+          other.deletedAt == this.deletedAt);
 }
 
 class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
@@ -6715,6 +7121,7 @@ class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
   final Value<String> familyId;
   final Value<String> userId;
   final Value<DateTime> createdAt;
+  final Value<DateTime?> deletedAt;
   final Value<int> rowid;
   const RecurringRulesCompanion({
     this.id = const Value.absent(),
@@ -6734,6 +7141,7 @@ class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
     this.familyId = const Value.absent(),
     this.userId = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   RecurringRulesCompanion.insert({
@@ -6754,6 +7162,7 @@ class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
     required String familyId,
     required String userId,
     required DateTime createdAt,
+    this.deletedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        name = Value(name),
@@ -6783,6 +7192,7 @@ class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
     Expression<String>? familyId,
     Expression<String>? userId,
     Expression<DateTime>? createdAt,
+    Expression<DateTime>? deletedAt,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -6804,6 +7214,7 @@ class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
       if (familyId != null) 'family_id': familyId,
       if (userId != null) 'user_id': userId,
       if (createdAt != null) 'created_at': createdAt,
+      if (deletedAt != null) 'deleted_at': deletedAt,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -6826,6 +7237,7 @@ class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
     Value<String>? familyId,
     Value<String>? userId,
     Value<DateTime>? createdAt,
+    Value<DateTime?>? deletedAt,
     Value<int>? rowid,
   }) {
     return RecurringRulesCompanion(
@@ -6846,6 +7258,7 @@ class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
       familyId: familyId ?? this.familyId,
       userId: userId ?? this.userId,
       createdAt: createdAt ?? this.createdAt,
+      deletedAt: deletedAt ?? this.deletedAt,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -6906,6 +7319,9 @@ class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -6932,6 +7348,7 @@ class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
           ..write('familyId: $familyId, ')
           ..write('userId: $userId, ')
           ..write('createdAt: $createdAt, ')
+          ..write('deletedAt: $deletedAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -7852,6 +8269,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $UsersTable users = $UsersTable(this);
   late final $AccountsTable accounts = $AccountsTable(this);
   late final $CategoriesTable categories = $CategoriesTable(this);
+  late final $CategoryGroupsTable categoryGroups = $CategoryGroupsTable(this);
   late final $TransactionsTable transactions = $TransactionsTable(this);
   late final $BalanceSnapshotsTable balanceSnapshots = $BalanceSnapshotsTable(
     this,
@@ -7874,6 +8292,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     users,
     accounts,
     categories,
+    categoryGroups,
     transactions,
     balanceSnapshots,
     auditLog,
@@ -7959,6 +8378,24 @@ final class $$FamiliesTableReferences
     ).filter((f) => f.familyId.id.sqlEquals($_itemColumn<String>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_categoriesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$CategoryGroupsTable, List<CategoryGroup>>
+  _categoryGroupsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.categoryGroups,
+    aliasName: $_aliasNameGenerator(db.families.id, db.categoryGroups.familyId),
+  );
+
+  $$CategoryGroupsTableProcessedTableManager get categoryGroupsRefs {
+    final manager = $$CategoryGroupsTableTableManager(
+      $_db,
+      $_db.categoryGroups,
+    ).filter((f) => f.familyId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_categoryGroupsRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -8217,6 +8654,31 @@ class $$FamiliesTableFilterComposer
           }) => $$CategoriesTableFilterComposer(
             $db: $db,
             $table: $db.categories,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> categoryGroupsRefs(
+    Expression<bool> Function($$CategoryGroupsTableFilterComposer f) f,
+  ) {
+    final $$CategoryGroupsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.categoryGroups,
+      getReferencedColumn: (t) => t.familyId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CategoryGroupsTableFilterComposer(
+            $db: $db,
+            $table: $db.categoryGroups,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8555,6 +9017,31 @@ class $$FamiliesTableAnnotationComposer
     return f(composer);
   }
 
+  Expression<T> categoryGroupsRefs<T extends Object>(
+    Expression<T> Function($$CategoryGroupsTableAnnotationComposer a) f,
+  ) {
+    final $$CategoryGroupsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.categoryGroups,
+      getReferencedColumn: (t) => t.familyId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CategoryGroupsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.categoryGroups,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
   Expression<T> transactionsRefs<T extends Object>(
     Expression<T> Function($$TransactionsTableAnnotationComposer a) f,
   ) {
@@ -8774,6 +9261,7 @@ class $$FamiliesTableTableManager
             bool usersRefs,
             bool accountsRefs,
             bool categoriesRefs,
+            bool categoryGroupsRefs,
             bool transactionsRefs,
             bool balanceSnapshotsRefs,
             bool auditLogRefs,
@@ -8836,6 +9324,7 @@ class $$FamiliesTableTableManager
                 usersRefs = false,
                 accountsRefs = false,
                 categoriesRefs = false,
+                categoryGroupsRefs = false,
                 transactionsRefs = false,
                 balanceSnapshotsRefs = false,
                 auditLogRefs = false,
@@ -8851,6 +9340,7 @@ class $$FamiliesTableTableManager
                     if (usersRefs) db.users,
                     if (accountsRefs) db.accounts,
                     if (categoriesRefs) db.categories,
+                    if (categoryGroupsRefs) db.categoryGroups,
                     if (transactionsRefs) db.transactions,
                     if (balanceSnapshotsRefs) db.balanceSnapshots,
                     if (auditLogRefs) db.auditLog,
@@ -8916,6 +9406,27 @@ class $$FamiliesTableTableManager
                                 table,
                                 p0,
                               ).categoriesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.familyId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (categoryGroupsRefs)
+                        await $_getPrefetchedData<
+                          Family,
+                          $FamiliesTable,
+                          CategoryGroup
+                        >(
+                          currentTable: table,
+                          referencedTable: $$FamiliesTableReferences
+                              ._categoryGroupsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$FamiliesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).categoryGroupsRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.familyId == item.id,
@@ -9110,6 +9621,7 @@ typedef $$FamiliesTableProcessedTableManager =
         bool usersRefs,
         bool accountsRefs,
         bool categoriesRefs,
+        bool categoryGroupsRefs,
         bool transactionsRefs,
         bool balanceSnapshotsRefs,
         bool auditLogRefs,
@@ -10999,6 +11511,315 @@ typedef $$CategoriesTableProcessedTableManager =
         bool recurringRulesRefs,
       })
     >;
+typedef $$CategoryGroupsTableCreateCompanionBuilder =
+    CategoryGroupsCompanion Function({
+      required String id,
+      required String name,
+      Value<int> displayOrder,
+      required String familyId,
+      Value<int> rowid,
+    });
+typedef $$CategoryGroupsTableUpdateCompanionBuilder =
+    CategoryGroupsCompanion Function({
+      Value<String> id,
+      Value<String> name,
+      Value<int> displayOrder,
+      Value<String> familyId,
+      Value<int> rowid,
+    });
+
+final class $$CategoryGroupsTableReferences
+    extends BaseReferences<_$AppDatabase, $CategoryGroupsTable, CategoryGroup> {
+  $$CategoryGroupsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $FamiliesTable _familyIdTable(_$AppDatabase db) =>
+      db.families.createAlias(
+        $_aliasNameGenerator(db.categoryGroups.familyId, db.families.id),
+      );
+
+  $$FamiliesTableProcessedTableManager get familyId {
+    final $_column = $_itemColumn<String>('family_id')!;
+
+    final manager = $$FamiliesTableTableManager(
+      $_db,
+      $_db.families,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_familyIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$CategoryGroupsTableFilterComposer
+    extends Composer<_$AppDatabase, $CategoryGroupsTable> {
+  $$CategoryGroupsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get displayOrder => $composableBuilder(
+    column: $table.displayOrder,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$FamiliesTableFilterComposer get familyId {
+    final $$FamiliesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.familyId,
+      referencedTable: $db.families,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$FamiliesTableFilterComposer(
+            $db: $db,
+            $table: $db.families,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$CategoryGroupsTableOrderingComposer
+    extends Composer<_$AppDatabase, $CategoryGroupsTable> {
+  $$CategoryGroupsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get displayOrder => $composableBuilder(
+    column: $table.displayOrder,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$FamiliesTableOrderingComposer get familyId {
+    final $$FamiliesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.familyId,
+      referencedTable: $db.families,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$FamiliesTableOrderingComposer(
+            $db: $db,
+            $table: $db.families,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$CategoryGroupsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $CategoryGroupsTable> {
+  $$CategoryGroupsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<int> get displayOrder => $composableBuilder(
+    column: $table.displayOrder,
+    builder: (column) => column,
+  );
+
+  $$FamiliesTableAnnotationComposer get familyId {
+    final $$FamiliesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.familyId,
+      referencedTable: $db.families,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$FamiliesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.families,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$CategoryGroupsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $CategoryGroupsTable,
+          CategoryGroup,
+          $$CategoryGroupsTableFilterComposer,
+          $$CategoryGroupsTableOrderingComposer,
+          $$CategoryGroupsTableAnnotationComposer,
+          $$CategoryGroupsTableCreateCompanionBuilder,
+          $$CategoryGroupsTableUpdateCompanionBuilder,
+          (CategoryGroup, $$CategoryGroupsTableReferences),
+          CategoryGroup,
+          PrefetchHooks Function({bool familyId})
+        > {
+  $$CategoryGroupsTableTableManager(
+    _$AppDatabase db,
+    $CategoryGroupsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$CategoryGroupsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CategoryGroupsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$CategoryGroupsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<int> displayOrder = const Value.absent(),
+                Value<String> familyId = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => CategoryGroupsCompanion(
+                id: id,
+                name: name,
+                displayOrder: displayOrder,
+                familyId: familyId,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String name,
+                Value<int> displayOrder = const Value.absent(),
+                required String familyId,
+                Value<int> rowid = const Value.absent(),
+              }) => CategoryGroupsCompanion.insert(
+                id: id,
+                name: name,
+                displayOrder: displayOrder,
+                familyId: familyId,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$CategoryGroupsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({familyId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (familyId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.familyId,
+                                referencedTable: $$CategoryGroupsTableReferences
+                                    ._familyIdTable(db),
+                                referencedColumn:
+                                    $$CategoryGroupsTableReferences
+                                        ._familyIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$CategoryGroupsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $CategoryGroupsTable,
+      CategoryGroup,
+      $$CategoryGroupsTableFilterComposer,
+      $$CategoryGroupsTableOrderingComposer,
+      $$CategoryGroupsTableAnnotationComposer,
+      $$CategoryGroupsTableCreateCompanionBuilder,
+      $$CategoryGroupsTableUpdateCompanionBuilder,
+      (CategoryGroup, $$CategoryGroupsTableReferences),
+      CategoryGroup,
+      PrefetchHooks Function({bool familyId})
+    >;
 typedef $$TransactionsTableCreateCompanionBuilder =
     TransactionsCompanion Function({
       required String id,
@@ -11012,6 +11833,7 @@ typedef $$TransactionsTableCreateCompanionBuilder =
       Value<String?> reconciliationKind,
       Value<String?> metadata,
       required String familyId,
+      Value<DateTime?> deletedAt,
       Value<int> rowid,
     });
 typedef $$TransactionsTableUpdateCompanionBuilder =
@@ -11027,6 +11849,7 @@ typedef $$TransactionsTableUpdateCompanionBuilder =
       Value<String?> reconciliationKind,
       Value<String?> metadata,
       Value<String> familyId,
+      Value<DateTime?> deletedAt,
       Value<int> rowid,
     });
 
@@ -11152,6 +11975,11 @@ class $$TransactionsTableFilterComposer
 
   ColumnFilters<String> get metadata => $composableBuilder(
     column: $table.metadata,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -11292,6 +12120,11 @@ class $$TransactionsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$CategoriesTableOrderingComposer get categoryId {
     final $$CategoriesTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -11418,6 +12251,9 @@ class $$TransactionsTableAnnotationComposer
 
   GeneratedColumn<String> get metadata =>
       $composableBuilder(column: $table.metadata, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
 
   $$CategoriesTableAnnotationComposer get categoryId {
     final $$CategoriesTableAnnotationComposer composer = $composerBuilder(
@@ -11556,6 +12392,7 @@ class $$TransactionsTableTableManager
                 Value<String?> reconciliationKind = const Value.absent(),
                 Value<String?> metadata = const Value.absent(),
                 Value<String> familyId = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => TransactionsCompanion(
                 id: id,
@@ -11569,6 +12406,7 @@ class $$TransactionsTableTableManager
                 reconciliationKind: reconciliationKind,
                 metadata: metadata,
                 familyId: familyId,
+                deletedAt: deletedAt,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -11584,6 +12422,7 @@ class $$TransactionsTableTableManager
                 Value<String?> reconciliationKind = const Value.absent(),
                 Value<String?> metadata = const Value.absent(),
                 required String familyId,
+                Value<DateTime?> deletedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => TransactionsCompanion.insert(
                 id: id,
@@ -11597,6 +12436,7 @@ class $$TransactionsTableTableManager
                 reconciliationKind: reconciliationKind,
                 metadata: metadata,
                 familyId: familyId,
+                deletedAt: deletedAt,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -14741,6 +15581,7 @@ typedef $$RecurringRulesTableCreateCompanionBuilder =
       required String familyId,
       required String userId,
       required DateTime createdAt,
+      Value<DateTime?> deletedAt,
       Value<int> rowid,
     });
 typedef $$RecurringRulesTableUpdateCompanionBuilder =
@@ -14762,6 +15603,7 @@ typedef $$RecurringRulesTableUpdateCompanionBuilder =
       Value<String> familyId,
       Value<String> userId,
       Value<DateTime> createdAt,
+      Value<DateTime?> deletedAt,
       Value<int> rowid,
     });
 
@@ -14921,6 +15763,11 @@ class $$RecurringRulesTableFilterComposer
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -15091,6 +15938,11 @@ class $$RecurringRulesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$AccountsTableOrderingComposer get accountId {
     final $$AccountsTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -15238,6 +16090,9 @@ class $$RecurringRulesTableAnnotationComposer
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
+  GeneratedColumn<DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
+
   $$AccountsTableAnnotationComposer get accountId {
     final $$AccountsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
@@ -15383,6 +16238,7 @@ class $$RecurringRulesTableTableManager
                 Value<String> familyId = const Value.absent(),
                 Value<String> userId = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => RecurringRulesCompanion(
                 id: id,
@@ -15402,6 +16258,7 @@ class $$RecurringRulesTableTableManager
                 familyId: familyId,
                 userId: userId,
                 createdAt: createdAt,
+                deletedAt: deletedAt,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -15423,6 +16280,7 @@ class $$RecurringRulesTableTableManager
                 required String familyId,
                 required String userId,
                 required DateTime createdAt,
+                Value<DateTime?> deletedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => RecurringRulesCompanion.insert(
                 id: id,
@@ -15442,6 +16300,7 @@ class $$RecurringRulesTableTableManager
                 familyId: familyId,
                 userId: userId,
                 createdAt: createdAt,
+                deletedAt: deletedAt,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -16054,6 +16913,8 @@ class $AppDatabaseManager {
       $$AccountsTableTableManager(_db, _db.accounts);
   $$CategoriesTableTableManager get categories =>
       $$CategoriesTableTableManager(_db, _db.categories);
+  $$CategoryGroupsTableTableManager get categoryGroups =>
+      $$CategoryGroupsTableTableManager(_db, _db.categoryGroups);
   $$TransactionsTableTableManager get transactions =>
       $$TransactionsTableTableManager(_db, _db.transactions);
   $$BalanceSnapshotsTableTableManager get balanceSnapshots =>

@@ -8,6 +8,7 @@ import '../../../core/providers/transaction_providers.dart';
 import '../../../shared/theme/color_tokens.dart';
 import '../../../shared/theme/spacing.dart';
 import '../../../shared/utils/formatters.dart';
+import '../../imports/screens/statement_import_screen.dart';
 import 'transaction_form_screen.dart';
 
 /// Displays all transactions for a family, grouped by date with search and
@@ -71,6 +72,16 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
           : AppBar(
               title: const Text('Transactions'),
               actions: [
+                IconButton(
+                  icon: const Icon(Icons.file_upload_outlined),
+                  tooltip: 'Import Statement',
+                  onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) =>
+                          StatementImportScreen(familyId: widget.familyId),
+                    ),
+                  ),
+                ),
                 IconButton(
                   icon: const Icon(Icons.search),
                   onPressed: () => setState(() => _searching = true),

@@ -56,18 +56,25 @@ void main() {
   });
 
   group('CategoryGroup', () {
-    test('should have exactly 5 values', () {
-      expect(CategoryGroup.values.length, 5);
+    test('should have exactly 12 values', () {
+      expect(CategoryGroup.values.length, 12);
     });
 
     test('should contain all expected values', () {
       expect(
         CategoryGroup.values,
         containsAll([
-          CategoryGroup.essential,
-          CategoryGroup.nonEssential,
-          CategoryGroup.investments,
+          CategoryGroup.assets,
+          CategoryGroup.liabilities,
           CategoryGroup.homeExpenses,
+          CategoryGroup.livingExpense,
+          CategoryGroup.essential,
+          CategoryGroup.luxuryEssential,
+          CategoryGroup.luxuryNonEssential,
+          CategoryGroup.philanthropy,
+          CategoryGroup.selfImprovement,
+          CategoryGroup.investments,
+          CategoryGroup.nonEssential,
           CategoryGroup.missing,
         ]),
       );
@@ -89,9 +96,9 @@ void main() {
       expect(
         Visibility.values,
         containsAll([
-          Visibility.private_,
+          Visibility.hidden,
+          Visibility.nameOnly,
           Visibility.shared,
-          Visibility.familyWide,
         ]),
       );
     });
@@ -100,6 +107,12 @@ void main() {
       for (final value in Visibility.values) {
         expect(Visibility.values.byName(value.name), value);
       }
+    });
+
+    test('should not contain deprecated private_ or familyWide values', () {
+      final names = Visibility.values.map((v) => v.name).toList();
+      expect(names, isNot(contains('private_')));
+      expect(names, isNot(contains('familyWide')));
     });
   });
 

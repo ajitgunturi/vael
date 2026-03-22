@@ -84,6 +84,44 @@ wrong_key_fails_to_decrypt
 | Sync engine | Conflict resolution tests with deterministic mock clocks |
 | Statement import | Parser tests against real anonymized fixtures |
 
+## Horizontal Integration
+
+Building a screen in isolation is only half the work. Every new screen must be **wired into the navigation graph** — reachable by a real user tapping through the app.
+
+### Why This Matters
+
+In wave-based development, it's easy to build a vertical slice (screen + logic + tests) that works perfectly in isolation but is unreachable from the running app. We've been burned by this: screens existed as files, E2E tests pumped them directly, but the debug build had no way to navigate to them. This section prevents that from recurring.
+
+### What You Must Do
+
+1. **Wire navigation entry points.** When you add a screen, add the `Navigator.push` call from an existing screen. Common entry points:
+   - Dashboard quick actions grid — for top-level feature screens
+   - AppBar action buttons — for contextual features (e.g., Import on Transactions)
+   - List tile `onTap` — for detail screens (e.g., Loan Detail from account tile)
+   - Settings tiles — for configuration screens
+
+2. **Never ship dead buttons.** If a button or tile has `onPressed: () {}` or `onTap: null`, either wire it to a real destination or remove it. Placeholder no-ops are not acceptable.
+
+3. **Update navigation tests.** Every phase that introduces new screens must include integration tests that verify the screen is reachable via tap interaction starting from `HomeShell`. Do not rely solely on direct `pumpWidget` — that tests the screen, not the wiring.
+
+4. **Provide empty-state defaults for data-driven screens.** If a screen's constructor requires backend data (sync status, manifest data), provide sensible defaults so the screen renders in debug builds before that backend is configured.
+
+### Navigation Test Pattern
+
+```dart
+// Start from the real shell
+await tester.pumpWidget(buildApp()); // HomeShell-based app
+
+// Navigate via tap (not direct pumpWidget)
+await tester.tap(find.text('Investments'));
+await tester.pumpAndSettle();
+
+// Assert the target screen rendered
+expect(find.text('No investment buckets yet'), findsOneWidget);
+```
+
+Extend `navigation_flow_test.dart` or `phase5_e2e_test.dart` rather than creating new navigation test files.
+
 ## Commit Messages
 
 Use [Conventional Commits](https://www.conventionalcommits.org/):

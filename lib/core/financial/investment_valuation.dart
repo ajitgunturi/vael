@@ -75,6 +75,23 @@ class InvestmentValuation {
     };
   }
 
+  /// Returns the effective return rate using a 4-level priority:
+  ///
+  /// 1. [fixedRate] — user-specified fixed rate for a holding
+  /// 2. [xirr] — computed XIRR from actual cash flows
+  /// 3. [familyBaseline] — family-level baseline for the asset class
+  /// 4. [defaultReturnRate] for [type] — India-typical defaults
+  ///
+  /// Returns the first non-null value in priority order.
+  static double effectiveReturnRate({
+    double? fixedRate,
+    double? xirr,
+    double? familyBaseline,
+    required BucketType type,
+  }) {
+    return fixedRate ?? xirr ?? familyBaseline ?? defaultReturnRate(type);
+  }
+
   /// Projects a single bucket's value forward month-by-month.
   ///
   /// Returns a list of projected values (paise) for each month.

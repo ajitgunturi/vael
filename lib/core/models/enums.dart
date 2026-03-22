@@ -13,18 +13,32 @@ enum TransactionKind {
 }
 
 /// High-level grouping for expense/income categories.
+///
+/// Source of truth for groups is the `category_groups` DB table.
+/// This enum serves as a reference for known built-in groups and
+/// display mapping. Custom user-created groups won't appear here.
 enum CategoryGroup {
-  essential,
-  nonEssential,
-  investments,
+  assets,
+  liabilities,
   homeExpenses,
+  livingExpense,
+  essential,
+  luxuryEssential,
+  luxuryNonEssential,
+  philanthropy,
+  selfImprovement,
+  investments,
+  nonEssential,
   missing,
 }
 
 /// Controls which family members can see a record.
 ///
-/// [private_] uses a trailing underscore to avoid the Dart reserved keyword.
-enum Visibility { private_, shared, familyWide }
+/// Three-tier privacy model per UI_DESIGN.md §0.5:
+/// - [shared] — full details visible to all family members
+/// - [nameOnly] — name/label visible, amounts hidden from non-owners
+/// - [hidden] — completely invisible to non-owners (private)
+enum Visibility { hidden, nameOnly, shared }
 
 /// Classification of investment buckets (India-native asset types).
 enum BucketType {

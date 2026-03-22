@@ -46,13 +46,13 @@ class BudgetScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: Text('Budget — ${_monthNames[month]} $year')),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _navigateToForm(context),
+        onPressed: () => _navigateToForm(context, ref),
         child: const Icon(Icons.add),
       ),
       body: summaryAsync.when(
         data: (rows) => rows.isEmpty
             ? _buildEmptyState(context)
-            : _buildBudgetList(context, rows),
+            : _buildBudgetList(context, ref, rows),
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Error: $e')),
       ),
@@ -79,7 +79,11 @@ class BudgetScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildBudgetList(BuildContext context, List<BudgetSummaryRow> rows) {
+  Widget _buildBudgetList(
+    BuildContext context,
+    WidgetRef ref,
+    List<BudgetSummaryRow> rows,
+  ) {
     return ListView.builder(
       padding: const EdgeInsets.all(Spacing.md),
       itemCount: rows.length,
@@ -87,6 +91,7 @@ class BudgetScreen extends ConsumerWidget {
         row: rows[index],
         onTap: () => _navigateToForm(
           context,
+          ref,
           editBudgetId: rows[index].budgetId,
           initialGroup: rows[index].categoryGroup,
           initialAmount: rows[index].limitAmount,
@@ -96,23 +101,30 @@ class BudgetScreen extends ConsumerWidget {
   }
 
   void _navigateToForm(
-    BuildContext context, {
+    BuildContext context,
+    WidgetRef ref, {
     String? editBudgetId,
     String? initialGroup,
     int? initialAmount,
   }) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => BudgetFormScreen(
-          familyId: familyId,
-          year: year,
-          month: month,
-          editBudgetId: editBudgetId,
-          initialGroup: initialGroup,
-          initialAmount: initialAmount,
-        ),
-      ),
-    );
+    Navigator.of(context)
+        .push(
+          MaterialPageRoute<void>(
+            builder: (_) => BudgetFormScreen(
+              familyId: familyId,
+              year: year,
+              month: month,
+              editBudgetId: editBudgetId,
+              initialGroup: initialGroup,
+              initialAmount: initialAmount,
+            ),
+          ),
+        )
+        .then((_) {
+          // Refresh budget data after form closes
+          final key = (familyId: familyId, year: year, month: month);
+          ref.invalidate(budgetSummaryProvider(key));
+        });
   }
 }
 

@@ -13,7 +13,7 @@ import 'icloud_platform_channel.dart';
 ///
 /// Folder layout (same structure as Google Drive):
 /// ```
-/// <ubiquity_container>/Vael/
+/// <ubiquity_container>/6d11beccfd0f0ab4/
 /// ├── .meta/manifest.json
 /// ├── changesets/*.enc
 /// └── snapshots/latest.enc
@@ -27,6 +27,12 @@ class ICloudStorage implements CloudStorageInterface {
   ICloudStorage({required ICloudPlatformChannel platform})
     : _platform = platform;
 
+  @override
+  CloudProvider get provider => CloudProvider.iCloudDrive;
+
+  @override
+  bool get supportsSharing => false;
+
   /// Resolves the Vael root directory inside the ubiquity container.
   /// Creates the directory structure if it doesn't exist.
   Future<String> _vaelRoot() async {
@@ -39,7 +45,7 @@ class ICloudStorage implements CloudStorageInterface {
       }
       _containerPath = container;
     }
-    final root = '$_containerPath/Vael';
+    final root = '$_containerPath/6d11beccfd0f0ab4';
     await Directory(root).create(recursive: true);
     return root;
   }
@@ -139,6 +145,24 @@ class ICloudStorage implements CloudStorageInterface {
   Future<void> writeManifest(Map<String, dynamic> manifest) async {
     final dir = await _ensureDir('.meta');
     await File('$dir/manifest.json').writeAsString(jsonEncode(manifest));
+  }
+
+  @override
+  Future<void> writeSchemaVersion(int version) async {
+    final dir = await _ensureDir('.meta');
+    await File(
+      '$dir/schema_version.json',
+    ).writeAsString(jsonEncode({'schema_version': version}));
+  }
+
+  @override
+  Future<int?> readSchemaVersion() async {
+    final dir = await _ensureDir('.meta');
+    final file = File('$dir/schema_version.json');
+    if (!await file.exists()) return null;
+    final content = await file.readAsString();
+    final json = jsonDecode(content) as Map<String, dynamic>;
+    return json['schema_version'] as int?;
   }
 
   /// Waits for an evicted file to become locally available after

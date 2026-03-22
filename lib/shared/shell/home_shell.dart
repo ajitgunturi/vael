@@ -36,6 +36,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     return switch (index) {
       0 => DashboardScreen(
         familyId: widget.familyId,
+        userId: widget.userId,
         onNavigateToTab: _onNavigateToTab,
       ),
       1 => AccountListScreen(familyId: widget.familyId),

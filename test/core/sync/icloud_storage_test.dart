@@ -52,7 +52,7 @@ void main() {
       await storage.uploadChangeset('test.enc', Uint8List.fromList([1, 2, 3]));
 
       expect(
-        await Directory('$containerPath/Vael/changesets').exists(),
+        await Directory('$containerPath/6d11beccfd0f0ab4/changesets').exists(),
         isTrue,
       );
     });
@@ -126,7 +126,7 @@ void main() {
 
       final entries = await storage.listChangesets();
       expect(entries.first.id, startsWith('/'));
-      expect(entries.first.id, contains('Vael/changesets/path-test.enc'));
+      expect(entries.first.id, contains('changesets/path-test.enc'));
     });
   });
 
