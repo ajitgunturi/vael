@@ -8,6 +8,8 @@ import '../../../core/sync/manifest.dart';
 import '../../../core/sync/sync_orchestrator.dart';
 import '../../../shared/theme/spacing.dart';
 import '../../../shared/theme/theme_mode_provider.dart';
+import '../../planning/providers/life_profile_provider.dart';
+import '../../planning/screens/life_profile_wizard_screen.dart';
 import 'category_management_screen.dart';
 import 'family_backup_screen.dart';
 import 'passphrase_setup_screen.dart';
@@ -60,6 +62,24 @@ class SettingsScreen extends ConsumerWidget {
             onTap: () => _openPassphrase(context),
           ),
           const Divider(),
+          const Padding(
+            padding: EdgeInsets.only(left: 16, top: 8, bottom: 4),
+            child: Text(
+              'Financial Planning',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: Colors.grey,
+              ),
+            ),
+          ),
+          _SettingsTile(
+            icon: Icons.person_outline,
+            title: 'Life Profile',
+            subtitle: 'Age, retirement, risk & growth rates',
+            onTap: () => _openLifeProfile(context, ref),
+          ),
+          const Divider(),
           _ThemeModeTile(ref: ref),
           const Divider(),
           _SettingsTile(
@@ -71,6 +91,23 @@ class SettingsScreen extends ConsumerWidget {
           const Divider(),
           const _AppInfoSection(),
         ],
+      ),
+    );
+  }
+
+  void _openLifeProfile(BuildContext context, WidgetRef ref) {
+    // Read current profile to determine edit vs create mode.
+    final profileAsync = ref.read(
+      lifeProfileProvider((userId: userId, familyId: familyId)),
+    );
+    final existing = profileAsync.whenOrNull(data: (p) => p);
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => LifeProfileWizardScreen(
+          userId: userId,
+          familyId: familyId,
+          existingProfile: existing,
+        ),
       ),
     );
   }

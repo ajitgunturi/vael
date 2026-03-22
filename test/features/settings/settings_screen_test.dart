@@ -109,8 +109,11 @@ void main() {
       await tester.tap(find.text('Open Settings'));
       await tester.pumpAndSettle();
 
-      // Tap Sign Out
-      await tester.tap(find.text('Sign Out'));
+      // Tap Sign Out (scroll into view first since Financial Planning section may push it off-screen)
+      final signOut = find.text('Sign Out');
+      await tester.ensureVisible(signOut);
+      await tester.pumpAndSettle();
+      await tester.tap(signOut);
       await tester.pumpAndSettle();
 
       // Session providers should be cleared
@@ -123,7 +126,11 @@ void main() {
 
     testWidgets('shows app version info section', (tester) async {
       await tester.pumpWidget(buildScreen());
-      expect(find.text('Vael'), findsOneWidget);
+      // App info is at the bottom of the list -- scroll into view
+      final vael = find.text('Vael');
+      await tester.scrollUntilVisible(vael, 100);
+      await tester.pumpAndSettle();
+      expect(vael, findsOneWidget);
     });
   });
 }

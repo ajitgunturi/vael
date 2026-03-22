@@ -169,7 +169,10 @@ void main() {
       await tester.tap(find.byIcon(Icons.settings));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Sign Out'));
+      final signOut = find.text('Sign Out');
+      await tester.ensureVisible(signOut);
+      await tester.pumpAndSettle();
+      await tester.tap(signOut);
       await tester.pumpAndSettle();
 
       expect(container.read(sessionFamilyIdProvider), isNull);
