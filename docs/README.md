@@ -14,6 +14,7 @@ Vael is the production-grade successor to this repo. It replaces the Docker-base
 | [SYNC.md](SYNC.md) | Google Drive sync protocol, changeset format, conflict resolution, snapshots |
 | [MIGRATION.md](MIGRATION.md) | How to migrate data from the current PostgreSQL app into Vael's local SQLite |
 | [ROADMAP.md](ROADMAP.md) | 5-phase implementation plan with timeline and verification criteria |
+| [RUNNING.md](RUNNING.md) | How to run the app on simulators, emulators, desktop, and web — plus testing and CI |
 
 ## Key Decisions
 
