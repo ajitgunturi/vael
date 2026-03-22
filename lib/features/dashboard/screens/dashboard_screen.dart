@@ -124,31 +124,34 @@ class _HeroNetWorthCard extends StatelessWidget {
     final sign = isPositive ? '' : '-';
     final formatted = formatIndianNumber(netWorth.abs() ~/ 100);
 
-    return Card(
-      child: InkWell(
-        borderRadius: BorderRadius.circular(Spacing.cardRadius),
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: Spacing.lg,
-            horizontal: Spacing.md,
-          ),
-          child: Column(
-            children: [
-              Text(
-                'Net Worth',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: tokens.onSurfaceVariant,
+    return Semantics(
+      label: 'Net worth: $sign rupees $formatted',
+      child: Card(
+        child: InkWell(
+          borderRadius: BorderRadius.circular(Spacing.cardRadius),
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: Spacing.lg,
+              horizontal: Spacing.md,
+            ),
+            child: Column(
+              children: [
+                Text(
+                  'Net Worth',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: tokens.onSurfaceVariant,
+                  ),
                 ),
-              ),
-              const SizedBox(height: Spacing.sm),
-              Text(
-                '$sign₹$formatted',
-                style: Theme.of(
-                  context,
-                ).textTheme.displayLarge?.copyWith(color: color),
-              ),
-            ],
+                const SizedBox(height: Spacing.sm),
+                Text(
+                  '$sign₹$formatted',
+                  style: Theme.of(
+                    context,
+                  ).textTheme.displayLarge?.copyWith(color: color),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -215,25 +218,28 @@ class _CompactTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: InkWell(
-        borderRadius: BorderRadius.circular(Spacing.cardRadius),
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(Spacing.sm),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(label, style: Theme.of(context).textTheme.labelSmall),
-              const SizedBox(height: Spacing.xs),
-              Text(
-                value,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: color,
-                  fontWeight: FontWeight.w600,
+    return Semantics(
+      label: '$label: $value',
+      child: Card(
+        child: InkWell(
+          borderRadius: BorderRadius.circular(Spacing.cardRadius),
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.all(Spacing.sm),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(label, style: Theme.of(context).textTheme.labelSmall),
+                const SizedBox(height: Spacing.xs),
+                Text(
+                  value,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: color,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

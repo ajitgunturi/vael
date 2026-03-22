@@ -44,15 +44,21 @@
 - 3 unit tests for filename opacity, determinism, no-leakage
 - Files: lib/core/database/database_path.dart, lib/core/providers/database_providers.dart
 
+### Wave 6: Accessibility (COMPLETE) — latest commit
+- WCAG AA contrast verified for both light/dark themes (15 color pair tests)
+- Semantics labels on net worth hero, monthly tiles, goal progress bars
+- Dynamic type scaling verified at 2x and 0.8x
+- 19 a11y tests (15 contrast + 2 scaling + 2 semantics)
+- Files: lib/features/dashboard/screens/dashboard_screen.dart, lib/features/goals/widgets/goal_card.dart, test/shared/accessibility_test.dart
+
 ### Remaining Waves
-- **Wave 6**: Accessibility — semantics labels, dynamic type, WCAG AA contrast
 - **Wave 7**: E2E integration tests — home_shell, goals, onboarding, settings flows (~14 tests)
 - **Wave 8**: CI/CD + distribution — GitHub Actions, Fastlane, App Store metadata
 
 ## Plan File
 Detailed plan with file-level breakdown: .claude/plans/inherited-greeting-eich.md
 
-## Test Count: 730 unit/widget (all green) + 29 simulator tests + 23 journey tests + 38 retroactive E2E tests
+## Test Count: 749 unit/widget (all green) + 29 simulator tests + 23 journey tests + 38 retroactive E2E tests
 
 ## Key Patterns Established
 - Widget tests override stream providers with Stream.value() to avoid drift timer issues

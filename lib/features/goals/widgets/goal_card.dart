@@ -53,13 +53,16 @@ class GoalCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: Spacing.sm),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: LinearProgressIndicator(
-                  value: progress,
-                  minHeight: 6,
-                  backgroundColor: tokens.surfaceContainerHigh,
-                  valueColor: AlwaysStoppedAnimation(status.color),
+              Semantics(
+                label: '${(progress * 100).round()} percent saved',
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: LinearProgressIndicator(
+                    value: progress,
+                    minHeight: 6,
+                    backgroundColor: tokens.surfaceContainerHigh,
+                    valueColor: AlwaysStoppedAnimation(status.color),
+                  ),
                 ),
               ),
               const SizedBox(height: Spacing.xs),
