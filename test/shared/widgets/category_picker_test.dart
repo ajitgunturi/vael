@@ -1,11 +1,8 @@
 import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:drift/native.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vael/core/database/database.dart';
 import 'package:vael/core/models/category_group_display.dart';
-import 'package:vael/core/providers/category_providers.dart';
 import 'package:vael/core/database/daos/category_dao.dart';
 import 'package:vael/core/services/category_seeder.dart';
 
