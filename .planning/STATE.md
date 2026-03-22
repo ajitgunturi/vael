@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 06-01-PLAN.md
-last_updated: "2026-03-22T18:43:42Z"
+stopped_at: Completed 06-02-PLAN.md
+last_updated: "2026-03-22T19:03:39Z"
 progress:
   total_phases: 8
   completed_phases: 0
   total_plans: 3
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -24,21 +24,21 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 ## Current Position
 
 Phase: 06 (life-profile-income-model) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 1
-- Average duration: 8min
-- Total execution time: 0.13 hours
+- Total plans completed: 2
+- Average duration: 12min
+- Total execution time: 0.40 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 06-life-profile-income-model | 1/3 | 8min | 8min |
+| 06-life-profile-income-model | 2/3 | 24min | 12min |
 
 **Recent Trend:**
 
@@ -57,6 +57,8 @@ Recent decisions affecting current work:
 - All rates stored as integer basis points (800 bp = 8%), converted at engine boundary
 - Career stage boundaries: Early=[20,30) 1.2x, Mid=[30,45) 1.0x, Late=[45,retirement) 0.6x
 - IncomeGrowthEngine is pure static -- no DB imports, no mutable state
+- threeScenariosCashFlowWithIncomeSpread uses callback (buildIncomeFlows) to avoid coupling to IncomeGrowthEngine
+- isSecondaryIncome on recurring_rules is a tag independent of kind column
 - Phases 6-8 are additive extensions (no changes to existing code)
 - Deterministic glide paths (rule-based tables, not ML)
 - No new bottom tabs (stay at 5); surface via dashboard cards and contextual navigation
@@ -80,6 +82,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-22T18:43:42Z
-Stopped at: Completed 06-01-PLAN.md
-Resume file: .planning/phases/06-life-profile-income-model/06-01-SUMMARY.md
+Last session: 2026-03-22T19:03:39Z
+Stopped at: Completed 06-02-PLAN.md
+Resume file: .planning/phases/06-life-profile-income-model/06-02-SUMMARY.md

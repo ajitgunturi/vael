@@ -41,8 +41,8 @@ Requirements for the financial planning extension (Phases 6-8). Each maps to roa
 
 - [x] **INCOME-01**: User can model salary hike rate with career stage multipliers (early 1.2x, mid 1.0x, late 0.6x)
 - [x] **INCOME-02**: User can set hike application month (default April for Indian fiscal year)
-- [ ] **INCOME-03**: Income growth model feeds into projection engine replacing flat income assumption (fixes GAP C7)
-- [ ] **INCOME-04**: User can model side income as separate recurring rules tagged as secondary income
+- [x] **INCOME-03**: Income growth model feeds into projection engine replacing flat income assumption (fixes GAP C7)
+- [x] **INCOME-04**: User can model side income as separate recurring rules tagged as secondary income
 
 ### Major Purchase Planning
 
@@ -176,8 +176,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | LIFE-04 | Phase 6 | Pending |
 | INCOME-01 | Phase 6 | Complete |
 | INCOME-02 | Phase 6 | Complete |
-| INCOME-03 | Phase 6 | Pending |
-| INCOME-04 | Phase 6 | Pending |
+| INCOME-03 | Phase 6 | Complete |
+| INCOME-04 | Phase 6 | Complete |
 | FI-01 | Phase 7 | Pending |
 | FI-02 | Phase 7 | Pending |
 | FI-03 | Phase 7 | Pending |
