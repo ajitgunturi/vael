@@ -46,7 +46,7 @@
 - **Impact**: Family boundary model (principle #2) is incomplete. No way to share account name but hide balance.
 
 ### C7. Projection Engine Oversimplified
-- **Doc**: BUSINESS_LOGIC.md — 60-month engine consuming recurring rules, RSU vestings, policy payouts, education costs, fund drawdowns, three scenarios with multipliers.
+- **Doc**: archived/BUSINESS_LOGIC_PORTING.md — 60-month engine consuming recurring rules, RSU vestings, policy payouts, education costs, fund drawdowns, three scenarios with multipliers.
 - **Code**: `ProjectionEngine` takes flat monthly income/expenses with hardcoded defaults and rate spreads. Does not consume recurring rules or any other data source.
 - **Impact**: Projection screen shows toy data, not real financial projections.
 
@@ -75,12 +75,12 @@
 | M2 | No `deletedAt` on `recurring_rules` (soft delete spec) | DATA_MODEL.md | `tables/recurring_rules.dart` |
 | M3 | No `deletedAt` on `transactions` | DATA_MODEL.md | `tables/transactions.dart` |
 | M4 | No database migration files (schema version 6) | DATA_MODEL.md | `migrations/` empty |
-| M5 | Goal-investment linking not used in calculations | BUSINESS_LOGIC.md | `goal_tracking.dart` |
-| M6 | Investment baseline return lookup: only platform defaults, no XIRR or family config | BUSINESS_LOGIC.md | `investment_valuation.dart` |
-| M7 | Budget summary missing self-transfer filter | BUSINESS_LOGIC.md | `budget_summary.dart:52-66` |
-| M8 | Closed period enforcement not implemented | BUSINESS_LOGIC.md | Nowhere |
-| M9 | Idempotent key for recurring dedup not implemented | BUSINESS_LOGIC.md | `recurring_scheduler.dart` |
-| M10 | Dedup hash for statement import not implemented | BUSINESS_LOGIC.md | `statement_parser.dart` |
+| M5 | Goal-investment linking not used in calculations | archived/BUSINESS_LOGIC_PORTING.md | `goal_tracking.dart` |
+| M6 | Investment baseline return lookup: only platform defaults, no XIRR or family config | archived/BUSINESS_LOGIC_PORTING.md | `investment_valuation.dart` |
+| M7 | Budget summary missing self-transfer filter | archived/BUSINESS_LOGIC_PORTING.md | `budget_summary.dart:52-66` |
+| M8 | Closed period enforcement not implemented | archived/BUSINESS_LOGIC_PORTING.md | Nowhere |
+| M9 | Idempotent key for recurring dedup not implemented | archived/BUSINESS_LOGIC_PORTING.md | `recurring_scheduler.dart` |
+| M10 | Dedup hash for statement import not implemented | archived/BUSINESS_LOGIC_PORTING.md | `statement_parser.dart` |
 | M11 | Biometric unlock not implemented | ENCRYPTION.md | No file |
 | M12 | No periodic sync scheduling (30s push, 60s pull) | SYNC.md | `sync_orchestrator.dart` |
 | M13 | No changeset backlog optimization (1000+ triggers snapshot) | SYNC.md | `sync_pull.dart` |

@@ -6,13 +6,6 @@ Thank you for your interest in Vael. This document explains how to contribute ef
 
 Before contributing, read [docs/INTENT.md](docs/INTENT.md). Every change must pass the Decision Framework table in that document. If any row returns **Block**, the proposal must be redesigned.
 
-Key constraints:
-- No data leaves the device unencrypted
-- No server dependencies beyond Google Drive (as blind storage)
-- No AI/ML — all logic is deterministic
-- No telemetry, analytics, or crash reporting
-- All monetary values are integers (minor units, never floats)
-
 ## Development Setup
 
 ### Prerequisites
@@ -149,11 +142,7 @@ test(financial): add amortization edge case for 0% rate
 
 ### Security-Sensitive Changes
 
-Changes touching files in `lib/core/crypto/` or `lib/core/sync/` require extra scrutiny:
-- Encryption round-trip tests for any new crypto path
-- No plaintext data in Drive file names, folder names, or sync metadata
-- No secrets (keys, passphrases) logged, printed, or stored in plaintext
-- Review the [Security Policy](SECURITY.md) before modifying these areas
+Changes touching `lib/core/crypto/` or `lib/core/sync/` require extra scrutiny. See [SECURITY.md](SECURITY.md) for the full checklist.
 
 ## Code Style
 
@@ -162,15 +151,6 @@ Changes touching files in `lib/core/crypto/` or `lib/core/sync/` require extra s
 - Use `Spacing.xs/sm/md/lg/xl/xxl` constants, never magic numbers
 - Use `EmptyState` widget for empty screens, never bare text
 - Use shimmer skeletons (`SkeletonBox`/`SkeletonCard`) for loading states, never spinners
-
-## What We Will Not Accept
-
-- Features that require a backend server
-- Analytics, telemetry, or user tracking of any kind
-- Direct bank API connections (Plaid, Yodlee, account aggregators)
-- AI/ML features (predictions, smart categorization, chatbots)
-- Floating-point arithmetic for monetary values
-- Dependencies that transmit data to third parties
 
 ## Reporting Issues
 

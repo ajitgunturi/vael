@@ -419,7 +419,7 @@ The `HomeShell` widget itself does NOT change its tab count (stays at 5). The mo
 
 ### Horizontal Integration Tests (Mandatory)
 
-Per CLAUDE.md: every phase that introduces new screens MUST have navigation integration tests that verify the screen is reachable via tap interaction from the app shell.
+Per CONTRIBUTING.md and docs/INTENT.md: every phase that introduces new screens MUST have navigation integration tests that verify the screen is reachable via tap interaction from the app shell.
 
 #### Phase 6 Integration Tests
 
@@ -510,7 +510,7 @@ New features have dependencies — FI Calculator needs a life profile, Emergency
 
 ### Horizontal Integration Verification Checklist
 
-This checklist must be completed for EVERY new screen before marking a feature as done. It mirrors the CLAUDE.md mandate:
+This checklist must be completed for EVERY new screen before marking a feature as done. It mirrors the horizontal integration mandate from CONTRIBUTING.md:
 
 ```
 For each new screen:

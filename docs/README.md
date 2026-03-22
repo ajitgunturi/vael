@@ -1,32 +1,52 @@
-# Vael — Native Family Finance App
+# Vael Documentation
 
-Vael is the production-grade successor to this repo. It replaces the Docker-based monolith with a native Flutter app that runs on iOS, iPad, Android, and macOS — with all computation local, data encrypted on-device, and sync via encrypted Google Drive changesets.
+## First-Time Developer? Start Here
 
-## Documentation Index
+| Step | File | Time | What you'll learn |
+|------|------|------|-------------------|
+| 1 | [INTENT.md](INTENT.md) | 5 min | Why Vael exists, what it will never become |
+| 2 | [ARCHITECTURE.md](ARCHITECTURE.md) | 15 min | How it's built, project structure, platform strategy |
+| 3 | [RUNNING.md](RUNNING.md) | 15 min | Get the app running on your machine |
+| 4 | [../STATE.md](../STATE.md) | 10 min | What's been built, what's next |
 
-| Document | What it covers |
-|----------|---------------|
-| [INTENT.md](INTENT.md) | Purpose, governing principles, anti-vision, and decision framework — the constitutional document |
-| [ARCHITECTURE.md](ARCHITECTURE.md) | System architecture, tech stack, project structure, form factor strategy |
-| [DATA_MODEL.md](DATA_MODEL.md) | SQLite schema (drift), table definitions, sync changelog design |
-| [BUSINESS_LOGIC.md](BUSINESS_LOGIC.md) | Full inventory of Java business logic to port to Dart, with source file references |
-| [ENCRYPTION.md](ENCRYPTION.md) | Key hierarchy, PBKDF2 derivation, AES-256-GCM, SQLCipher, family key sharing |
-| [SYNC.md](SYNC.md) | Google Drive sync protocol, changeset format, conflict resolution, snapshots |
-| [MIGRATION.md](MIGRATION.md) | How to migrate data from the current PostgreSQL app into Vael's local SQLite |
-| [ROADMAP.md](ROADMAP.md) | 5-phase implementation plan with timeline and verification criteria |
-| [RUNNING.md](RUNNING.md) | How to run the app on simulators, emulators, desktop, and web — plus testing and CI |
+Everything below is reference material — pull it in when you need it.
 
-## Key Decisions
+## Reference Index
 
-- **Framework**: Flutter 3.x + Dart (single codebase, all platforms)
-- **Database**: drift (SQLite) + SQLCipher (AES-256 encryption at rest)
-- **State**: Riverpod
-- **Sync**: Google Drive API v3 with encrypted JSON changesets — no server
-- **Auth**: Google Sign-In (for Drive access only, not a custom auth server)
-- **Encryption**: Family Encryption Key (FEK) derived from shared passphrase via PBKDF2
-- **Platforms**: iOS 16+, iPadOS, Android 8+, macOS 13+
-- **Form factors**: Landscape master-detail (iPad Pro, Mac), portrait stack (phones)
+### Core Design
 
-## Repo
+| Document | Covers |
+|----------|--------|
+| [DATA_MODEL.md](DATA_MODEL.md) | SQLite schema (drift), table definitions, relationships |
+| [ENCRYPTION.md](ENCRYPTION.md) | Key hierarchy (FEK/KEK), PBKDF2, AES-256-GCM, SQLCipher |
+| [SYNC.md](SYNC.md) | Google Drive sync protocol, changeset format, conflict resolution |
+| [UI_DESIGN.md](UI_DESIGN.md) | Design system, color tokens, typography, component specs |
 
-The new repo will be created at `~/workspace/vael` when development begins.
+### Phase-Specific Design
+
+| Document | Covers |
+|----------|--------|
+| [PHASE_3_5_DETAIL.md](PHASE_3_5_DETAIL.md) | Per-member key wrapping, manifest V2, ownership transfer |
+| [PHASE_3_5_CLOUD_STORAGE.md](PHASE_3_5_CLOUD_STORAGE.md) | iCloud/Google Drive abstraction layer |
+| [EXTENSION_PLAN_FINANCIAL_PLANNING.md](EXTENSION_PLAN_FINANCIAL_PLANNING.md) | Phase 6-8: Lifetime planning + cash management extensions |
+
+### Operations
+
+| Document | Covers |
+|----------|--------|
+| [GOOGLE_CLOUD_SETUP.md](GOOGLE_CLOUD_SETUP.md) | OAuth client IDs, Cloud Console configuration |
+| [STORE_DISTRIBUTION.md](STORE_DISTRIBUTION.md) | App Store / Play Store account setup and publishing |
+| [MIGRATION.md](MIGRATION.md) | Migrating data from the legacy PostgreSQL app |
+
+### Health
+
+| Document | Covers |
+|----------|--------|
+| [GAP_ANALYSIS.md](GAP_ANALYSIS.md) | Current gaps between design docs and implementation |
+| [DOCS_CLEANUP_REPORT.md](DOCS_CLEANUP_REPORT.md) | Documentation audit and cleanup tracking |
+
+### Archived
+
+| Document | Why archived |
+|----------|-------------|
+| [archived/BUSINESS_LOGIC_PORTING.md](archived/BUSINESS_LOGIC_PORTING.md) | Java-to-Dart porting guide (Phase 1-2 work complete) |

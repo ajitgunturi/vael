@@ -44,7 +44,11 @@ make run-macos                   # Run on macOS (client IDs injected from .env)
 
 Credentials setup details in [CONTRIBUTING.md](CONTRIBUTING.md). Google Cloud project setup in [docs/GOOGLE_CLOUD_SETUP.md](docs/GOOGLE_CLOUD_SETUP.md).
 
-**517 tests** covering financial math, encryption round-trips, sync push/pull, conflict resolution, and UI.
+**760+ tests** covering financial math, encryption round-trips, sync push/pull, conflict resolution, and UI.
+
+## Documentation
+
+New to the project? Read these 4 files in order: [INTENT](docs/INTENT.md) → [ARCHITECTURE](docs/ARCHITECTURE.md) → [RUNNING](docs/RUNNING.md) → [STATE](STATE.md). Full index at [docs/README.md](docs/README.md).
 
 ## Contributing
 
