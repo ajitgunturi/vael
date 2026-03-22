@@ -25,11 +25,11 @@ void main() {
       expect(app.themeMode, ThemeMode.system);
     });
 
-    testWidgets('shows placeholder when no session is set', (tester) async {
+    testWidgets('shows onboarding when no session is set', (tester) async {
       await tester.pumpWidget(const ProviderScope(child: VaelApp()));
       await tester.pumpAndSettle();
-      // No familyId/userId means we show the placeholder, not HomeShell
-      expect(find.text('Vael'), findsOneWidget);
+      // No familyId/userId means we show onboarding, not HomeShell
+      expect(find.text('Welcome to Vael'), findsOneWidget);
     });
   });
 }
