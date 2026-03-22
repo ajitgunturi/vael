@@ -104,6 +104,20 @@ void main() {
   });
 
   // ---------------------------------------------------------------------------
+  // power — exponentiation
+  // ---------------------------------------------------------------------------
+  group('FinancialMath.power', () {
+    test('should_compute_2_to_the_10_as_1024', () {
+      expect(FinancialMath.power(2.0, 10.0), 1024.0);
+    });
+
+    test('should_return_1_for_any_base_to_the_power_0', () {
+      expect(FinancialMath.power(5.0, 0.0), 1.0);
+      expect(FinancialMath.power(100.0, 0.0), 1.0);
+    });
+  });
+
+  // ---------------------------------------------------------------------------
   // requiredSip — monthly SIP to reach a target corpus
   // ---------------------------------------------------------------------------
   group('FinancialMath.requiredSip', () {

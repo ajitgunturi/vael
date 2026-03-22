@@ -32,7 +32,7 @@ void main() {
         theme: AppTheme.light(),
         darkTheme: AppTheme.dark(),
         themeMode: mode,
-        home: const DashboardScreen(familyId: kTestFamilyId),
+        home: const DashboardScreen(familyId: kTestFamilyId, userId: kTestUserId),
       ),
     );
   }

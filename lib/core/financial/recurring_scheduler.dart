@@ -1,4 +1,8 @@
+import 'dart:convert';
 import 'dart:math' as math;
+import 'dart:typed_data';
+
+import 'package:pointycastle/digests/sha256.dart';
 
 /// A recurring transaction rule.
 ///
@@ -67,6 +71,17 @@ class PendingTransaction {
 /// No DB access — caller provides rules and dates.
 class RecurringScheduler {
   RecurringScheduler._();
+
+  /// Computes an idempotent key for a recurring transaction instance.
+  ///
+  /// Returns `SHA256(ruleId + date.toIso8601String())` as a hex string.
+  /// Used to prevent duplicate generation when the scheduler runs multiple times.
+  static String computeIdempotentKey(String ruleId, DateTime date) {
+    final input = '$ruleId${date.toIso8601String()}';
+    final digest = SHA256Digest();
+    final bytes = digest.process(Uint8List.fromList(utf8.encode(input)));
+    return bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join();
+  }
 
   /// Computes all due dates for a rule within [from, until).
   ///

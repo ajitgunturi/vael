@@ -66,7 +66,11 @@ void main() {
       ],
       child: MaterialApp(
         theme: AppTheme.light(),
-        home: DashboardScreen(familyId: 'fam_a', goals: goals),
+        home: DashboardScreen(
+          familyId: 'fam_a',
+          userId: 'user_a',
+          goals: goals,
+        ),
       ),
     );
   }

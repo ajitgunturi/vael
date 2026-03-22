@@ -4,6 +4,7 @@ import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vael/core/crypto/aes_gcm.dart';
 import 'package:vael/core/database/database.dart';
+import 'package:vael/core/database/daos/sync_changelog_dao.dart';
 import 'package:vael/core/database/daos/sync_state_dao.dart';
 import 'package:vael/core/sync/changeset_serializer.dart';
 import 'package:vael/core/sync/cloud_storage_interface.dart';
@@ -34,6 +35,14 @@ class MockCloudStorage implements CloudStorageInterface {
   Future<Map<String, dynamic>?> readManifest() async => null;
   @override
   Future<void> writeManifest(Map<String, dynamic> manifest) async {}
+  @override
+  CloudProvider get provider => CloudProvider.googleDrive;
+  @override
+  bool get supportsSharing => true;
+  @override
+  Future<void> writeSchemaVersion(int version) async {}
+  @override
+  Future<int?> readSchemaVersion() async => null;
 
   void addEncryptedChangeset(
     String fileId,
@@ -60,6 +69,7 @@ void main() {
   group('SyncPull', () {
     late AppDatabase db;
     late SyncStateDao stateDao;
+    late SyncChangelogDao changelogDao;
     late MockCloudStorage cloudStorage;
     late SyncPull syncPull;
     late Uint8List fek;
@@ -67,11 +77,13 @@ void main() {
     setUp(() {
       db = AppDatabase(NativeDatabase.memory());
       stateDao = SyncStateDao(db);
+      changelogDao = SyncChangelogDao(db);
       cloudStorage = MockCloudStorage();
       fek = Uint8List.fromList(List.generate(32, (i) => i));
 
       syncPull = SyncPull(
         stateDao: stateDao,
+        changelogDao: changelogDao,
         cloudStorage: cloudStorage,
         serializer: ChangesetSerializer(),
         aesGcm: AesGcm(),
@@ -89,6 +101,7 @@ void main() {
       final appliedOps = <SyncOperation>[];
       syncPull = SyncPull(
         stateDao: stateDao,
+        changelogDao: changelogDao,
         cloudStorage: cloudStorage,
         serializer: ChangesetSerializer(),
         aesGcm: AesGcm(),
@@ -129,6 +142,7 @@ void main() {
       final appliedOps = <SyncOperation>[];
       syncPull = SyncPull(
         stateDao: stateDao,
+        changelogDao: changelogDao,
         cloudStorage: cloudStorage,
         serializer: ChangesetSerializer(),
         aesGcm: AesGcm(),
@@ -230,6 +244,7 @@ void main() {
       final appliedOps = <SyncOperation>[];
       syncPull = SyncPull(
         stateDao: stateDao,
+        changelogDao: changelogDao,
         cloudStorage: cloudStorage,
         serializer: ChangesetSerializer(),
         aesGcm: AesGcm(),
@@ -250,6 +265,7 @@ void main() {
       final appliedOps = <SyncOperation>[];
       syncPull = SyncPull(
         stateDao: stateDao,
+        changelogDao: changelogDao,
         cloudStorage: cloudStorage,
         serializer: ChangesetSerializer(),
         aesGcm: AesGcm(),
@@ -269,6 +285,7 @@ void main() {
       final appliedIds = <String>[];
       syncPull = SyncPull(
         stateDao: stateDao,
+        changelogDao: changelogDao,
         cloudStorage: cloudStorage,
         serializer: ChangesetSerializer(),
         aesGcm: AesGcm(),

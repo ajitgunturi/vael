@@ -6,13 +6,6 @@ Thank you for your interest in Vael. This document explains how to contribute ef
 
 Before contributing, read [docs/INTENT.md](docs/INTENT.md). Every change must pass the Decision Framework table in that document. If any row returns **Block**, the proposal must be redesigned.
 
-Key constraints:
-- No data leaves the device unencrypted
-- No server dependencies beyond Google Drive (as blind storage)
-- No AI/ML — all logic is deterministic
-- No telemetry, analytics, or crash reporting
-- All monetary values are integers (minor units, never floats)
-
 ## Development Setup
 
 ### Prerequisites
@@ -40,7 +33,7 @@ Vael uses Google Sign-In for Drive sync. OAuth client IDs are **not** checked in
 
 This generates the platform config files (`GoogleService-Info.plist`, `key.properties`) from your `.env`. These generated files are gitignored.
 
-If you need to create credentials from scratch (new Google Cloud project), see [docs/GOOGLE_CLOUD_SETUP.md](docs/GOOGLE_CLOUD_SETUP.md).
+If you need to create credentials from scratch (new Google Cloud project), see [docs/process/GOOGLE_CLOUD_SETUP.md](docs/process/GOOGLE_CLOUD_SETUP.md).
 
 Your Google account must also be added as a **test user** in the Google Cloud Console OAuth consent screen — ask a maintainer to add your email.
 
@@ -84,6 +77,44 @@ wrong_key_fails_to_decrypt
 | Sync engine | Conflict resolution tests with deterministic mock clocks |
 | Statement import | Parser tests against real anonymized fixtures |
 
+## Horizontal Integration
+
+Building a screen in isolation is only half the work. Every new screen must be **wired into the navigation graph** — reachable by a real user tapping through the app.
+
+### Why This Matters
+
+In wave-based development, it's easy to build a vertical slice (screen + logic + tests) that works perfectly in isolation but is unreachable from the running app. We've been burned by this: screens existed as files, E2E tests pumped them directly, but the debug build had no way to navigate to them. This section prevents that from recurring.
+
+### What You Must Do
+
+1. **Wire navigation entry points.** When you add a screen, add the `Navigator.push` call from an existing screen. Common entry points:
+   - Dashboard quick actions grid — for top-level feature screens
+   - AppBar action buttons — for contextual features (e.g., Import on Transactions)
+   - List tile `onTap` — for detail screens (e.g., Loan Detail from account tile)
+   - Settings tiles — for configuration screens
+
+2. **Never ship dead buttons.** If a button or tile has `onPressed: () {}` or `onTap: null`, either wire it to a real destination or remove it. Placeholder no-ops are not acceptable.
+
+3. **Update navigation tests.** Every phase that introduces new screens must include integration tests that verify the screen is reachable via tap interaction starting from `HomeShell`. Do not rely solely on direct `pumpWidget` — that tests the screen, not the wiring.
+
+4. **Provide empty-state defaults for data-driven screens.** If a screen's constructor requires backend data (sync status, manifest data), provide sensible defaults so the screen renders in debug builds before that backend is configured.
+
+### Navigation Test Pattern
+
+```dart
+// Start from the real shell
+await tester.pumpWidget(buildApp()); // HomeShell-based app
+
+// Navigate via tap (not direct pumpWidget)
+await tester.tap(find.text('Investments'));
+await tester.pumpAndSettle();
+
+// Assert the target screen rendered
+expect(find.text('No investment buckets yet'), findsOneWidget);
+```
+
+Extend `navigation_flow_test.dart` or `phase5_e2e_test.dart` rather than creating new navigation test files.
+
 ## Commit Messages
 
 Use [Conventional Commits](https://www.conventionalcommits.org/):
@@ -111,11 +142,7 @@ test(financial): add amortization edge case for 0% rate
 
 ### Security-Sensitive Changes
 
-Changes touching files in `lib/core/crypto/` or `lib/core/sync/` require extra scrutiny:
-- Encryption round-trip tests for any new crypto path
-- No plaintext data in Drive file names, folder names, or sync metadata
-- No secrets (keys, passphrases) logged, printed, or stored in plaintext
-- Review the [Security Policy](SECURITY.md) before modifying these areas
+Changes touching `lib/core/crypto/` or `lib/core/sync/` require extra scrutiny. See [SECURITY.md](SECURITY.md) for the full checklist.
 
 ## Code Style
 
@@ -124,15 +151,6 @@ Changes touching files in `lib/core/crypto/` or `lib/core/sync/` require extra s
 - Use `Spacing.xs/sm/md/lg/xl/xxl` constants, never magic numbers
 - Use `EmptyState` widget for empty screens, never bare text
 - Use shimmer skeletons (`SkeletonBox`/`SkeletonCard`) for loading states, never spinners
-
-## What We Will Not Accept
-
-- Features that require a backend server
-- Analytics, telemetry, or user tracking of any kind
-- Direct bank API connections (Plaid, Yodlee, account aggregators)
-- AI/ML features (predictions, smart categorization, chatbots)
-- Floating-point arithmetic for monetary values
-- Dependencies that transmit data to third parties
 
 ## Reporting Issues
 

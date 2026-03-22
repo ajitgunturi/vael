@@ -100,7 +100,7 @@ void main() {
           _fakeAccount(
             id: 'priv',
             name: 'Private Account',
-            visibility: 'private_',
+            visibility: 'hidden',
           ),
         ],
         investments: [],
@@ -114,7 +114,7 @@ void main() {
       expect(find.text('Shared Account'), findsOneWidget);
       expect(find.text('Private Account'), findsOneWidget);
       expect(find.text('Shared'), findsOneWidget);
-      expect(find.text('Private'), findsOneWidget);
+      expect(find.text('Hidden'), findsOneWidget);
     });
 
     testWidgets('shows empty state when no accounts exist', (tester) async {

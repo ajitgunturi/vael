@@ -22,15 +22,15 @@ const _liabilityTypes = {'creditCard', 'loan'};
 
 /// Computes family net worth (assets − liabilities) in minor units (paise).
 ///
-/// Only includes accounts with visibility `shared` or `familyWide`.
-/// Excludes `private_` accounts from the family-level calculation.
+/// Only includes accounts with visibility `shared` or `nameOnly`.
+/// Excludes `hidden` accounts from the family-level calculation.
 final netWorthProvider = StreamProvider.family<int, String>((ref, familyId) {
   final dao = ref.watch(accountDaoProvider);
   return dao.watchAll(familyId).map((accounts) {
     int netWorth = 0;
     for (final account in accounts) {
-      // Exclude private accounts from family net worth
-      if (account.visibility == 'private_') continue;
+      // Exclude hidden accounts from family net worth
+      if (account.visibility == 'hidden') continue;
 
       if (_assetTypes.contains(account.type)) {
         netWorth += account.balance;

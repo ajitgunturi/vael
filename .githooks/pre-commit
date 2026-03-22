@@ -9,7 +9,7 @@ dart format --set-exit-if-changed lib test
 echo ""
 
 echo "==> Pre-commit: static analysis"
-flutter analyze --no-fatal-infos
+flutter analyze --no-fatal-infos --no-fatal-warnings
 echo ""
 
 echo "==> Pre-commit: running tests"

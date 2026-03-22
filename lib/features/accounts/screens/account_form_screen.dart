@@ -43,9 +43,9 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen> {
   };
 
   static const _visibilityLabels = {
+    'hidden': 'Hidden',
+    'nameOnly': 'Name Only',
     'shared': 'Shared',
-    'private_': 'Private',
-    'familyWide': 'Family Wide',
   };
 
   @override

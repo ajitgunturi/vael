@@ -159,7 +159,7 @@ void main() {
 
   group('netWorthProvider', () {
     test(
-      'computes assets minus liabilities for shared/familyWide accounts',
+      'computes assets minus liabilities for shared/nameOnly accounts',
       () async {
         await _seedFamily('fam_a');
 
@@ -176,7 +176,7 @@ void main() {
           familyId: 'fam_a',
           type: 'investment',
           balance: 1000000, // ₹10,000
-          visibility: 'familyWide',
+          visibility: 'nameOnly',
         );
 
         // Liabilities
@@ -220,7 +220,7 @@ void main() {
         familyId: 'fam_a',
         type: 'savings',
         balance: 300000,
-        visibility: 'private_',
+        visibility: 'hidden',
       );
 
       final sub = container.listen(netWorthProvider('fam_a'), (_, __) {});

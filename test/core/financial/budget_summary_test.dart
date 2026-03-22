@@ -175,7 +175,7 @@ void main() {
           categories: categories,
           accounts: [
             _account(id: 'acc_1', visibility: 'shared'),
-            _account(id: 'acc_priv', visibility: 'private_'),
+            _account(id: 'acc_priv', visibility: 'hidden'),
           ],
         );
 

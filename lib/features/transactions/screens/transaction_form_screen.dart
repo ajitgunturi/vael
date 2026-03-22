@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:drift/drift.dart' hide Column;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,8 +8,11 @@ import 'package:uuid/uuid.dart';
 
 import '../../../core/database/database.dart';
 import '../../../core/financial/balance_rules.dart';
+import '../../../core/providers/category_providers.dart';
 import '../../../core/providers/database_providers.dart';
 import '../../../core/providers/transaction_providers.dart';
+import '../../../shared/widgets/category_metadata_fields.dart';
+import '../../../shared/widgets/category_picker.dart';
 import '../../../shared/widgets/currency_input.dart';
 import '../../../core/providers/account_providers.dart';
 
@@ -40,6 +45,11 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
   String? _selectedAccountId;
   String? _selectedToAccountId;
 
+  // Category state
+  String? _selectedCategoryId;
+  Category? _selectedCategory;
+  Map<String, String> _metadata = {};
+
   static const _kindLabels = {
     'income': 'Income',
     'salary': 'Salary',
@@ -49,6 +59,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     'insurancePremium': 'Insurance Premium',
     'dividend': 'Dividend',
   };
+
+  /// Transaction kinds that represent income (filter for INCOME categories).
+  static const _incomeKinds = {'income', 'salary', 'dividend'};
 
   @override
   void initState() {
@@ -64,6 +77,30 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     _selectedDate = existing?.date ?? DateTime.now();
     _selectedAccountId = existing?.accountId;
     _selectedToAccountId = existing?.toAccountId;
+    _selectedCategoryId = existing?.categoryId;
+
+    // Parse existing metadata
+    if (existing?.metadata != null) {
+      try {
+        final decoded = jsonDecode(existing!.metadata!) as Map<String, dynamic>;
+        _metadata = decoded.map((k, v) => MapEntry(k, v.toString()));
+      } catch (_) {
+        _metadata = {};
+      }
+    }
+
+    // Load existing category object
+    if (_selectedCategoryId != null) {
+      _loadCategory(_selectedCategoryId!);
+    }
+  }
+
+  Future<void> _loadCategory(String categoryId) async {
+    final dao = ref.read(categoryDaoProvider);
+    final cat = await dao.getById(categoryId);
+    if (mounted && cat != null) {
+      setState(() => _selectedCategory = cat);
+    }
   }
 
   @override
@@ -72,6 +109,10 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     _descriptionController.dispose();
     super.dispose();
   }
+
+  /// Returns the category type filter based on the selected transaction kind.
+  String get _categoryTypeFilter =>
+      _incomeKinds.contains(_selectedKind) ? 'INCOME' : 'EXPENSE';
 
   @override
   Widget build(BuildContext context) {
@@ -88,14 +129,27 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
           children: [
             _buildKindSelector(),
             const SizedBox(height: 16),
+            _buildCategoryPicker(),
+            if (_selectedCategory != null) ...[
+              const SizedBox(height: 4),
+              CategoryMetadataFields(
+                groupId: _selectedCategory!.groupName,
+                categoryName: _selectedCategory!.name,
+                familyId: widget.familyId,
+                metadata: _metadata,
+                onChanged: (updated) => setState(() => _metadata = updated),
+              ),
+            ],
+            const SizedBox(height: 16),
             CurrencyInput(
               label: 'Amount',
               controller: _amountController,
               validator: (v) {
                 if (v == null || v.trim().isEmpty) return 'Amount is required';
                 final parsed = double.tryParse(v.replaceAll(',', ''));
-                if (parsed == null || parsed <= 0)
+                if (parsed == null || parsed <= 0) {
                   return 'Enter a valid amount';
+                }
                 return null;
               },
             ),
@@ -132,9 +186,85 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
               .map((e) => DropdownMenuItem(value: e.key, child: Text(e.value)))
               .toList(),
           onChanged: (v) {
-            if (v != null) setState(() => _selectedKind = v);
+            if (v == null) return;
+            final oldType = _categoryTypeFilter;
+            setState(() => _selectedKind = v);
+            // Clear category if type changed (income ↔ expense)
+            if (_categoryTypeFilter != oldType) {
+              setState(() {
+                _selectedCategoryId = null;
+                _selectedCategory = null;
+                _metadata = {};
+              });
+            }
           },
         ),
+      ),
+    );
+  }
+
+  Widget _buildCategoryPicker() {
+    final theme = Theme.of(context);
+    return InkWell(
+      onTap: () async {
+        final selected = await CategoryPicker.show(
+          context,
+          familyId: widget.familyId,
+          filterType: _categoryTypeFilter,
+          selectedCategoryId: _selectedCategoryId,
+        );
+        // null return means "No Category" was explicitly tapped, or
+        // the bottom sheet was dismissed (in which case we keep current).
+        // We handle the explicit "No Category" case via the pop(null).
+        setState(() {
+          if (selected != null) {
+            _selectedCategoryId = selected.id;
+            _selectedCategory = selected;
+            // Clear metadata when category changes
+            _metadata = {};
+          } else {
+            _selectedCategoryId = null;
+            _selectedCategory = null;
+            _metadata = {};
+          }
+        });
+      },
+      child: InputDecorator(
+        decoration: InputDecoration(
+          labelText: 'Category',
+          suffixIcon: const Icon(Icons.arrow_drop_down),
+          // Show an "uncategorized" hint if no category selected
+          hintText: 'Select a category',
+          hintStyle: TextStyle(
+            color: theme.colorScheme.onSurfaceVariant.withAlpha(150),
+          ),
+        ),
+        child: _selectedCategory != null
+            ? Row(
+                children: [
+                  Icon(
+                    Icons.label_outline,
+                    size: 18,
+                    color: theme.colorScheme.primary,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(child: Text(_selectedCategory!.name)),
+                  // Clear button
+                  GestureDetector(
+                    onTap: () => setState(() {
+                      _selectedCategoryId = null;
+                      _selectedCategory = null;
+                      _metadata = {};
+                    }),
+                    child: Icon(
+                      Icons.close,
+                      size: 18,
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              )
+            : null,
       ),
     );
   }
@@ -198,15 +328,39 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     );
   }
 
+  /// Detects self-transfer: same owner for source and destination accounts.
+  bool _isSelfTransfer(List<Account>? accounts) {
+    if (_selectedKind != 'transfer' ||
+        _selectedAccountId == null ||
+        _selectedToAccountId == null) {
+      return false;
+    }
+    if (accounts == null) return false;
+    final from = accounts.where((a) => a.id == _selectedAccountId).firstOrNull;
+    final to = accounts.where((a) => a.id == _selectedToAccountId).firstOrNull;
+    if (from == null || to == null) return false;
+    return from.userId == to.userId;
+  }
+
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
 
     final db = ref.read(databaseProvider);
     final dao = ref.read(transactionDaoProvider);
     final balanceService = BalanceService(db);
+    final accounts = ref.read(accountsProvider(widget.familyId)).value;
 
     final amountPaise = CurrencyInput.toPaise(_amountController.text);
     final txId = widget.existingTransaction?.id ?? const Uuid().v4();
+
+    // Build metadata JSON
+    final metadataMap = Map<String, dynamic>.from(_metadata);
+    if (_isSelfTransfer(accounts)) {
+      metadataMap['isSelfTransfer'] = true;
+    }
+    final metadataJson = metadataMap.isNotEmpty
+        ? jsonEncode(metadataMap)
+        : null;
 
     await dao.insertTransaction(
       TransactionsCompanion(
@@ -218,9 +372,11 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
               ? _descriptionController.text
               : null,
         ),
+        categoryId: Value(_selectedCategoryId),
         kind: Value(_selectedKind),
         accountId: Value(_selectedAccountId!),
         toAccountId: Value(_selectedToAccountId),
+        metadata: Value(metadataJson),
         familyId: Value(widget.familyId),
       ),
     );

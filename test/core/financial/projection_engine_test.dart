@@ -226,6 +226,121 @@ void main() {
       });
     });
 
+    group('projectFromCashFlows', () {
+      test('computes correct net worth with income and expense sources', () {
+        final result = ProjectionEngine.projectFromCashFlows(
+          startingNetWorth: 0,
+          cashFlows: [
+            const ProjectionCashFlow(
+              name: 'Salary',
+              monthlyAmount: 10000000, // 1L
+              isIncome: true,
+            ),
+            const ProjectionCashFlow(
+              name: 'Rent',
+              monthlyAmount: 3000000, // 30K
+              isIncome: false,
+            ),
+          ],
+          investmentReturnRate: 0,
+          horizonMonths: 6,
+        );
+
+        expect(result.months, hasLength(6));
+        // Net savings = 1L - 30K = 70K = 7000000 paise/month
+        expect(result.months[0].monthlyIncome, 10000000);
+        expect(result.months[0].monthlyExpenses, 3000000);
+        expect(result.months[0].monthlySavings, 7000000);
+        // Month 6 NW: 7000000 * 6 = 42000000
+        expect(result.months[5].netWorth, 42000000);
+      });
+
+      test('annual escalation applies correctly', () {
+        final result = ProjectionEngine.projectFromCashFlows(
+          startingNetWorth: 0,
+          cashFlows: [
+            const ProjectionCashFlow(
+              name: 'Salary',
+              monthlyAmount: 10000000,
+              isIncome: true,
+              annualEscalation: 0.10, // 10% annual
+            ),
+          ],
+          investmentReturnRate: 0,
+          horizonMonths: 24,
+        );
+
+        // Month 1-12: 10000000 (year 0, escalation^0 = 1)
+        expect(result.months[0].monthlyIncome, 10000000);
+        expect(result.months[11].monthlyIncome, 10000000);
+        // Month 13-24: 10000000 * 1.10 = 11000000 (year 1)
+        expect(result.months[12].monthlyIncome, 11000000);
+        expect(result.months[23].monthlyIncome, 11000000);
+      });
+
+      test('duration-limited cash flows stop after specified months', () {
+        final result = ProjectionEngine.projectFromCashFlows(
+          startingNetWorth: 0,
+          cashFlows: [
+            const ProjectionCashFlow(
+              name: 'Salary',
+              monthlyAmount: 10000000,
+              isIncome: true,
+            ),
+            const ProjectionCashFlow(
+              name: 'Loan EMI',
+              monthlyAmount: 5000000,
+              isIncome: false,
+              durationMonths: 3, // only 3 months
+            ),
+          ],
+          investmentReturnRate: 0,
+          horizonMonths: 6,
+        );
+
+        // Months 1-3: income=10M, expenses=5M, savings=5M
+        expect(result.months[0].monthlyExpenses, 5000000);
+        expect(result.months[2].monthlyExpenses, 5000000);
+        // Months 4-6: income=10M, expenses=0, savings=10M
+        expect(result.months[3].monthlyExpenses, 0);
+        expect(result.months[5].monthlyExpenses, 0);
+      });
+    });
+
+    group('threeScenariosCashFlow', () {
+      test('produces three different results', () {
+        final result = ProjectionEngine.threeScenariosCashFlow(
+          startingNetWorth: 100000000,
+          cashFlows: [
+            const ProjectionCashFlow(
+              name: 'Salary',
+              monthlyAmount: 15000000,
+              isIncome: true,
+            ),
+            const ProjectionCashFlow(
+              name: 'Expenses',
+              monthlyAmount: 10000000,
+              isIncome: false,
+            ),
+          ],
+          baseReturnRate: 0.10,
+          horizonMonths: 60,
+        );
+
+        expect(result.optimistic.months, hasLength(60));
+        expect(result.base.months, hasLength(60));
+        expect(result.pessimistic.months, hasLength(60));
+
+        final optFinal = result.optimistic.months.last.netWorth;
+        final baseFinal = result.base.months.last.netWorth;
+        final pessFinal = result.pessimistic.months.last.netWorth;
+
+        // Optimistic > base > pessimistic (higher return rate = more growth)
+        expect(optFinal, greaterThan(baseFinal));
+        expect(baseFinal, greaterThan(pessFinal));
+      });
+    });
+
     group('edge cases', () {
       test('should handle zero income (drawdown scenario)', () {
         final result = ProjectionEngine.project(

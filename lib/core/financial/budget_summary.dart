@@ -32,7 +32,7 @@ class BudgetSummary {
   ///
   /// Filters:
   /// - Expense types only (expense, emiPayment, insurancePremium)
-  /// - Shared accounts only (excludes private_)
+  /// - Shared accounts only (excludes hidden)
   /// - Maps each transaction's categoryId → category → groupName
   /// - Uncategorized transactions go to 'MISSING'
   static Map<String, int> computeActualsByGroup({
@@ -44,7 +44,7 @@ class BudgetSummary {
     final categoryById = {for (final c in categories) c.id: c};
     final sharedAccountIds = {
       for (final a in accounts)
-        if (a.visibility != 'private_') a.id,
+        if (a.visibility != 'hidden') a.id,
     };
 
     final actuals = <String, int>{};

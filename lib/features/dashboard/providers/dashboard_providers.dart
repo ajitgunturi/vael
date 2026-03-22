@@ -4,6 +4,7 @@ import '../../../core/database/daos/account_dao.dart';
 import '../../../core/database/daos/transaction_dao.dart';
 import '../../../core/financial/dashboard_aggregation.dart';
 import '../../../core/providers/database_providers.dart';
+import '../../../core/providers/session_providers.dart';
 
 /// Notifier for toggling between family-wide and personal dashboard scope.
 class DashboardScopeNotifier extends Notifier<DashboardScope> {
@@ -49,11 +50,16 @@ final dashboardDataProvider = StreamProvider.family<DashboardData, String>((
   final accountDao = AccountDao(db);
   final transactionDao = TransactionDao(db);
   final scope = ref.watch(dashboardScopeProvider);
+  final userId = ref.watch(sessionUserIdProvider);
 
   // Watch accounts reactively
   return accountDao.watchAll(familyId).asyncMap((accounts) async {
     // Apply scope filter
-    final scoped = DashboardAggregation.filterByScope(accounts, scope: scope);
+    final scoped = DashboardAggregation.filterByScope(
+      accounts,
+      scope: scope,
+      userId: userId,
+    );
 
     final grouped = DashboardAggregation.groupAccounts(scoped);
     final netWorth = DashboardAggregation.computeNetWorth(scoped);

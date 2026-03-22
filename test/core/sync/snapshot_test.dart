@@ -28,6 +28,14 @@ class MockCloudStorage implements CloudStorageInterface {
   Future<Map<String, dynamic>?> readManifest() async => null;
   @override
   Future<void> writeManifest(Map<String, dynamic> manifest) async {}
+  @override
+  CloudProvider get provider => CloudProvider.googleDrive;
+  @override
+  bool get supportsSharing => true;
+  @override
+  Future<void> writeSchemaVersion(int version) async {}
+  @override
+  Future<int?> readSchemaVersion() async => null;
 }
 
 void main() {

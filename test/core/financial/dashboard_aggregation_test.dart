@@ -511,7 +511,7 @@ void main() {
 
   group('ScopeFiltering', () {
     test(
-      'family scope includes shared and familyWide, excludes private',
+      'family scope includes shared and nameOnly, excludes hidden',
       () async {
         await _seedFamily('fam_a');
 
@@ -526,9 +526,9 @@ void main() {
         );
         accounts.add(
           await _insertAccount(
-            id: 'family_wide',
+            id: 'name_only',
             familyId: 'fam_a',
-            visibility: 'familyWide',
+            visibility: 'nameOnly',
             balance: 200,
           ),
         );
@@ -536,7 +536,7 @@ void main() {
           await _insertAccount(
             id: 'priv',
             familyId: 'fam_a',
-            visibility: 'private_',
+            visibility: 'hidden',
             balance: 300,
           ),
         );
@@ -547,10 +547,7 @@ void main() {
         );
 
         expect(filtered, hasLength(2));
-        expect(
-          filtered.map((a) => a.id),
-          containsAll(['shared', 'family_wide']),
-        );
+        expect(filtered.map((a) => a.id), containsAll(['shared', 'name_only']));
       },
     );
 
