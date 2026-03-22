@@ -35,17 +35,32 @@ void main() {
       expect(find.text('Get Started'), findsOneWidget);
     });
 
-    testWidgets('advances to create family step on Get Started tap', (
-      tester,
-    ) async {
+    testWidgets('advances to sign-in step on Get Started tap', (tester) async {
       await tester.pumpWidget(buildApp());
       await tester.pumpAndSettle();
 
       await tester.tap(find.text('Get Started'));
       await tester.pumpAndSettle();
 
+      expect(find.text('Sign In'), findsOneWidget);
+      expect(find.text('Sign in with Google'), findsOneWidget);
+      // Debug mode shows skip button
+      expect(find.text('Skip (Dev Mode)'), findsOneWidget);
+    });
+
+    testWidgets('skip dev mode advances to create family step', (tester) async {
+      await tester.pumpWidget(buildApp());
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Get Started'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Skip (Dev Mode)'));
+      await tester.pumpAndSettle();
+
       expect(find.text('Create Your Family'), findsOneWidget);
       expect(find.text('Family Name'), findsOneWidget);
+      expect(find.textContaining('Signed in as'), findsOneWidget);
     });
 
     testWidgets('validates family name required', (tester) async {
@@ -53,6 +68,8 @@ void main() {
       await tester.pumpAndSettle();
 
       await tester.tap(find.text('Get Started'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Skip (Dev Mode)'));
       await tester.pumpAndSettle();
 
       await tester.tap(find.text('Create Family'));
@@ -68,6 +85,8 @@ void main() {
       await tester.pumpAndSettle();
 
       await tester.tap(find.text('Get Started'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Skip (Dev Mode)'));
       await tester.pumpAndSettle();
 
       await tester.enterText(

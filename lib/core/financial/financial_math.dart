@@ -86,6 +86,14 @@ class FinancialMath {
     return (amount * math.pow(1 + rate, years)).round();
   }
 
+  /// Exponentiation with double precision.
+  ///
+  /// Wrapper around `dart:math pow` for API completeness per BUSINESS_LOGIC.md.
+  /// [base] the base value
+  /// [exp]  the exponent
+  static double power(double base, double exp) =>
+      math.pow(base, exp).toDouble();
+
   /// Monthly SIP amount required to reach a target corpus.
   ///
   /// Derived from the future-value-of-annuity formula:

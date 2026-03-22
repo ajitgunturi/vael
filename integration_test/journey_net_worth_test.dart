@@ -97,7 +97,7 @@ void main() {
     testWidgets('should exclude private accounts from family net worth', (tester) async {
       await seedTestFamily(db);
       await seedAccount(db, id: 'shared', name: 'Shared Savings', type: 'savings', balance: 10000000);
-      await seedAccount(db, id: 'priv', name: 'Private FD', type: 'savings', balance: 5000000, visibility: 'private_');
+      await seedAccount(db, id: 'priv', name: 'Private FD', type: 'savings', balance: 5000000, visibility: 'hidden');
 
       await tester.pumpWidget(SimulatorTestApp(db: db));
       await settle(tester);

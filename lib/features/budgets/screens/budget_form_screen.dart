@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
 
+import '../../../core/database/database.dart';
+import '../../../core/providers/database_providers.dart';
 import '../../../shared/theme/spacing.dart';
 
 /// Form screen for creating or editing a budget limit for a category group.
-class BudgetFormScreen extends StatefulWidget {
+class BudgetFormScreen extends ConsumerStatefulWidget {
   const BudgetFormScreen({
     super.key,
     required this.familyId,
@@ -26,10 +30,10 @@ class BudgetFormScreen extends StatefulWidget {
   bool get isEditing => editBudgetId != null;
 
   @override
-  State<BudgetFormScreen> createState() => _BudgetFormScreenState();
+  ConsumerState<BudgetFormScreen> createState() => _BudgetFormScreenState();
 }
 
-class _BudgetFormScreenState extends State<BudgetFormScreen> {
+class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
   final _formKey = GlobalKey<FormState>();
   late String? _selectedGroup;
   late final TextEditingController _amountController;
@@ -106,12 +110,27 @@ class _BudgetFormScreenState extends State<BudgetFormScreen> {
     );
   }
 
-  void _submit() {
+  Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
-    // Return result to caller
-    Navigator.of(context).pop((
-      group: _selectedGroup!,
-      amountPaise: int.parse(_amountController.text) * 100,
-    ));
+
+    final amountPaise = int.parse(_amountController.text) * 100;
+    final dao = ref.read(budgetDaoProvider);
+
+    if (widget.isEditing) {
+      await dao.updateLimit(widget.editBudgetId!, amountPaise);
+    } else {
+      await dao.insertBudget(
+        BudgetsCompanion.insert(
+          id: const Uuid().v4(),
+          familyId: widget.familyId,
+          year: widget.year,
+          month: widget.month,
+          categoryGroup: _selectedGroup!,
+          limitAmount: amountPaise,
+        ),
+      );
+    }
+
+    if (mounted) Navigator.of(context).pop();
   }
 }

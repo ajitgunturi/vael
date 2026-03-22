@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/database/database.dart';
 import '../../../shared/theme/color_tokens.dart';
 import '../../../shared/utils/formatters.dart';
+import '../providers/recurring_providers.dart';
 import 'recurring_form_screen.dart';
 
 /// Displays list of recurring rules with status indicators.
@@ -13,6 +15,8 @@ class RecurringRulesScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final rulesAsync = ref.watch(recurringRulesProvider(familyId));
+
     return Scaffold(
       appBar: AppBar(title: const Text('Recurring Rules')),
       floatingActionButton: FloatingActionButton(
@@ -23,13 +27,19 @@ class RecurringRulesScreen extends ConsumerWidget {
         ),
         child: const Icon(Icons.add),
       ),
-      body: const _RulesBody(),
+      body: rulesAsync.when(
+        data: (rules) => rules.isEmpty
+            ? const _EmptyBody()
+            : _RulesList(rules: rules, ref: ref),
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (e, _) => Center(child: Text('Error: $e')),
+      ),
     );
   }
 }
 
-class _RulesBody extends StatelessWidget {
-  const _RulesBody();
+class _EmptyBody extends StatelessWidget {
+  const _EmptyBody();
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +54,39 @@ class _RulesBody extends StatelessWidget {
           Text('Automate SIPs, rent, salary, and more'),
         ],
       ),
+    );
+  }
+}
+
+class _RulesList extends StatelessWidget {
+  const _RulesList({required this.rules, required this.ref});
+
+  final List<RecurringRule> rules;
+  final WidgetRef ref;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      padding: const EdgeInsets.only(bottom: 80),
+      itemCount: rules.length,
+      itemBuilder: (context, i) {
+        final rule = rules[i];
+        return RecurringRuleCard(
+          name: rule.name,
+          kind: rule.kind,
+          amount: rule.amount,
+          frequencyMonths: rule.frequencyMonths,
+          isPaused: rule.isPaused,
+          onTogglePause: () async {
+            final dao = ref.read(recurringRuleDaoProvider);
+            if (rule.isPaused) {
+              await dao.resume(rule.id);
+            } else {
+              await dao.pause(rule.id);
+            }
+          },
+        );
+      },
     );
   }
 }

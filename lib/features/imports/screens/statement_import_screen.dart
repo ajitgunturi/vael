@@ -1,9 +1,14 @@
+import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
 
+import '../../../core/database/database.dart';
 import '../../../core/financial/statement_parser.dart';
+import '../../../core/providers/transaction_providers.dart';
 import '../../../shared/theme/color_tokens.dart';
 import '../../../shared/utils/formatters.dart';
+import '../../accounts/providers/account_ui_providers.dart';
 
 /// Statement import flow: paste CSV → preview → review → commit.
 class StatementImportScreen extends ConsumerStatefulWidget {
@@ -20,6 +25,7 @@ class _StatementImportScreenState extends ConsumerState<StatementImportScreen> {
   final _csvController = TextEditingController();
   ParseResult? _parseResult;
   final Set<int> _selectedIndices = {};
+  String? _selectedAccountId;
 
   @override
   void dispose() {
@@ -36,6 +42,8 @@ class _StatementImportScreenState extends ConsumerState<StatementImportScreen> {
   }
 
   Widget _buildInputStep() {
+    final accountsAsync = ref.watch(allAccountsProvider(widget.familyId));
+
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -49,6 +57,23 @@ class _StatementImportScreenState extends ConsumerState<StatementImportScreen> {
           Text(
             'Supported: HDFC, SBI, ICICI, or generic CSV',
             style: Theme.of(context).textTheme.bodySmall,
+          ),
+          const SizedBox(height: 16),
+          accountsAsync.when(
+            data: (accounts) => DropdownButtonFormField<String>(
+              value: _selectedAccountId,
+              decoration: const InputDecoration(
+                labelText: 'Import into account',
+              ),
+              items: accounts
+                  .map(
+                    (a) => DropdownMenuItem(value: a.id, child: Text(a.name)),
+                  )
+                  .toList(),
+              onChanged: (v) => setState(() => _selectedAccountId = v),
+            ),
+            loading: () => const LinearProgressIndicator(),
+            error: (_, __) => const Text('Could not load accounts'),
           ),
           const SizedBox(height: 16),
           Expanded(
@@ -66,7 +91,7 @@ class _StatementImportScreenState extends ConsumerState<StatementImportScreen> {
           ),
           const SizedBox(height: 16),
           FilledButton.icon(
-            onPressed: _preview,
+            onPressed: _selectedAccountId != null ? _preview : null,
             icon: const Icon(Icons.preview),
             label: const Text('Preview'),
           ),
@@ -162,14 +187,34 @@ class _StatementImportScreenState extends ConsumerState<StatementImportScreen> {
     });
   }
 
-  void _commit() {
-    // Will be wired to DAO in integration
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Imported ${_selectedIndices.length} transactions'),
-      ),
-    );
-    Navigator.of(context).pop();
+  Future<void> _commit() async {
+    final txns = _parseResult!.transactions;
+    final dao = ref.read(transactionDaoProvider);
+    const uuid = Uuid();
+
+    for (final i in _selectedIndices) {
+      final parsed = txns[i];
+      await dao.insertTransaction(
+        TransactionsCompanion.insert(
+          id: uuid.v4(),
+          amount: parsed.amount,
+          date: parsed.date,
+          description: drift.Value(parsed.description),
+          accountId: _selectedAccountId!,
+          kind: parsed.isDebit ? 'expense' : 'income',
+          familyId: widget.familyId,
+        ),
+      );
+    }
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Imported ${_selectedIndices.length} transactions'),
+        ),
+      );
+      Navigator.of(context).pop();
+    }
   }
 }
 

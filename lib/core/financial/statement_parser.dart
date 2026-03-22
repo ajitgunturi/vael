@@ -1,3 +1,8 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:pointycastle/digests/sha256.dart';
+
 /// Supported bank statement formats.
 enum BankFormat { hdfc, sbi, icici, generic }
 
@@ -40,6 +45,22 @@ class ParseResult {
 /// The parser never commits — it returns parsed data for user review.
 class StatementParser {
   StatementParser._();
+
+  /// Computes a deduplication hash for an imported transaction.
+  ///
+  /// Returns `SHA256(familyId + accountId + date + amount + description)`
+  /// as a hex string. Used to detect duplicates across repeated imports.
+  static String computeDedupHash(
+    String familyId,
+    String accountId,
+    ParsedTransaction txn,
+  ) {
+    final input =
+        '$familyId$accountId${txn.date.toIso8601String()}${txn.amount}${txn.description}';
+    final digest = SHA256Digest();
+    final bytes = digest.process(Uint8List.fromList(utf8.encode(input)));
+    return bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join();
+  }
 
   /// Detects bank format from CSV header row.
   static BankFormat detectFormat(String csv) {

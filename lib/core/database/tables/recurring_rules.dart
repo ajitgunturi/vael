@@ -27,6 +27,7 @@ class RecurringRules extends Table {
   TextColumn get familyId => text().references(Families, #id)();
   TextColumn get userId => text()();
   DateTimeColumn get createdAt => dateTime()();
+  DateTimeColumn get deletedAt => dateTime().nullable()();
 
   @override
   Set<Column> get primaryKey => {id};

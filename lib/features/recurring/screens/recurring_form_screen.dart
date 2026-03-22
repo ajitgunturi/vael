@@ -1,8 +1,14 @@
+import 'package:drift/drift.dart' hide Column;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
 
+import '../../../core/database/database.dart';
 import '../../../core/models/enums.dart';
+import '../../../core/providers/session_providers.dart';
 import '../../../shared/widgets/currency_input.dart';
+import '../../accounts/providers/account_ui_providers.dart';
+import '../providers/recurring_providers.dart';
 
 /// Form for creating/editing a recurring rule.
 class RecurringFormScreen extends ConsumerStatefulWidget {
@@ -29,6 +35,7 @@ class _RecurringFormScreenState extends ConsumerState<RecurringFormScreen> {
   TransactionKind _selectedKind = TransactionKind.expense;
   double _frequencyMonths = 1.0;
   DateTime _startDate = DateTime.now();
+  String? _selectedAccountId;
 
   static final _frequencies = <double, String>{
     0.5: 'Biweekly',
@@ -49,6 +56,7 @@ class _RecurringFormScreenState extends ConsumerState<RecurringFormScreen> {
   @override
   Widget build(BuildContext context) {
     final isEditing = widget.editingId != null;
+    final accountsAsync = ref.watch(allAccountsProvider(widget.familyId));
 
     return Scaffold(
       appBar: AppBar(
@@ -80,6 +88,22 @@ class _RecurringFormScreenState extends ConsumerState<RecurringFormScreen> {
             ),
             const SizedBox(height: 16),
             CurrencyInput(controller: _amountController, label: 'Amount'),
+            const SizedBox(height: 16),
+            accountsAsync.when(
+              data: (accounts) => DropdownButtonFormField<String>(
+                value: _selectedAccountId,
+                decoration: const InputDecoration(labelText: 'Account'),
+                items: accounts
+                    .map(
+                      (a) => DropdownMenuItem(value: a.id, child: Text(a.name)),
+                    )
+                    .toList(),
+                onChanged: (v) => setState(() => _selectedAccountId = v),
+                validator: (v) => v == null ? 'Select an account' : null,
+              ),
+              loading: () => const LinearProgressIndicator(),
+              error: (_, __) => const Text('Could not load accounts'),
+            ),
             const SizedBox(height: 16),
             DropdownButtonFormField<double>(
               value: _frequencyMonths,
@@ -134,8 +158,31 @@ class _RecurringFormScreenState extends ConsumerState<RecurringFormScreen> {
     if (picked != null) setState(() => _startDate = picked);
   }
 
-  void _save() {
+  Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
-    Navigator.of(context).pop();
+
+    final amountPaise =
+        int.parse(_amountController.text.replaceAll(',', '')) * 100;
+    final escalation = double.tryParse(_escalationController.text) ?? 0;
+    final userId = ref.read(sessionUserIdProvider) ?? 'unknown';
+    final dao = ref.read(recurringRuleDaoProvider);
+
+    await dao.insertRule(
+      RecurringRulesCompanion.insert(
+        id: const Uuid().v4(),
+        name: _nameController.text.trim(),
+        kind: _selectedKind.name,
+        amount: amountPaise,
+        accountId: _selectedAccountId!,
+        frequencyMonths: _frequencyMonths,
+        startDate: _startDate,
+        annualEscalationRate: Value(escalation / 100),
+        familyId: widget.familyId,
+        userId: userId,
+        createdAt: DateTime.now(),
+      ),
+    );
+
+    if (mounted) Navigator.of(context).pop();
   }
 }

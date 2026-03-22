@@ -9,6 +9,12 @@ enum CloudProvider { googleDrive, iCloudDrive }
 /// a cloud provider. All data is encrypted before reaching this layer —
 /// implementations never see plaintext.
 abstract class CloudStorageInterface {
+  /// The cloud provider this implementation targets.
+  CloudProvider get provider;
+
+  /// Whether this provider supports file sharing with other users.
+  bool get supportsSharing;
+
   Future<void> uploadChangeset(String fileName, Uint8List data);
   Future<Uint8List> downloadFile(String fileId);
   Future<List<CloudFileEntry>> listChangesets({DateTime? after});
@@ -16,6 +22,13 @@ abstract class CloudStorageInterface {
   Future<Uint8List?> downloadSnapshot();
   Future<Map<String, dynamic>?> readManifest();
   Future<void> writeManifest(Map<String, dynamic> manifest);
+
+  /// Writes the database schema version to `.meta/schema_version.json`.
+  Future<void> writeSchemaVersion(int version);
+
+  /// Reads the database schema version from `.meta/schema_version.json`.
+  /// Returns `null` if the file does not exist.
+  Future<int?> readSchemaVersion();
 }
 
 /// Metadata for a file in cloud storage.

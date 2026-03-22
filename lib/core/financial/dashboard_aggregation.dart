@@ -170,7 +170,7 @@ class DashboardAggregation {
 
   /// Filters accounts by scope.
   ///
-  /// - [DashboardScope.family]: shared + familyWide (excludes private_)
+  /// - [DashboardScope.family]: shared + nameOnly (excludes hidden)
   /// - [DashboardScope.personal]: only accounts owned by [userId]
   static List<Account> filterByScope(
     List<Account> accounts, {
@@ -179,7 +179,7 @@ class DashboardAggregation {
   }) {
     switch (scope) {
       case DashboardScope.family:
-        return accounts.where((a) => a.visibility != 'private_').toList();
+        return accounts.where((a) => a.visibility != 'hidden').toList();
       case DashboardScope.personal:
         assert(userId != null, 'userId required for personal scope');
         return accounts.where((a) => a.userId == userId).toList();

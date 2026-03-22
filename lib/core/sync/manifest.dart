@@ -82,14 +82,24 @@ class MemberEntry {
 class ManifestOwner {
   final String userId;
   final String email;
+  final String? driveFolderId;
 
-  ManifestOwner({required this.userId, required this.email});
+  ManifestOwner({
+    required this.userId,
+    required this.email,
+    this.driveFolderId,
+  });
 
-  Map<String, dynamic> toJson() => {'user_id': userId, 'email': email};
+  Map<String, dynamic> toJson() => {
+    'user_id': userId,
+    'email': email,
+    if (driveFolderId != null) 'drive_folder_id': driveFolderId,
+  };
 
   factory ManifestOwner.fromJson(Map<String, dynamic> json) => ManifestOwner(
     userId: json['user_id'] as String,
     email: json['email'] as String,
+    driveFolderId: json['drive_folder_id'] as String?,
   );
 }
 
@@ -100,12 +110,14 @@ class ManifestV2 {
   final Map<String, MemberEntry> members;
   final int fekGeneration;
   final DateTime lastUpdated;
+  final String? provider; // 'googleDrive' or 'iCloudDrive'
 
   ManifestV2({
     required this.familyId,
     required this.owner,
     required this.members,
     this.fekGeneration = 1,
+    this.provider,
     DateTime? lastUpdated,
   }) : lastUpdated = lastUpdated ?? DateTime.now().toUtc();
 
@@ -116,6 +128,7 @@ class ManifestV2 {
     'members': members.map((k, v) => MapEntry(k, v.toJson())),
     'fek_generation': fekGeneration,
     'last_updated': lastUpdated.toIso8601String(),
+    if (provider != null) 'provider': provider,
   };
 
   factory ManifestV2.fromJson(Map<String, dynamic> json) {
@@ -127,6 +140,7 @@ class ManifestV2 {
         (k, v) => MapEntry(k, MemberEntry.fromJson(v as Map<String, dynamic>)),
       ),
       fekGeneration: json['fek_generation'] as int? ?? 1,
+      provider: json['provider'] as String?,
       lastUpdated: DateTime.parse(json['last_updated'] as String),
     );
   }

@@ -89,9 +89,9 @@ void main() {
       expect(
         Visibility.values,
         containsAll([
-          Visibility.private_,
+          Visibility.hidden,
+          Visibility.nameOnly,
           Visibility.shared,
-          Visibility.familyWide,
         ]),
       );
     });
@@ -100,6 +100,12 @@ void main() {
       for (final value in Visibility.values) {
         expect(Visibility.values.byName(value.name), value);
       }
+    });
+
+    test('should not contain deprecated private_ or familyWide values', () {
+      final names = Visibility.values.map((v) => v.name).toList();
+      expect(names, isNot(contains('private_')));
+      expect(names, isNot(contains('familyWide')));
     });
   });
 

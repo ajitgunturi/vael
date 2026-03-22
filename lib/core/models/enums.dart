@@ -23,8 +23,11 @@ enum CategoryGroup {
 
 /// Controls which family members can see a record.
 ///
-/// [private_] uses a trailing underscore to avoid the Dart reserved keyword.
-enum Visibility { private_, shared, familyWide }
+/// Three-tier privacy model per UI_DESIGN.md §0.5:
+/// - [shared] — full details visible to all family members
+/// - [nameOnly] — name/label visible, amounts hidden from non-owners
+/// - [hidden] — completely invisible to non-owners (private)
+enum Visibility { hidden, nameOnly, shared }
 
 /// Classification of investment buckets (India-native asset types).
 enum BucketType {

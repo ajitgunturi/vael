@@ -192,7 +192,7 @@ void main() {
         familyId: 'fam_a',
         type: 'savings',
         balance: 300000,
-        visibility: 'private_',
+        visibility: 'hidden',
       );
 
       // Default scope is family

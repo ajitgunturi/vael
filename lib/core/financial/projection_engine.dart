@@ -37,10 +37,30 @@ class ThreeScenarioResult {
   });
 }
 
+/// A recurring cash flow source consumed by the projection engine.
+class ProjectionCashFlow {
+  final String name;
+  final int monthlyAmount; // paise
+  final bool isIncome; // true = income, false = expense
+  final int? durationMonths; // null = indefinite
+  final double annualEscalation; // e.g. 0.10 for 10%
+
+  const ProjectionCashFlow({
+    required this.name,
+    required this.monthlyAmount,
+    required this.isIncome,
+    this.durationMonths,
+    this.annualEscalation = 0,
+  });
+}
+
 /// Forward-stepping 60-month financial projection engine.
 ///
 /// Pure function: no DB access. Takes current state and growth assumptions,
 /// produces monthly net worth trajectory.
+///
+/// Can optionally consume recurring cash flows (from recurring rules) to
+/// produce data-driven projections instead of flat assumptions.
 ///
 /// Annual growth rates are applied at the start of each new year (month 13, 25, …).
 /// Investment returns compound monthly on accumulated net worth.
@@ -108,6 +128,94 @@ class ProjectionEngine {
     }
 
     return ProjectionResult(months: snapshots);
+  }
+
+  /// Projects net worth using actual recurring cash flows from the DB.
+  ///
+  /// Instead of flat monthlyIncome/monthlyExpenses, this method consumes
+  /// structured [ProjectionCashFlow] sources (derived from recurring rules,
+  /// salary, EMIs, SIPs, etc.) and applies per-source escalation rates.
+  static ProjectionResult projectFromCashFlows({
+    required int startingNetWorth,
+    required List<ProjectionCashFlow> cashFlows,
+    double investmentReturnRate = 0.10,
+    int horizonMonths = 60,
+  }) {
+    final monthlyReturn = investmentReturnRate / 12;
+    final snapshots = <ProjectionSnapshot>[];
+
+    double runningNW = startingNetWorth.toDouble();
+
+    for (var m = 1; m <= horizonMonths; m++) {
+      // Investment returns compound on positive net worth
+      if (runningNW > 0 && monthlyReturn > 0) {
+        runningNW *= (1 + monthlyReturn);
+      }
+
+      int totalIncome = 0;
+      int totalExpenses = 0;
+
+      for (final cf in cashFlows) {
+        // Check duration
+        if (cf.durationMonths != null && m > cf.durationMonths!) continue;
+
+        // Apply annual escalation
+        final yearsElapsed = (m - 1) ~/ 12;
+        final escalated =
+            (cf.monthlyAmount * math.pow(1 + cf.annualEscalation, yearsElapsed))
+                .round();
+
+        if (cf.isIncome) {
+          totalIncome += escalated;
+        } else {
+          totalExpenses += escalated;
+        }
+      }
+
+      final savings = totalIncome - totalExpenses;
+      runningNW += savings;
+
+      snapshots.add(
+        ProjectionSnapshot(
+          month: m,
+          netWorth: runningNW.round(),
+          monthlyIncome: totalIncome,
+          monthlyExpenses: totalExpenses,
+          monthlySavings: savings,
+        ),
+      );
+    }
+
+    return ProjectionResult(months: snapshots);
+  }
+
+  /// Generates three scenarios from cash flows with return rate spreads.
+  static ThreeScenarioResult threeScenariosCashFlow({
+    required int startingNetWorth,
+    required List<ProjectionCashFlow> cashFlows,
+    double baseReturnRate = 0.10,
+    int horizonMonths = 60,
+  }) {
+    return ThreeScenarioResult(
+      optimistic: projectFromCashFlows(
+        startingNetWorth: startingNetWorth,
+        cashFlows: cashFlows,
+        investmentReturnRate: baseReturnRate + 0.02,
+        horizonMonths: horizonMonths,
+      ),
+      base: projectFromCashFlows(
+        startingNetWorth: startingNetWorth,
+        cashFlows: cashFlows,
+        investmentReturnRate: baseReturnRate,
+        horizonMonths: horizonMonths,
+      ),
+      pessimistic: projectFromCashFlows(
+        startingNetWorth: startingNetWorth,
+        cashFlows: cashFlows,
+        investmentReturnRate: math.max(0, baseReturnRate - 0.02),
+        horizonMonths: horizonMonths,
+      ),
+    );
   }
 
   /// Generates optimistic / base / pessimistic projections.

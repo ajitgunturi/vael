@@ -17,6 +17,7 @@ class Transactions extends Table {
   TextColumn get reconciliationKind => text().nullable()();
   TextColumn get metadata => text().nullable()(); // JSON blob
   TextColumn get familyId => text().references(Families, #id)();
+  DateTimeColumn get deletedAt => dateTime().nullable()();
 
   @override
   Set<Column> get primaryKey => {id};

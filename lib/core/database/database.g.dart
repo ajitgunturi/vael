@@ -1931,6 +1931,17 @@ class $TransactionsTable extends Transactions
       'REFERENCES families (id)',
     ),
   );
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> deletedAt = GeneratedColumn<DateTime>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -1944,6 +1955,7 @@ class $TransactionsTable extends Transactions
     reconciliationKind,
     metadata,
     familyId,
+    deletedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -2041,6 +2053,12 @@ class $TransactionsTable extends Transactions
     } else if (isInserting) {
       context.missing(_familyIdMeta);
     }
+    if (data.containsKey('deleted_at')) {
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
+    }
     return context;
   }
 
@@ -2094,6 +2112,10 @@ class $TransactionsTable extends Transactions
         DriftSqlType.string,
         data['${effectivePrefix}family_id'],
       )!,
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}deleted_at'],
+      ),
     );
   }
 
@@ -2115,6 +2137,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
   final String? reconciliationKind;
   final String? metadata;
   final String familyId;
+  final DateTime? deletedAt;
   const Transaction({
     required this.id,
     required this.amount,
@@ -2127,6 +2150,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     this.reconciliationKind,
     this.metadata,
     required this.familyId,
+    this.deletedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -2152,6 +2176,9 @@ class Transaction extends DataClass implements Insertable<Transaction> {
       map['metadata'] = Variable<String>(metadata);
     }
     map['family_id'] = Variable<String>(familyId);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt);
+    }
     return map;
   }
 
@@ -2178,6 +2205,9 @@ class Transaction extends DataClass implements Insertable<Transaction> {
           ? const Value.absent()
           : Value(metadata),
       familyId: Value(familyId),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
     );
   }
 
@@ -2200,6 +2230,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
       ),
       metadata: serializer.fromJson<String?>(json['metadata']),
       familyId: serializer.fromJson<String>(json['familyId']),
+      deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
     );
   }
   @override
@@ -2217,6 +2248,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
       'reconciliationKind': serializer.toJson<String?>(reconciliationKind),
       'metadata': serializer.toJson<String?>(metadata),
       'familyId': serializer.toJson<String>(familyId),
+      'deletedAt': serializer.toJson<DateTime?>(deletedAt),
     };
   }
 
@@ -2232,6 +2264,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     Value<String?> reconciliationKind = const Value.absent(),
     Value<String?> metadata = const Value.absent(),
     String? familyId,
+    Value<DateTime?> deletedAt = const Value.absent(),
   }) => Transaction(
     id: id ?? this.id,
     amount: amount ?? this.amount,
@@ -2246,6 +2279,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
         : this.reconciliationKind,
     metadata: metadata.present ? metadata.value : this.metadata,
     familyId: familyId ?? this.familyId,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
   );
   Transaction copyWithCompanion(TransactionsCompanion data) {
     return Transaction(
@@ -2268,6 +2302,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
           : this.reconciliationKind,
       metadata: data.metadata.present ? data.metadata.value : this.metadata,
       familyId: data.familyId.present ? data.familyId.value : this.familyId,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
     );
   }
 
@@ -2284,7 +2319,8 @@ class Transaction extends DataClass implements Insertable<Transaction> {
           ..write('kind: $kind, ')
           ..write('reconciliationKind: $reconciliationKind, ')
           ..write('metadata: $metadata, ')
-          ..write('familyId: $familyId')
+          ..write('familyId: $familyId, ')
+          ..write('deletedAt: $deletedAt')
           ..write(')'))
         .toString();
   }
@@ -2302,6 +2338,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     reconciliationKind,
     metadata,
     familyId,
+    deletedAt,
   );
   @override
   bool operator ==(Object other) =>
@@ -2317,7 +2354,8 @@ class Transaction extends DataClass implements Insertable<Transaction> {
           other.kind == this.kind &&
           other.reconciliationKind == this.reconciliationKind &&
           other.metadata == this.metadata &&
-          other.familyId == this.familyId);
+          other.familyId == this.familyId &&
+          other.deletedAt == this.deletedAt);
 }
 
 class TransactionsCompanion extends UpdateCompanion<Transaction> {
@@ -2332,6 +2370,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
   final Value<String?> reconciliationKind;
   final Value<String?> metadata;
   final Value<String> familyId;
+  final Value<DateTime?> deletedAt;
   final Value<int> rowid;
   const TransactionsCompanion({
     this.id = const Value.absent(),
@@ -2345,6 +2384,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
     this.reconciliationKind = const Value.absent(),
     this.metadata = const Value.absent(),
     this.familyId = const Value.absent(),
+    this.deletedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   TransactionsCompanion.insert({
@@ -2359,6 +2399,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
     this.reconciliationKind = const Value.absent(),
     this.metadata = const Value.absent(),
     required String familyId,
+    this.deletedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        amount = Value(amount),
@@ -2378,6 +2419,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
     Expression<String>? reconciliationKind,
     Expression<String>? metadata,
     Expression<String>? familyId,
+    Expression<DateTime>? deletedAt,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -2392,6 +2434,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
       if (reconciliationKind != null) 'reconciliation_kind': reconciliationKind,
       if (metadata != null) 'metadata': metadata,
       if (familyId != null) 'family_id': familyId,
+      if (deletedAt != null) 'deleted_at': deletedAt,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -2408,6 +2451,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
     Value<String?>? reconciliationKind,
     Value<String?>? metadata,
     Value<String>? familyId,
+    Value<DateTime?>? deletedAt,
     Value<int>? rowid,
   }) {
     return TransactionsCompanion(
@@ -2422,6 +2466,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
       reconciliationKind: reconciliationKind ?? this.reconciliationKind,
       metadata: metadata ?? this.metadata,
       familyId: familyId ?? this.familyId,
+      deletedAt: deletedAt ?? this.deletedAt,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -2462,6 +2507,9 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
     if (familyId.present) {
       map['family_id'] = Variable<String>(familyId.value);
     }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -2482,6 +2530,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
           ..write('reconciliationKind: $reconciliationKind, ')
           ..write('metadata: $metadata, ')
           ..write('familyId: $familyId, ')
+          ..write('deletedAt: $deletedAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -6155,6 +6204,17 @@ class $RecurringRulesTable extends RecurringRules
     type: DriftSqlType.dateTime,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> deletedAt = GeneratedColumn<DateTime>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -6174,6 +6234,7 @@ class $RecurringRulesTable extends RecurringRules
     familyId,
     userId,
     createdAt,
+    deletedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -6318,6 +6379,12 @@ class $RecurringRulesTable extends RecurringRules
     } else if (isInserting) {
       context.missing(_createdAtMeta);
     }
+    if (data.containsKey('deleted_at')) {
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
+    }
     return context;
   }
 
@@ -6395,6 +6462,10 @@ class $RecurringRulesTable extends RecurringRules
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
       )!,
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}deleted_at'],
+      ),
     );
   }
 
@@ -6422,6 +6493,7 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
   final String familyId;
   final String userId;
   final DateTime createdAt;
+  final DateTime? deletedAt;
   const RecurringRule({
     required this.id,
     required this.name,
@@ -6440,6 +6512,7 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
     required this.familyId,
     required this.userId,
     required this.createdAt,
+    this.deletedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -6471,6 +6544,9 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
     map['family_id'] = Variable<String>(familyId);
     map['user_id'] = Variable<String>(userId);
     map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt);
+    }
     return map;
   }
 
@@ -6503,6 +6579,9 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
       familyId: Value(familyId),
       userId: Value(userId),
       createdAt: Value(createdAt),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
     );
   }
 
@@ -6533,6 +6612,7 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
       familyId: serializer.fromJson<String>(json['familyId']),
       userId: serializer.fromJson<String>(json['userId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
     );
   }
   @override
@@ -6556,6 +6636,7 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
       'familyId': serializer.toJson<String>(familyId),
       'userId': serializer.toJson<String>(userId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
+      'deletedAt': serializer.toJson<DateTime?>(deletedAt),
     };
   }
 
@@ -6577,6 +6658,7 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
     String? familyId,
     String? userId,
     DateTime? createdAt,
+    Value<DateTime?> deletedAt = const Value.absent(),
   }) => RecurringRule(
     id: id ?? this.id,
     name: name ?? this.name,
@@ -6597,6 +6679,7 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
     familyId: familyId ?? this.familyId,
     userId: userId ?? this.userId,
     createdAt: createdAt ?? this.createdAt,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
   );
   RecurringRule copyWithCompanion(RecurringRulesCompanion data) {
     return RecurringRule(
@@ -6627,6 +6710,7 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
       familyId: data.familyId.present ? data.familyId.value : this.familyId,
       userId: data.userId.present ? data.userId.value : this.userId,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
     );
   }
 
@@ -6649,7 +6733,8 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
           ..write('annualEscalationRate: $annualEscalationRate, ')
           ..write('familyId: $familyId, ')
           ..write('userId: $userId, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('deletedAt: $deletedAt')
           ..write(')'))
         .toString();
   }
@@ -6673,6 +6758,7 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
     familyId,
     userId,
     createdAt,
+    deletedAt,
   );
   @override
   bool operator ==(Object other) =>
@@ -6694,7 +6780,8 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
           other.annualEscalationRate == this.annualEscalationRate &&
           other.familyId == this.familyId &&
           other.userId == this.userId &&
-          other.createdAt == this.createdAt);
+          other.createdAt == this.createdAt &&
+          other.deletedAt == this.deletedAt);
 }
 
 class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
@@ -6715,6 +6802,7 @@ class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
   final Value<String> familyId;
   final Value<String> userId;
   final Value<DateTime> createdAt;
+  final Value<DateTime?> deletedAt;
   final Value<int> rowid;
   const RecurringRulesCompanion({
     this.id = const Value.absent(),
@@ -6734,6 +6822,7 @@ class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
     this.familyId = const Value.absent(),
     this.userId = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   RecurringRulesCompanion.insert({
@@ -6754,6 +6843,7 @@ class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
     required String familyId,
     required String userId,
     required DateTime createdAt,
+    this.deletedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        name = Value(name),
@@ -6783,6 +6873,7 @@ class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
     Expression<String>? familyId,
     Expression<String>? userId,
     Expression<DateTime>? createdAt,
+    Expression<DateTime>? deletedAt,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -6804,6 +6895,7 @@ class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
       if (familyId != null) 'family_id': familyId,
       if (userId != null) 'user_id': userId,
       if (createdAt != null) 'created_at': createdAt,
+      if (deletedAt != null) 'deleted_at': deletedAt,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -6826,6 +6918,7 @@ class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
     Value<String>? familyId,
     Value<String>? userId,
     Value<DateTime>? createdAt,
+    Value<DateTime?>? deletedAt,
     Value<int>? rowid,
   }) {
     return RecurringRulesCompanion(
@@ -6846,6 +6939,7 @@ class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
       familyId: familyId ?? this.familyId,
       userId: userId ?? this.userId,
       createdAt: createdAt ?? this.createdAt,
+      deletedAt: deletedAt ?? this.deletedAt,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -6906,6 +7000,9 @@ class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -6932,6 +7029,7 @@ class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
           ..write('familyId: $familyId, ')
           ..write('userId: $userId, ')
           ..write('createdAt: $createdAt, ')
+          ..write('deletedAt: $deletedAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -11012,6 +11110,7 @@ typedef $$TransactionsTableCreateCompanionBuilder =
       Value<String?> reconciliationKind,
       Value<String?> metadata,
       required String familyId,
+      Value<DateTime?> deletedAt,
       Value<int> rowid,
     });
 typedef $$TransactionsTableUpdateCompanionBuilder =
@@ -11027,6 +11126,7 @@ typedef $$TransactionsTableUpdateCompanionBuilder =
       Value<String?> reconciliationKind,
       Value<String?> metadata,
       Value<String> familyId,
+      Value<DateTime?> deletedAt,
       Value<int> rowid,
     });
 
@@ -11152,6 +11252,11 @@ class $$TransactionsTableFilterComposer
 
   ColumnFilters<String> get metadata => $composableBuilder(
     column: $table.metadata,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -11292,6 +11397,11 @@ class $$TransactionsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$CategoriesTableOrderingComposer get categoryId {
     final $$CategoriesTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -11418,6 +11528,9 @@ class $$TransactionsTableAnnotationComposer
 
   GeneratedColumn<String> get metadata =>
       $composableBuilder(column: $table.metadata, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
 
   $$CategoriesTableAnnotationComposer get categoryId {
     final $$CategoriesTableAnnotationComposer composer = $composerBuilder(
@@ -11556,6 +11669,7 @@ class $$TransactionsTableTableManager
                 Value<String?> reconciliationKind = const Value.absent(),
                 Value<String?> metadata = const Value.absent(),
                 Value<String> familyId = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => TransactionsCompanion(
                 id: id,
@@ -11569,6 +11683,7 @@ class $$TransactionsTableTableManager
                 reconciliationKind: reconciliationKind,
                 metadata: metadata,
                 familyId: familyId,
+                deletedAt: deletedAt,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -11584,6 +11699,7 @@ class $$TransactionsTableTableManager
                 Value<String?> reconciliationKind = const Value.absent(),
                 Value<String?> metadata = const Value.absent(),
                 required String familyId,
+                Value<DateTime?> deletedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => TransactionsCompanion.insert(
                 id: id,
@@ -11597,6 +11713,7 @@ class $$TransactionsTableTableManager
                 reconciliationKind: reconciliationKind,
                 metadata: metadata,
                 familyId: familyId,
+                deletedAt: deletedAt,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -14741,6 +14858,7 @@ typedef $$RecurringRulesTableCreateCompanionBuilder =
       required String familyId,
       required String userId,
       required DateTime createdAt,
+      Value<DateTime?> deletedAt,
       Value<int> rowid,
     });
 typedef $$RecurringRulesTableUpdateCompanionBuilder =
@@ -14762,6 +14880,7 @@ typedef $$RecurringRulesTableUpdateCompanionBuilder =
       Value<String> familyId,
       Value<String> userId,
       Value<DateTime> createdAt,
+      Value<DateTime?> deletedAt,
       Value<int> rowid,
     });
 
@@ -14921,6 +15040,11 @@ class $$RecurringRulesTableFilterComposer
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -15091,6 +15215,11 @@ class $$RecurringRulesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$AccountsTableOrderingComposer get accountId {
     final $$AccountsTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -15238,6 +15367,9 @@ class $$RecurringRulesTableAnnotationComposer
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
+  GeneratedColumn<DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
+
   $$AccountsTableAnnotationComposer get accountId {
     final $$AccountsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
@@ -15383,6 +15515,7 @@ class $$RecurringRulesTableTableManager
                 Value<String> familyId = const Value.absent(),
                 Value<String> userId = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => RecurringRulesCompanion(
                 id: id,
@@ -15402,6 +15535,7 @@ class $$RecurringRulesTableTableManager
                 familyId: familyId,
                 userId: userId,
                 createdAt: createdAt,
+                deletedAt: deletedAt,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -15423,6 +15557,7 @@ class $$RecurringRulesTableTableManager
                 required String familyId,
                 required String userId,
                 required DateTime createdAt,
+                Value<DateTime?> deletedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => RecurringRulesCompanion.insert(
                 id: id,
@@ -15442,6 +15577,7 @@ class $$RecurringRulesTableTableManager
                 familyId: familyId,
                 userId: userId,
                 createdAt: createdAt,
+                deletedAt: deletedAt,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

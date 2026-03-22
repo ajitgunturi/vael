@@ -67,7 +67,7 @@ void main() {
     testWidgets('should exclude private account transactions from actuals', (tester) async {
       await seedTestFamily(db);
       await seedAccount(db, id: 'a_shared', name: 'Shared', type: 'savings', balance: 50000000);
-      await seedAccount(db, id: 'a_priv', name: 'Private', type: 'savings', balance: 50000000, visibility: 'private_');
+      await seedAccount(db, id: 'a_priv', name: 'Private', type: 'savings', balance: 50000000, visibility: 'hidden');
       await seedCategory(db, id: 'cat_groc', name: 'Groceries', groupName: 'ESSENTIAL');
       await seedBudget(db, id: 'b1', categoryGroup: 'ESSENTIAL', limitAmount: 5000000, year: now.year, month: now.month);
 

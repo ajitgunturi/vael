@@ -1,9 +1,14 @@
+import 'package:drift/drift.dart' hide Column;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
 
+import '../../../core/database/database.dart';
 import '../../../core/financial/investment_valuation.dart';
 import '../../../core/models/enums.dart';
+import '../../../core/providers/session_providers.dart';
 import '../../../shared/widgets/currency_input.dart';
+import '../providers/investment_providers.dart';
 
 /// Form for creating/editing an investment bucket.
 class InvestmentFormScreen extends ConsumerStatefulWidget {
@@ -109,10 +114,40 @@ class _InvestmentFormScreenState extends ConsumerState<InvestmentFormScreen> {
     );
   }
 
-  void _save() {
+  Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
-    // Will be wired to DAO in integration
-    Navigator.of(context).pop();
+
+    final investedPaise =
+        int.parse(_investedController.text.replaceAll(',', '')) * 100;
+    final currentPaise =
+        int.parse(_currentController.text.replaceAll(',', '')) * 100;
+    final sipText = _sipController.text.replaceAll(',', '');
+    final sipPaise = sipText.isNotEmpty
+        ? (int.tryParse(sipText) ?? 0) * 100
+        : 0;
+    final returnRate =
+        _customReturnRate ??
+        InvestmentValuation.defaultReturnRate(_selectedType);
+    final userId = ref.read(sessionUserIdProvider) ?? 'unknown';
+    final dao = ref.read(investmentHoldingDaoProvider);
+
+    await dao.insertHolding(
+      InvestmentHoldingsCompanion.insert(
+        id: const Uuid().v4(),
+        name: _nameController.text.trim(),
+        bucketType: _selectedType.name,
+        investedAmount: investedPaise,
+        currentValue: currentPaise,
+        expectedReturnRate: Value(returnRate),
+        monthlyContribution: Value(sipPaise),
+        familyId: widget.familyId,
+        userId: userId,
+        visibility: const Value('shared'),
+        createdAt: DateTime.now(),
+      ),
+    );
+
+    if (mounted) Navigator.of(context).pop();
   }
 
   String _bucketTypeLabel(BucketType t) {
