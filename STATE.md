@@ -1,6 +1,6 @@
 # Vael — State
 
-## Current Phase: 5 — Polish + Distribution (IN PROGRESS)
+## Current Phase: 5 — Polish + Distribution (COMPLETE)
 ## Branch: feat/phase5
 
 ## Phase 5 Progress
@@ -59,8 +59,13 @@
 - Session lifecycle: no session → onboarding, set session → HomeShell, sign out → onboarding
 - Files: test/integration/phase5_e2e_test.dart
 
-### Remaining Waves
-- **Wave 8**: CI/CD + distribution — GitHub Actions, Fastlane, App Store metadata
+### Wave 8: CI/CD + Distribution (COMPLETE) — latest commit
+- GitHub Actions CI enhanced: analyze → test → build-android (APK) → build-ios (no codesign)
+- Android APK uploaded as artifact (7-day retention)
+- iOS build on macos-latest runner
+- Fastlane Fastfile for iOS (build/beta/release lanes)
+- Fastlane Fastfile for Android (build/beta/release lanes)
+- Files: .github/workflows/ci.yml, ios/fastlane/Fastfile, android/fastlane/Fastfile
 
 ## Plan File
 Detailed plan with file-level breakdown: .claude/plans/inherited-greeting-eich.md
