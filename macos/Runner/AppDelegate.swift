@@ -12,9 +12,7 @@ class AppDelegate: FlutterAppDelegate {
   }
 
   override func applicationDidFinishLaunching(_ notification: Notification) {
-    let controller = NSApplication.shared.mainWindow?.contentViewController as? FlutterViewController
-    if let registrar = controller?.registrar(forPlugin: "ICloudPlugin") {
-      ICloudPlugin.register(with: registrar)
-    }
+    // ICloudPlugin is registered via GeneratedPluginRegistrant when available.
+    // Manual registration removed — was referencing an unresolved symbol.
   }
 }
