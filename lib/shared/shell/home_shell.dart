@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../features/accounts/screens/account_list_screen.dart';
 import '../../features/budgets/screens/budget_screen.dart';
 import '../../features/dashboard/screens/dashboard_screen.dart';
+import '../../features/goals/screens/goal_list_screen.dart';
 import '../../features/transactions/screens/transaction_list_screen.dart';
 import '../layout/adaptive_scaffold.dart';
 
@@ -46,7 +47,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
         year: now.year,
         month: now.month,
       ),
-      4 => const Center(child: Text('Goals')),
+      4 => GoalListScreen(familyId: widget.familyId),
       _ => const SizedBox.shrink(),
     };
   }
