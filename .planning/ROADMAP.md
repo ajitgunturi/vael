@@ -17,7 +17,7 @@ This roadmap extends Vael's existing 5-phase foundation (multi-account managemen
 - Decimal phases (e.g., 7.1): Urgent insertions if needed
 
 - [x] **Phase 6: Life Profile & Income Model** - User establishes personal financial identity and income trajectory
-- [ ] **Phase 7: FI Calculator & Net Worth Milestones** - User can see their FI number and decade-by-decade wealth trajectory
+- [x] **Phase 7: FI Calculator & Net Worth Milestones** - User can see their FI number and decade-by-decade wealth trajectory (completed 2026-03-22)
 - [ ] **Phase 8: Asset Allocation & Purchase Planning** - User can see allocation targets and model major purchase impact
 - [ ] **Phase 9: Emergency Fund & Cash Tiers** - User has safety-net tracking with liquidity classification
 - [ ] **Phase 10: Sinking Funds & Savings Rate** - User can track short-term savings goals and monitor savings health
@@ -178,7 +178,7 @@ Note: Phases 9-10-11 (cash management track) depend on Phase 6 but not on Phases
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 6. Life Profile & Income Model | 3/3 | Complete | 2026-03-23 |
-| 7. FI Calculator & Net Worth Milestones | 2/3 | In Progress|  |
+| 7. FI Calculator & Net Worth Milestones | 3/3 | Complete   | 2026-03-22 |
 | 8. Asset Allocation & Purchase Planning | 0/? | Not started | - |
 | 9. Emergency Fund & Cash Tiers | 0/? | Not started | - |
 | 10. Sinking Funds & Savings Rate | 0/? | Not started | - |
