@@ -51,14 +51,21 @@
 - 19 a11y tests (15 contrast + 2 scaling + 2 semantics)
 - Files: lib/features/dashboard/screens/dashboard_screen.dart, lib/features/goals/widgets/goal_card.dart, test/shared/accessibility_test.dart
 
+### Wave 7: E2E Integration Tests (COMPLETE) — latest commit
+- 11 E2E tests covering Phase 5 features
+- HomeShell: tab navigation, settings gear → SettingsScreen
+- Settings: Family Backup nav, Passphrase nav, Sign Out clears session
+- Goals: empty state, FAB presence
+- Session lifecycle: no session → onboarding, set session → HomeShell, sign out → onboarding
+- Files: test/integration/phase5_e2e_test.dart
+
 ### Remaining Waves
-- **Wave 7**: E2E integration tests — home_shell, goals, onboarding, settings flows (~14 tests)
 - **Wave 8**: CI/CD + distribution — GitHub Actions, Fastlane, App Store metadata
 
 ## Plan File
 Detailed plan with file-level breakdown: .claude/plans/inherited-greeting-eich.md
 
-## Test Count: 749 unit/widget (all green) + 29 simulator tests + 23 journey tests + 38 retroactive E2E tests
+## Test Count: 760 unit/widget (all green) + 29 simulator tests + 23 journey tests + 38 retroactive E2E tests
 
 ## Key Patterns Established
 - Widget tests override stream providers with Stream.value() to avoid drift timer issues
