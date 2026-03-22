@@ -12,7 +12,7 @@ Requirements for the financial planning extension (Phases 6-8). Each maps to roa
 - [x] **LIFE-01**: User can create a life profile with date of birth, planned retirement age, and risk profile (conservative/moderate/aggressive)
 - [x] **LIFE-02**: User can set annual income growth rate, expected inflation rate, and safe withdrawal rate (default 3% for India)
 - [x] **LIFE-03**: Life profile is per-user within a family, respecting existing visibility boundaries
-- [ ] **LIFE-04**: User can edit their life profile at any time and see downstream calculations update
+- [x] **LIFE-04**: User can edit their life profile at any time and see downstream calculations update
 
 ### Net Worth Milestones
 

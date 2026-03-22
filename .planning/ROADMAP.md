@@ -16,7 +16,7 @@ This roadmap extends Vael's existing 5-phase foundation (multi-account managemen
 - Phases 6-13: Financial Planning Extension (current scope)
 - Decimal phases (e.g., 7.1): Urgent insertions if needed
 
-- [ ] **Phase 6: Life Profile & Income Model** - User establishes personal financial identity and income trajectory
+- [x] **Phase 6: Life Profile & Income Model** - User establishes personal financial identity and income trajectory
 - [ ] **Phase 7: FI Calculator & Net Worth Milestones** - User can see their FI number and decade-by-decade wealth trajectory
 - [ ] **Phase 8: Asset Allocation & Purchase Planning** - User can see allocation targets and model major purchase impact
 - [ ] **Phase 9: Emergency Fund & Cash Tiers** - User has safety-net tracking with liquidity classification
@@ -40,9 +40,9 @@ This roadmap extends Vael's existing 5-phase foundation (multi-account managemen
 **Plans**: 3 plans
 
 Plans:
-- [ ] 06-01-PLAN.md -- Core data foundation: life_profiles table, DAO, schema migration v8->v9, IncomeGrowthEngine
-- [ ] 06-02-PLAN.md -- Projection integration: career-aware income scenarios, golden-file precision tests, side income tagging
-- [ ] 06-03-PLAN.md -- UI layer: 3-step wizard, risk profile cards, rate sliders, Settings integration, providers
+- [x] 06-01-PLAN.md -- Core data foundation: life_profiles table, DAO, schema migration v8->v9, IncomeGrowthEngine
+- [x] 06-02-PLAN.md -- Projection integration: career-aware income scenarios, golden-file precision tests, side income tagging
+- [x] 06-03-PLAN.md -- UI layer: 3-step wizard, risk profile cards, rate sliders, Settings integration, providers
 
 **GAP Resolution**: INCOME-03 resolves C7 (projection engine consumes income growth model instead of flat assumption). M5 (goal-investment linking) partially addressed here via schema prep.
 
@@ -177,7 +177,7 @@ Note: Phases 9-10-11 (cash management track) depend on Phase 6 but not on Phases
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 6. Life Profile & Income Model | 2/3 | In Progress|  |
+| 6. Life Profile & Income Model | 3/3 | Complete | 2026-03-23 |
 | 7. FI Calculator & Net Worth Milestones | 0/? | Not started | - |
 | 8. Asset Allocation & Purchase Planning | 0/? | Not started | - |
 | 9. Emergency Fund & Cash Tiers | 0/? | Not started | - |
