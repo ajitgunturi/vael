@@ -5,6 +5,7 @@ import '../../features/accounts/screens/account_list_screen.dart';
 import '../../features/budgets/screens/budget_screen.dart';
 import '../../features/dashboard/screens/dashboard_screen.dart';
 import '../../features/goals/screens/goal_list_screen.dart';
+import '../../features/settings/screens/settings_screen.dart';
 import '../../features/transactions/screens/transaction_list_screen.dart';
 import '../layout/adaptive_scaffold.dart';
 
@@ -59,7 +60,14 @@ class _HomeShellState extends ConsumerState<HomeShell> {
       onDestinationSelected: _onNavigateToTab,
       body: _bodyForIndex(_selectedIndex),
       onSettingsTap: () {
-        // Settings navigation wired in Wave 4.
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => SettingsScreen(
+              familyId: widget.familyId,
+              userId: widget.userId,
+            ),
+          ),
+        );
       },
     );
   }

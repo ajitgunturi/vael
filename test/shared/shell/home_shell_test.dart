@@ -124,5 +124,16 @@ void main() {
 
       expect(find.byIcon(Icons.settings), findsOneWidget);
     });
+
+    testWidgets('tapping Settings navigates to SettingsScreen', (tester) async {
+      await tester.pumpWidget(_buildApp());
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byIcon(Icons.settings));
+      await tester.pumpAndSettle();
+
+      // SettingsScreen shows its app bar title
+      expect(find.text('Settings'), findsOneWidget);
+    });
   });
 }

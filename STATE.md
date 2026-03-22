@@ -1,54 +1,54 @@
 # Vael — State
 
-## Current Phase: 4 — Advanced Features (COMPLETE)
-## Branch: feat/phase4
+## Current Phase: 5 — Polish + Distribution (IN PROGRESS)
+## Branch: feat/phase5
 
-## Phase 4 Delivered
+## Phase 5 Progress
 
-### Projection Engine
-- 60-month forward-stepping financial simulation
-- Three scenarios (optimistic/base/pessimistic) with ±2% return spread
-- Compound investment returns, annual income/expense growth, EMI deductions
-- Interactive projection screen with parameter sliders and fl_chart visualization
+### Wave 1: App Shell + HomeShell (COMPLETE) — commit 97c5491
+- HomeShell ConsumerStatefulWidget wires AdaptiveScaffold with all 5 tabs
+- Session providers (sessionFamilyIdProvider, sessionUserIdProvider) via Notifier pattern
+- VaelApp conditionally renders HomeShell (session set) or OnboardingFlow (no session)
+- Dev bootstrap seeds family+user in kDebugMode for simulator testing
+- Files: lib/shared/shell/home_shell.dart, lib/core/providers/session_providers.dart, lib/app.dart, lib/main.dart
 
-### Investment Tracking (Bucket-Based)
-- 8 India-native bucket types: MFs, Stocks, PPF, EPF, NPS, FD, Bonds, Policy
-- Default return rates per type, user-overridable
-- Portfolio summary: total invested, current value, gain %, overall returns
-- Multi-bucket projection (compound growth per bucket)
-- Goal course correction: projected shortfall + suggested SIP adjustment
-- Investment holdings table + DAO (schema v6)
-- Portfolio screen with summary card + bucket cards + form
+### Wave 2: Goals Feature (COMPLETE) — commit 52065f1
+- GoalListScreen with progress bars, status chips, INR formatting, empty state
+- GoalFormScreen with name/amount/date validation, DAO insertion
+- GoalCard widget extracted from DashboardScreen._GoalTile for reuse
+- Goal providers: goalDaoProvider, goalListProvider (StreamProvider.family)
+- Wired to tab 4 in HomeShell
+- Files: lib/features/goals/{providers,screens,widgets}/
 
-### Recurring Automation
-- Frequency as float months: 0.5 (biweekly), 1, 3, 6, 12
-- Annual escalation (e.g. 10% salary hike)
-- Pause/resume with timestamps
-- Pending transaction generation from last-executed watermark
-- Recurring rules table + DAO (schema v6)
-- Rules screen with status indicators + form
+### Wave 3: Onboarding Flow (COMPLETE) — latest commit
+- Welcome screen with branding + "Get Started"
+- Create Family step with name validation, UUID generation
+- Seeds family+user in DB, activates session providers → transitions to HomeShell
+- OnboardingNotifier tracks step progression
+- Files: lib/features/onboarding/{providers,screens}/
 
-### Statement Import
-- Auto-detecting parser: HDFC, SBI, ICICI, generic CSV
-- Indian date formats (DD/MM/YYYY, DD-MM-YYYY)
-- Amount parsing with Indian comma grouping
-- Category inference from 15+ keyword patterns (Swiggy, Zomato, Amazon, etc.)
-- Malformed row handling with skip count
-- Preview → review → commit flow (paste CSV → checkbox select → import)
+### Wave 4: Settings Hub (COMPLETE) — latest commit
+- SettingsScreen hub with ListTiles: Family Backup, Sync Status, Passphrase, Sign Out
+- Navigation to placeholder backup/sync screens + real PassphraseSetupScreen
+- Sign-out clears session providers → VaelApp reactively returns to OnboardingFlow
+- HomeShell.onSettingsTap wired to push SettingsScreen
+- App info section with branding
+- 10 widget tests (SettingsScreen) + 1 new HomeShell navigation test
+- Files: lib/features/settings/screens/settings_screen.dart, lib/shared/shell/home_shell.dart
 
-### Balance Reconciliation
-- Validates account balances vs transaction sums
-- Reports discrepancies with recorded/computed/difference
-- Designed to run on app foreground
+### Remaining Waves
+- **Wave 5**: File-backed database — replace NativeDatabase.memory() with path_provider file-backed storage, opaque filename
+- **Wave 6**: Accessibility — semantics labels, dynamic type, WCAG AA contrast
+- **Wave 7**: E2E integration tests — home_shell, goals, onboarding, settings flows (~14 tests)
+- **Wave 8**: CI/CD + distribution — GitHub Actions, Fastlane, App Store metadata
 
-### Planning Insights
-- Budget drift detection: 3-month rolling window, >5% overspend + upward trend
-- At-risk goal flags: critical (overdue), high (<50% progress), moderate (50-80%)
+## Plan File
+Detailed plan with file-level breakdown: .claude/plans/inherited-greeting-eich.md
 
-### Schema Migration
-- v5 → v6: added investment_holdings, recurring_rules tables
-- DAOs with full CRUD, pause/resume, watch streams
+## Test Count: 727 unit/widget (all green) + 29 simulator tests + 23 journey tests + 38 retroactive E2E tests
 
-## Test Count: 688 unit/widget (all green) + 29 simulator tests + 23 journey tests + 38 retroactive E2E tests
-
-## Next: Phase 5 — Polish + Distribution
+## Key Patterns Established
+- Widget tests override stream providers with Stream.value() to avoid drift timer issues
+- Riverpod 3.x: use Notifier + NotifierProvider (no StateProvider)
+- Pre-commit hook runs: dart format → flutter analyze --no-fatal-infos → flutter test
+- Unused imports cause hook failure (analyze returns exit 1 on warnings)
