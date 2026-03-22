@@ -33,7 +33,7 @@ Vael uses Google Sign-In for Drive sync. OAuth client IDs are **not** checked in
 
 This generates the platform config files (`GoogleService-Info.plist`, `key.properties`) from your `.env`. These generated files are gitignored.
 
-If you need to create credentials from scratch (new Google Cloud project), see [docs/GOOGLE_CLOUD_SETUP.md](docs/GOOGLE_CLOUD_SETUP.md).
+If you need to create credentials from scratch (new Google Cloud project), see [docs/process/GOOGLE_CLOUD_SETUP.md](docs/process/GOOGLE_CLOUD_SETUP.md).
 
 Your Google account must also be added as a **test user** in the Google Cloud Console OAuth consent screen — ask a maintainer to add your email.
 

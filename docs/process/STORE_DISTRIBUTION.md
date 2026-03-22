@@ -219,7 +219,7 @@ The accounts and Google Cloud project are independent — you can do them in any
 
 ```
 1. Google Cloud Project setup          ← enables development & testing
-   (docs/GOOGLE_CLOUD_SETUP.md)          immediately, no store account needed
+   (GOOGLE_CLOUD_SETUP.md)                immediately, no store account needed
 
 2. Apple Developer Program enrollment  ← 24-48h verification wait
    (submit early, develop while waiting)

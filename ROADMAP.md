@@ -4,7 +4,7 @@
 
 Vael is a greenfield Flutter family finance app being ported from a Java/PostgreSQL monolith to a local-first, zero-server native app. This roadmap implements the full app using strict TDD (Red-Green-Refactor) across 5 phases, ~14 weeks.
 
-**Governing docs**: `docs/INTENT.md` (constitutional), `docs/ARCHITECTURE.md`, `docs/DATA_MODEL.md`, `docs/ENCRYPTION.md`, `docs/SYNC.md`, `docs/UI_DESIGN.md`, `docs/MIGRATION.md`
+**Governing docs**: `docs/INTENT.md` (constitutional), `docs/ARCHITECTURE.md`, `docs/DATA_MODEL.md`, `docs/ENCRYPTION.md`, `docs/SYNC.md`, `docs/UI_DESIGN.md`
 **Extension plans**: `docs/EXTENSION_PLAN_FINANCIAL_PLANNING.md` (Phases 6-8)
 
 ---
