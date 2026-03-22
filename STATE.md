@@ -36,8 +36,15 @@
 - 10 widget tests (SettingsScreen) + 1 new HomeShell navigation test
 - Files: lib/features/settings/screens/settings_screen.dart, lib/shared/shell/home_shell.dart
 
+### Wave 5: File-backed Database (COMPLETE) — latest commit
+- databaseFileName() returns SHA-256 opaque hex filename (no financial semantics)
+- databaseFile() returns File in getApplicationSupportDirectory()
+- databaseProvider uses LazyDatabase for async file resolution
+- Tests continue using NativeDatabase.memory() via override
+- 3 unit tests for filename opacity, determinism, no-leakage
+- Files: lib/core/database/database_path.dart, lib/core/providers/database_providers.dart
+
 ### Remaining Waves
-- **Wave 5**: File-backed database — replace NativeDatabase.memory() with path_provider file-backed storage, opaque filename
 - **Wave 6**: Accessibility — semantics labels, dynamic type, WCAG AA contrast
 - **Wave 7**: E2E integration tests — home_shell, goals, onboarding, settings flows (~14 tests)
 - **Wave 8**: CI/CD + distribution — GitHub Actions, Fastlane, App Store metadata
@@ -45,7 +52,7 @@
 ## Plan File
 Detailed plan with file-level breakdown: .claude/plans/inherited-greeting-eich.md
 
-## Test Count: 727 unit/widget (all green) + 29 simulator tests + 23 journey tests + 38 retroactive E2E tests
+## Test Count: 730 unit/widget (all green) + 29 simulator tests + 23 journey tests + 38 retroactive E2E tests
 
 ## Key Patterns Established
 - Widget tests override stream providers with Stream.value() to avoid drift timer issues
