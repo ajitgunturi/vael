@@ -64,7 +64,7 @@ Requirements for the financial planning extension (Phases 6-8). Each maps to roa
 - [x] **TIER-01**: User can assign each account a liquidity tier (IMMEDIATE/0 days, SHORT_TERM/30 days, MEDIUM_TERM/90 days)
 - [x] **TIER-02**: User can see aggregate balance by tier with weighted-average interest rate
 - [x] **TIER-03**: App suggests optimal tier distribution based on emergency fund target (1mo immediate, 2mo short-term, rest medium-term)
-- [ ] **TIER-04**: Account detail screen shows cash tier badge when tier is assigned
+- [x] **TIER-04**: Account detail screen shows cash tier badge when tier is assigned
 
 ### Sinking Funds
 
@@ -133,8 +133,8 @@ Requirements for the financial planning extension (Phases 6-8). Each maps to roa
 - [ ] **NAV-02**: Dashboard quick actions extended with "Cash Flow" and "Life Plan" buttons
 - [ ] **NAV-03**: Settings screen extended with "Financial Planning" section (Life Profile, Allocation, EF Setup, Cash Tiers, Savings Rules, Opportunity Fund)
 - [ ] **NAV-04**: Goals screen split into sections: Milestones, Sinking Funds, Investment Goals, Purchase Goals
-- [ ] **NAV-05**: Account detail shows cash tier and emergency fund badges when assigned
-- [ ] **NAV-06**: Budget screen shows monthly essentials row linking to emergency fund
+- [x] **NAV-05**: Account detail shows cash tier and emergency fund badges when assigned
+- [x] **NAV-06**: Budget screen shows monthly essentials row linking to emergency fund
 - [x] **NAV-07**: Investment portfolio shows "Allocation vs Target" banner linking to allocation screen
 - [ ] **NAV-08**: Every new screen has empty-state with navigable CTA when prerequisites are missing
 - [ ] **NAV-09**: Navigation integration tests at 3 breakpoints (400dp, 750dp, 1200dp) — minimum 32 tests
@@ -205,9 +205,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TIER-01 | Phase 9 | Complete |
 | TIER-02 | Phase 9 | Complete |
 | TIER-03 | Phase 9 | Complete |
-| TIER-04 | Phase 9 | Pending |
-| NAV-05 | Phase 9 | Pending |
-| NAV-06 | Phase 9 | Pending |
+| TIER-04 | Phase 9 | Complete |
+| NAV-05 | Phase 9 | Complete |
+| NAV-06 | Phase 9 | Complete |
 | SINK-01 | Phase 10 | Pending |
 | SINK-02 | Phase 10 | Pending |
 | SINK-03 | Phase 10 | Pending |
