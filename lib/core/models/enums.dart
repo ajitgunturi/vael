@@ -57,3 +57,19 @@ enum UserRole { admin, member }
 
 /// Tracks progress state of a financial goal.
 enum GoalStatus { active, onTrack, atRisk, completed }
+
+/// Broad asset class for allocation targeting.
+enum AssetClass { equity, debt, gold, cash }
+
+/// Category of a financial goal.
+enum GoalCategory { investmentGoal, purchase, retirement }
+
+/// Type of financial decision being modeled.
+enum DecisionType {
+  jobChange,
+  salaryNegotiation,
+  majorPurchase,
+  investmentWithdrawal,
+  rentalChange,
+  custom,
+}
