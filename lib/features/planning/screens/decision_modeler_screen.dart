@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:drift/drift.dart' hide Column;
@@ -12,6 +13,8 @@ import '../../../core/financial/decision_modeler.dart';
 import '../../../core/models/enums.dart';
 import '../../../shared/theme/color_tokens.dart';
 import '../../../shared/theme/spacing.dart';
+import '../../../core/providers/transaction_providers.dart';
+import '../../../features/recurring/providers/recurring_providers.dart';
 import '../providers/decision_provider.dart';
 import '../widgets/decision_impact_card.dart';
 import '../widgets/decision_type_card.dart';
@@ -268,8 +271,190 @@ class _DecisionModelerScreenState extends ConsumerState<DecisionModelerScreen> {
       ),
     );
 
-    // Mark as implemented
-    await decisionDao.markImplemented(decisionId);
+    // Create tagged transactions and recurring rules based on decision type
+    final recurringRuleDao = ref.read(recurringRuleDaoProvider);
+    final transactionDao = ref.read(transactionDaoProvider);
+
+    switch (params) {
+      case JobChangeParams(:final newMonthlySalaryPaise):
+        // Create recurring rule for new salary
+        await recurringRuleDao.insertRule(
+          RecurringRulesCompanion(
+            id: Value(_uuid.v4()),
+            name: const Value('New Salary'),
+            kind: const Value('income'),
+            amount: Value(newMonthlySalaryPaise),
+            accountId: const Value('default'),
+            frequencyMonths: const Value(1),
+            startDate: Value(now),
+            familyId: Value(widget.familyId),
+            userId: Value(widget.userId),
+            createdAt: Value(now),
+            decisionId: Value(decisionId),
+          ),
+        );
+      case SalaryNegotiationParams(:final proposedMonthlySalaryPaise):
+        await recurringRuleDao.insertRule(
+          RecurringRulesCompanion(
+            id: Value(_uuid.v4()),
+            name: const Value('Negotiated Salary'),
+            kind: const Value('income'),
+            amount: Value(proposedMonthlySalaryPaise),
+            accountId: const Value('default'),
+            frequencyMonths: const Value(1),
+            startDate: Value(now),
+            familyId: Value(widget.familyId),
+            userId: Value(widget.userId),
+            createdAt: Value(now),
+            decisionId: Value(decisionId),
+          ),
+        );
+      case MajorPurchaseParams(
+        :final purchaseAmountPaise,
+        :final downPaymentBp,
+        :final loanInterestRate,
+        :final loanTenureMonths,
+      ):
+        final downPaymentPaise = (purchaseAmountPaise * downPaymentBp) ~/ 10000;
+        // One-time down payment transaction
+        await transactionDao.insertTransaction(
+          TransactionsCompanion(
+            id: Value(_uuid.v4()),
+            description: const Value('Down payment'),
+            amount: Value(downPaymentPaise),
+            kind: const Value('expense'),
+            accountId: const Value('default'),
+            date: Value(now),
+            familyId: Value(widget.familyId),
+            metadata: Value(jsonEncode({'decisionId': decisionId})),
+          ),
+        );
+        // EMI recurring rule if loan exists
+        if (loanTenureMonths != null && loanTenureMonths > 0) {
+          final loanAmount = purchaseAmountPaise - downPaymentPaise;
+          final monthlyRate = (loanInterestRate ?? 0.09) / 12;
+          final emiPaise = monthlyRate > 0
+              ? (loanAmount *
+                        monthlyRate *
+                        math.pow(1 + monthlyRate, loanTenureMonths)) ~/
+                    (math.pow(1 + monthlyRate, loanTenureMonths) - 1)
+              : loanAmount ~/ loanTenureMonths;
+          await recurringRuleDao.insertRule(
+            RecurringRulesCompanion(
+              id: Value(_uuid.v4()),
+              name: const Value('Loan EMI'),
+              kind: const Value('expense'),
+              amount: Value(emiPaise),
+              accountId: const Value('default'),
+              frequencyMonths: const Value(1),
+              startDate: Value(now),
+              familyId: Value(widget.familyId),
+              userId: Value(widget.userId),
+              createdAt: Value(now),
+              decisionId: Value(decisionId),
+            ),
+          );
+        }
+      case InvestmentWithdrawalParams(:final amountPaise):
+        // One-time withdrawal transaction
+        await transactionDao.insertTransaction(
+          TransactionsCompanion(
+            id: Value(_uuid.v4()),
+            description: const Value('Investment withdrawal'),
+            amount: Value(amountPaise),
+            kind: const Value('expense'),
+            accountId: const Value('default'),
+            date: Value(now),
+            familyId: Value(widget.familyId),
+            metadata: Value(jsonEncode({'decisionId': decisionId})),
+          ),
+        );
+      case RentalChangeParams(:final newRentPaise, :final securityDepositPaise):
+        // Recurring rule for new rent
+        await recurringRuleDao.insertRule(
+          RecurringRulesCompanion(
+            id: Value(_uuid.v4()),
+            name: const Value('New Rent'),
+            kind: const Value('expense'),
+            amount: Value(newRentPaise),
+            accountId: const Value('default'),
+            frequencyMonths: const Value(1),
+            startDate: Value(now),
+            familyId: Value(widget.familyId),
+            userId: Value(widget.userId),
+            createdAt: Value(now),
+            decisionId: Value(decisionId),
+          ),
+        );
+        // One-time security deposit transaction
+        if (securityDepositPaise != null && securityDepositPaise > 0) {
+          await transactionDao.insertTransaction(
+            TransactionsCompanion(
+              id: Value(_uuid.v4()),
+              description: const Value('Security deposit'),
+              amount: Value(securityDepositPaise),
+              kind: const Value('expense'),
+              accountId: const Value('default'),
+              date: Value(now),
+              familyId: Value(widget.familyId),
+              metadata: Value(jsonEncode({'decisionId': decisionId})),
+            ),
+          );
+        }
+      case CustomParams(
+        :final monthlyIncomeChangePaise,
+        :final monthlyExpenseChangePaise,
+        :final oneTimeCostPaise,
+      ):
+        if (monthlyIncomeChangePaise != 0) {
+          await recurringRuleDao.insertRule(
+            RecurringRulesCompanion(
+              id: Value(_uuid.v4()),
+              name: const Value('Custom income change'),
+              kind: Value(monthlyIncomeChangePaise > 0 ? 'income' : 'expense'),
+              amount: Value(monthlyIncomeChangePaise.abs()),
+              accountId: const Value('default'),
+              frequencyMonths: const Value(1),
+              startDate: Value(now),
+              familyId: Value(widget.familyId),
+              userId: Value(widget.userId),
+              createdAt: Value(now),
+              decisionId: Value(decisionId),
+            ),
+          );
+        }
+        if (monthlyExpenseChangePaise != 0) {
+          await recurringRuleDao.insertRule(
+            RecurringRulesCompanion(
+              id: Value(_uuid.v4()),
+              name: const Value('Custom expense change'),
+              kind: const Value('expense'),
+              amount: Value(monthlyExpenseChangePaise.abs()),
+              accountId: const Value('default'),
+              frequencyMonths: const Value(1),
+              startDate: Value(now),
+              familyId: Value(widget.familyId),
+              userId: Value(widget.userId),
+              createdAt: Value(now),
+              decisionId: Value(decisionId),
+            ),
+          );
+        }
+        if (oneTimeCostPaise > 0) {
+          await transactionDao.insertTransaction(
+            TransactionsCompanion(
+              id: Value(_uuid.v4()),
+              description: const Value('Custom one-time cost'),
+              amount: Value(oneTimeCostPaise),
+              kind: const Value('expense'),
+              accountId: const Value('default'),
+              date: Value(now),
+              familyId: Value(widget.familyId),
+              metadata: Value(jsonEncode({'decisionId': decisionId})),
+            ),
+          );
+        }
+    }
 
     if (mounted) {
       ScaffoldMessenger.of(
