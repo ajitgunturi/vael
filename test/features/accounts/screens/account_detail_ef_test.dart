@@ -73,12 +73,8 @@ void main() {
     testWidgets('EfBadge shown only when isEmergencyFund is true', (
       tester,
     ) async {
-      // Simulate the conditional: if (isEmergencyFund) EfBadge()
-      const isEmergencyFund = true;
-      await _pump(
-        tester,
-        Column(children: [if (isEmergencyFund) const EfBadge()]),
-      );
+      // EfBadge is present when account is tagged as emergency fund
+      await _pump(tester, const Column(children: [EfBadge()]));
 
       expect(find.byType(EfBadge), findsOneWidget);
     });
@@ -86,11 +82,8 @@ void main() {
     testWidgets('EfBadge NOT shown when isEmergencyFund is false', (
       tester,
     ) async {
-      const isEmergencyFund = false;
-      await _pump(
-        tester,
-        Column(children: [if (isEmergencyFund) const EfBadge()]),
-      );
+      // Empty column — no EfBadge added when flag is false
+      await _pump(tester, const Column(children: []));
 
       expect(find.byType(EfBadge), findsNothing);
     });
@@ -98,10 +91,10 @@ void main() {
     testWidgets('LiquidityTierChip shown when tier is not null', (
       tester,
     ) async {
-      const String? tier = 'instant';
+      const tier = 'instant';
       await _pump(
         tester,
-        Column(children: [if (tier != null) LiquidityTierChip(tier: tier)]),
+        const Column(children: [LiquidityTierChip(tier: tier)]),
       );
 
       expect(find.byType(LiquidityTierChip), findsOneWidget);
