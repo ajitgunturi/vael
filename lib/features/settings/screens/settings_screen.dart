@@ -11,6 +11,7 @@ import '../../../shared/theme/theme_mode_provider.dart';
 import '../../planning/providers/life_profile_provider.dart';
 import '../../planning/screens/allocation_screen.dart';
 import '../../planning/screens/decision_modeler_screen.dart';
+import '../../planning/screens/emergency_fund_screen.dart';
 import '../../planning/screens/fi_calculator_screen.dart';
 import '../../planning/screens/life_profile_wizard_screen.dart';
 import '../../planning/screens/milestone_dashboard_screen.dart';
@@ -107,6 +108,12 @@ class SettingsScreen extends ConsumerWidget {
             subtitle: 'Model life decisions and their financial impact',
             onTap: () => _openDecisionModeler(context),
           ),
+          _SettingsTile(
+            icon: Icons.shield_outlined,
+            title: 'Emergency Fund',
+            subtitle: 'Safety net coverage and cash tiers',
+            onTap: () => _openEmergencyFund(context),
+          ),
           const Divider(),
           _ThemeModeTile(ref: ref),
           const Divider(),
@@ -170,6 +177,14 @@ class SettingsScreen extends ConsumerWidget {
       MaterialPageRoute(
         builder: (_) =>
             DecisionModelerScreen(familyId: familyId, userId: userId),
+      ),
+    );
+  }
+
+  void _openEmergencyFund(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => EmergencyFundScreen(familyId: familyId, userId: userId),
       ),
     );
   }

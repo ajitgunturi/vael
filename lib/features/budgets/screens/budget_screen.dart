@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/financial/budget_summary.dart';
+import '../../../core/providers/session_providers.dart';
 import '../../../shared/theme/color_tokens.dart';
 import '../../../shared/theme/spacing.dart';
 import '../../../shared/utils/formatters.dart';
+import '../../planning/providers/emergency_fund_provider.dart';
+import '../../planning/screens/emergency_fund_screen.dart';
 import '../providers/budget_providers.dart';
 import 'budget_form_screen.dart';
 
@@ -84,19 +87,47 @@ class BudgetScreen extends ConsumerWidget {
     WidgetRef ref,
     List<BudgetSummaryRow> rows,
   ) {
+    // Fetch EF coverage for the essential group subtitle.
+    final userId = ref.watch(sessionUserIdProvider);
+    final efAsync = userId != null
+        ? ref.watch(
+            emergencyFundStateProvider((userId: userId, familyId: familyId)),
+          )
+        : null;
+
     return ListView.builder(
       padding: const EdgeInsets.all(Spacing.md),
       itemCount: rows.length,
-      itemBuilder: (context, index) => _BudgetGroupCard(
-        row: rows[index],
-        onTap: () => _navigateToForm(
-          context,
-          ref,
-          editBudgetId: rows[index].budgetId,
-          initialGroup: rows[index].categoryGroup,
-          initialAmount: rows[index].limitAmount,
-        ),
-      ),
+      itemBuilder: (context, index) {
+        final row = rows[index];
+        final isEssential = row.categoryGroup == 'ESSENTIAL';
+        final coverageText = isEssential
+            ? efAsync?.whenOrNull(
+                data: (ef) =>
+                    '${ef.coverageMonths.toStringAsFixed(1)} months covered',
+              )
+            : null;
+
+        return _BudgetGroupCard(
+          row: row,
+          efCoverageSubtitle: coverageText,
+          onTap: () => _navigateToForm(
+            context,
+            ref,
+            editBudgetId: row.budgetId,
+            initialGroup: row.categoryGroup,
+            initialAmount: row.limitAmount,
+          ),
+          onEfTap: isEssential && userId != null
+              ? () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) =>
+                        EmergencyFundScreen(familyId: familyId, userId: userId),
+                  ),
+                )
+              : null,
+        );
+      },
     );
   }
 
@@ -129,10 +160,17 @@ class BudgetScreen extends ConsumerWidget {
 }
 
 class _BudgetGroupCard extends StatelessWidget {
-  const _BudgetGroupCard({required this.row, required this.onTap});
+  const _BudgetGroupCard({
+    required this.row,
+    required this.onTap,
+    this.efCoverageSubtitle,
+    this.onEfTap,
+  });
 
   final BudgetSummaryRow row;
   final VoidCallback onTap;
+  final String? efCoverageSubtitle;
+  final VoidCallback? onEfTap;
 
   @override
   Widget build(BuildContext context) {
@@ -174,6 +212,28 @@ class _BudgetGroupCard extends StatelessWidget {
                     ),
                 ],
               ),
+              if (efCoverageSubtitle != null)
+                GestureDetector(
+                  onTap: onEfTap,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 2),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.shield_outlined,
+                          size: 14,
+                          color: Colors.green.shade600,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          efCoverageSubtitle!,
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(color: Colors.green.shade700),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               const SizedBox(height: Spacing.sm),
               ClipRRect(
                 borderRadius: BorderRadius.circular(4),
