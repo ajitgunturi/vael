@@ -95,12 +95,12 @@ Plans:
   3. User can assign each account a liquidity tier (immediate/short-term/medium-term) and see aggregate balance by tier
   4. Account detail screen shows cash tier badge and emergency fund badge when assigned
   5. Budget screen shows monthly essentials row linking to emergency fund setup
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 09-01: TBD
-- [ ] 09-02: TBD
-- [ ] 09-03: TBD
+- [ ] 09-01-PLAN.md -- EmergencyFundEngine TDD + enums, schema v12 migration (accounts + life_profiles columns), AccountDao EF/tier methods
+- [ ] 09-02-PLAN.md -- Riverpod providers for EF state/tier summary, EF detail screen with progress ring, account linking, tier summary
+- [ ] 09-03-PLAN.md -- Navigation wiring: account detail EF/tier badges, budget essentials EF link, Settings Emergency Fund tile
 
 ### Phase 10: Sinking Funds & Savings Rate
 **Goal**: User can track short-term deterministic savings goals separately from investment goals, and monitor their savings health over time
@@ -126,7 +126,7 @@ Plans:
 **Depends on**: Phase 10 (sinking funds and EF must exist as allocation targets; savings rate feeds allocation context)
 **Requirements**: FLOW-01, FLOW-02, FLOW-03, FLOW-04, SAVE-01, SAVE-02, SAVE-03, SAVE-04, OPP-01, OPP-02, OPP-03
 **Success Criteria** (what must be TRUE):
-  1. User can see day-by-day income/expense map for any month based on recurring rules and known expenses
+  1. User can see day-by-day income/expense map for any month based on recurring rules and known upcoming expenses
   2. Running balance is computed daily with threshold alerts flagging dates where balance goes negative or below minimum
   3. User can create priority-ordered savings allocation rules targeting EF, sinking funds, investment goals, or opportunity fund
   4. Allocation engine processes rules in priority order, showing advisory output (where surplus should go) without auto-creating transactions
@@ -183,7 +183,7 @@ Note: Phases 9-10-11 (cash management track) depend on Phase 6 but not on Phases
 | 6. Life Profile & Income Model | 3/3 | Complete | 2026-03-23 |
 | 7. FI Calculator & Net Worth Milestones | 3/3 | Complete   | 2026-03-22 |
 | 8. Asset Allocation & Purchase Planning | 5/5 | Complete   | 2026-03-23 |
-| 9. Emergency Fund & Cash Tiers | 0/? | Not started | - |
+| 9. Emergency Fund & Cash Tiers | 0/3 | Not started | - |
 | 10. Sinking Funds & Savings Rate | 0/? | Not started | - |
 | 11. Cash Flow & Savings Allocation | 0/? | Not started | - |
 | 12. Planning Dashboard & Lifetime Timeline | 0/? | Not started | - |
