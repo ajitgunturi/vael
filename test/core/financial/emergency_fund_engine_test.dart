@@ -9,9 +9,9 @@ void main() {
         final months = List.generate(
           6,
           (_) => {
-            'essential': 3000000,
-            'homeExpenses': 1000000,
-            'livingExpense': 500000,
+            'ESSENTIAL': 3000000,
+            'HOME_EXPENSES': 1000000,
+            'LIVING_EXPENSE': 500000,
           },
         );
         expect(EmergencyFundEngine.monthlyEssentialAverage(months), 4500000);
@@ -24,19 +24,19 @@ void main() {
       test('3 months of varied data returns correct average', () {
         final months = [
           {
-            'essential': 3000000,
-            'homeExpenses': 1000000,
-            'livingExpense': 500000,
+            'ESSENTIAL': 3000000,
+            'HOME_EXPENSES': 1000000,
+            'LIVING_EXPENSE': 500000,
           },
           {
-            'essential': 4000000,
-            'homeExpenses': 1200000,
-            'livingExpense': 600000,
+            'ESSENTIAL': 4000000,
+            'HOME_EXPENSES': 1200000,
+            'LIVING_EXPENSE': 600000,
           },
           {
-            'essential': 2000000,
-            'homeExpenses': 800000,
-            'livingExpense': 400000,
+            'ESSENTIAL': 2000000,
+            'HOME_EXPENSES': 800000,
+            'LIVING_EXPENSE': 400000,
           },
         ];
         // Totals: 4500000, 5800000, 3200000 => avg = 13500000 / 3 = 4500000
@@ -46,37 +46,34 @@ void main() {
       test('ignores non-essential groups in input maps', () {
         final months = [
           {
-            'essential': 3000000,
-            'homeExpenses': 1000000,
-            'livingExpense': 500000,
-            'luxuryEssential': 9999,
+            'ESSENTIAL': 3000000,
+            'HOME_EXPENSES': 1000000,
+            'LIVING_EXPENSE': 500000,
+            'LUXURY_ESSENTIAL': 9999,
           },
         ];
         expect(EmergencyFundEngine.monthlyEssentialAverage(months), 4500000);
       });
 
-      test(
-        'handles maps with all CategoryGroup keys and filters correctly',
-        () {
-          // Map with ALL CategoryGroup enum .name values
-          final allGroups = <String, int>{
-            'assets': 100,
-            'liabilities': 200,
-            'homeExpenses': 200,
-            'livingExpense': 300,
-            'essential': 100,
-            'luxuryEssential': 999,
-            'luxuryNonEssential': 888,
-            'philanthropy': 777,
-            'selfImprovement': 666,
-            'investments': 555,
-            'nonEssential': 444,
-            'missing': 333,
-          };
-          // Only essential(100) + homeExpenses(200) + livingExpense(300) = 600
-          expect(EmergencyFundEngine.monthlyEssentialAverage([allGroups]), 600);
-        },
-      );
+      test('handles maps with all DB groupName keys and filters correctly', () {
+        // Map with all groupName values as stored in DB (uppercase slug format)
+        final allGroups = <String, int>{
+          'ASSETS': 100,
+          'LIABILITIES': 200,
+          'HOME_EXPENSES': 200,
+          'LIVING_EXPENSE': 300,
+          'ESSENTIAL': 100,
+          'LUXURY_ESSENTIAL': 999,
+          'LUXURY_NON_ESSENTIAL': 888,
+          'PHILANTHROPY': 777,
+          'SELF_IMPROVEMENT': 666,
+          'INVESTMENTS': 555,
+          'NON_ESSENTIAL': 444,
+          'MISSING': 333,
+        };
+        // Only ESSENTIAL(100) + HOME_EXPENSES(200) + LIVING_EXPENSE(300) = 600
+        expect(EmergencyFundEngine.monthlyEssentialAverage([allGroups]), 600);
+      });
     });
 
     group('suggestedTargetMonths', () {
@@ -181,26 +178,34 @@ void main() {
     });
 
     group('string key contract with BudgetSummary', () {
-      test(
-        'essentialGroups matches CategoryGroup enum names for essential types',
-        () {
-          // Verify the essentialGroups set contains exactly the right CategoryGroup names
-          expect(
-            EmergencyFundEngine.essentialGroups,
-            containsAll(['essential', 'homeExpenses', 'livingExpense']),
-          );
-          expect(EmergencyFundEngine.essentialGroups.length, 3);
-        },
-      );
+      test('essentialGroups matches DB groupName format for essential types', () {
+        // Verify the essentialGroups set contains exactly the right DB slug keys
+        expect(
+          EmergencyFundEngine.essentialGroups,
+          containsAll(['ESSENTIAL', 'HOME_EXPENSES', 'LIVING_EXPENSE']),
+        );
+        expect(EmergencyFundEngine.essentialGroups.length, 3);
+      });
 
       test(
-        'filtering a map with all CategoryGroup names returns only essential totals',
+        'filtering a map with all DB groupName keys returns only essential totals',
         () {
-          // Build a map using every CategoryGroup.values .name
+          // Build a map matching actual BudgetSummary.computeActualsByGroup output
+          // (DB stores uppercase slug format, not Dart enum .name)
           final allGroupMap = <String, int>{
-            for (final g in CategoryGroup.values) g.name: 1000,
+            'ASSETS': 1000,
+            'LIABILITIES': 1000,
+            'HOME_EXPENSES': 1000,
+            'LIVING_EXPENSE': 1000,
+            'ESSENTIAL': 1000,
+            'LUXURY_ESSENTIAL': 1000,
+            'LUXURY_NON_ESSENTIAL': 1000,
+            'PHILANTHROPY': 1000,
+            'SELF_IMPROVEMENT': 1000,
+            'INVESTMENTS': 1000,
+            'NON_ESSENTIAL': 1000,
+            'MISSING': 1000,
           };
-          // There are 12 CategoryGroup values, only 3 are essential
           expect(allGroupMap.length, CategoryGroup.values.length);
 
           final result = EmergencyFundEngine.monthlyEssentialAverage([

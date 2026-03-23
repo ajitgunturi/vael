@@ -62,7 +62,7 @@ Requirements for the financial planning extension (Phases 6-8). Each maps to roa
 ### Cash Tiers
 
 - [x] **TIER-01**: User can assign each account a liquidity tier (IMMEDIATE/0 days, SHORT_TERM/30 days, MEDIUM_TERM/90 days)
-- [x] **TIER-02**: User can see aggregate balance by tier with weighted-average interest rate
+- [x] **TIER-02**: User can see aggregate balance by tier (interest rate display deferred — no interestRateBp column)
 - [x] **TIER-03**: App suggests optimal tier distribution based on emergency fund target (1mo immediate, 2mo short-term, rest medium-term)
 - [x] **TIER-04**: Account detail screen shows cash tier badge when tier is assigned
 

@@ -6,9 +6,13 @@ class EmergencyFundEngine {
   EmergencyFundEngine._();
 
   /// The CategoryGroup string keys considered essential expenses.
-  /// Matches the .name values from CategoryGroup enum used by
-  /// BudgetSummary.computeActualsByGroup output.
-  static const essentialGroups = {'essential', 'homeExpenses', 'livingExpense'};
+  /// Matches the DB groupName values used by
+  /// BudgetSummary.computeActualsByGroup output (uppercase slug format).
+  static const essentialGroups = {
+    'ESSENTIAL',
+    'HOME_EXPENSES',
+    'LIVING_EXPENSE',
+  };
 
   /// Rolling average of essential expenses in paise.
   ///
