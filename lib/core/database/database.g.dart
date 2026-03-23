@@ -856,6 +856,32 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _liquidityTierMeta = const VerificationMeta(
+    'liquidityTier',
+  );
+  @override
+  late final GeneratedColumn<String> liquidityTier = GeneratedColumn<String>(
+    'liquidity_tier',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _isEmergencyFundMeta = const VerificationMeta(
+    'isEmergencyFund',
+  );
+  @override
+  late final GeneratedColumn<bool> isEmergencyFund = GeneratedColumn<bool>(
+    'is_emergency_fund',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_emergency_fund" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -869,6 +895,8 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
     familyId,
     userId,
     deletedAt,
+    liquidityTier,
+    isEmergencyFund,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -965,6 +993,24 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
         deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
       );
     }
+    if (data.containsKey('liquidity_tier')) {
+      context.handle(
+        _liquidityTierMeta,
+        liquidityTier.isAcceptableOrUnknown(
+          data['liquidity_tier']!,
+          _liquidityTierMeta,
+        ),
+      );
+    }
+    if (data.containsKey('is_emergency_fund')) {
+      context.handle(
+        _isEmergencyFundMeta,
+        isEmergencyFund.isAcceptableOrUnknown(
+          data['is_emergency_fund']!,
+          _isEmergencyFundMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -1018,6 +1064,14 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
         DriftSqlType.dateTime,
         data['${effectivePrefix}deleted_at'],
       ),
+      liquidityTier: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}liquidity_tier'],
+      ),
+      isEmergencyFund: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_emergency_fund'],
+      )!,
     );
   }
 
@@ -1039,6 +1093,8 @@ class Account extends DataClass implements Insertable<Account> {
   final String familyId;
   final String userId;
   final DateTime? deletedAt;
+  final String? liquidityTier;
+  final bool isEmergencyFund;
   const Account({
     required this.id,
     required this.name,
@@ -1051,6 +1107,8 @@ class Account extends DataClass implements Insertable<Account> {
     required this.familyId,
     required this.userId,
     this.deletedAt,
+    this.liquidityTier,
+    required this.isEmergencyFund,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1070,6 +1128,10 @@ class Account extends DataClass implements Insertable<Account> {
     if (!nullToAbsent || deletedAt != null) {
       map['deleted_at'] = Variable<DateTime>(deletedAt);
     }
+    if (!nullToAbsent || liquidityTier != null) {
+      map['liquidity_tier'] = Variable<String>(liquidityTier);
+    }
+    map['is_emergency_fund'] = Variable<bool>(isEmergencyFund);
     return map;
   }
 
@@ -1090,6 +1152,10 @@ class Account extends DataClass implements Insertable<Account> {
       deletedAt: deletedAt == null && nullToAbsent
           ? const Value.absent()
           : Value(deletedAt),
+      liquidityTier: liquidityTier == null && nullToAbsent
+          ? const Value.absent()
+          : Value(liquidityTier),
+      isEmergencyFund: Value(isEmergencyFund),
     );
   }
 
@@ -1110,6 +1176,8 @@ class Account extends DataClass implements Insertable<Account> {
       familyId: serializer.fromJson<String>(json['familyId']),
       userId: serializer.fromJson<String>(json['userId']),
       deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
+      liquidityTier: serializer.fromJson<String?>(json['liquidityTier']),
+      isEmergencyFund: serializer.fromJson<bool>(json['isEmergencyFund']),
     );
   }
   @override
@@ -1127,6 +1195,8 @@ class Account extends DataClass implements Insertable<Account> {
       'familyId': serializer.toJson<String>(familyId),
       'userId': serializer.toJson<String>(userId),
       'deletedAt': serializer.toJson<DateTime?>(deletedAt),
+      'liquidityTier': serializer.toJson<String?>(liquidityTier),
+      'isEmergencyFund': serializer.toJson<bool>(isEmergencyFund),
     };
   }
 
@@ -1142,6 +1212,8 @@ class Account extends DataClass implements Insertable<Account> {
     String? familyId,
     String? userId,
     Value<DateTime?> deletedAt = const Value.absent(),
+    Value<String?> liquidityTier = const Value.absent(),
+    bool? isEmergencyFund,
   }) => Account(
     id: id ?? this.id,
     name: name ?? this.name,
@@ -1154,6 +1226,10 @@ class Account extends DataClass implements Insertable<Account> {
     familyId: familyId ?? this.familyId,
     userId: userId ?? this.userId,
     deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
+    liquidityTier: liquidityTier.present
+        ? liquidityTier.value
+        : this.liquidityTier,
+    isEmergencyFund: isEmergencyFund ?? this.isEmergencyFund,
   );
   Account copyWithCompanion(AccountsCompanion data) {
     return Account(
@@ -1174,6 +1250,12 @@ class Account extends DataClass implements Insertable<Account> {
       familyId: data.familyId.present ? data.familyId.value : this.familyId,
       userId: data.userId.present ? data.userId.value : this.userId,
       deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
+      liquidityTier: data.liquidityTier.present
+          ? data.liquidityTier.value
+          : this.liquidityTier,
+      isEmergencyFund: data.isEmergencyFund.present
+          ? data.isEmergencyFund.value
+          : this.isEmergencyFund,
     );
   }
 
@@ -1190,7 +1272,9 @@ class Account extends DataClass implements Insertable<Account> {
           ..write('sharedWithFamily: $sharedWithFamily, ')
           ..write('familyId: $familyId, ')
           ..write('userId: $userId, ')
-          ..write('deletedAt: $deletedAt')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('liquidityTier: $liquidityTier, ')
+          ..write('isEmergencyFund: $isEmergencyFund')
           ..write(')'))
         .toString();
   }
@@ -1208,6 +1292,8 @@ class Account extends DataClass implements Insertable<Account> {
     familyId,
     userId,
     deletedAt,
+    liquidityTier,
+    isEmergencyFund,
   );
   @override
   bool operator ==(Object other) =>
@@ -1223,7 +1309,9 @@ class Account extends DataClass implements Insertable<Account> {
           other.sharedWithFamily == this.sharedWithFamily &&
           other.familyId == this.familyId &&
           other.userId == this.userId &&
-          other.deletedAt == this.deletedAt);
+          other.deletedAt == this.deletedAt &&
+          other.liquidityTier == this.liquidityTier &&
+          other.isEmergencyFund == this.isEmergencyFund);
 }
 
 class AccountsCompanion extends UpdateCompanion<Account> {
@@ -1238,6 +1326,8 @@ class AccountsCompanion extends UpdateCompanion<Account> {
   final Value<String> familyId;
   final Value<String> userId;
   final Value<DateTime?> deletedAt;
+  final Value<String?> liquidityTier;
+  final Value<bool> isEmergencyFund;
   final Value<int> rowid;
   const AccountsCompanion({
     this.id = const Value.absent(),
@@ -1251,6 +1341,8 @@ class AccountsCompanion extends UpdateCompanion<Account> {
     this.familyId = const Value.absent(),
     this.userId = const Value.absent(),
     this.deletedAt = const Value.absent(),
+    this.liquidityTier = const Value.absent(),
+    this.isEmergencyFund = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   AccountsCompanion.insert({
@@ -1265,6 +1357,8 @@ class AccountsCompanion extends UpdateCompanion<Account> {
     required String familyId,
     required String userId,
     this.deletedAt = const Value.absent(),
+    this.liquidityTier = const Value.absent(),
+    this.isEmergencyFund = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        name = Value(name),
@@ -1285,6 +1379,8 @@ class AccountsCompanion extends UpdateCompanion<Account> {
     Expression<String>? familyId,
     Expression<String>? userId,
     Expression<DateTime>? deletedAt,
+    Expression<String>? liquidityTier,
+    Expression<bool>? isEmergencyFund,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -1299,6 +1395,8 @@ class AccountsCompanion extends UpdateCompanion<Account> {
       if (familyId != null) 'family_id': familyId,
       if (userId != null) 'user_id': userId,
       if (deletedAt != null) 'deleted_at': deletedAt,
+      if (liquidityTier != null) 'liquidity_tier': liquidityTier,
+      if (isEmergencyFund != null) 'is_emergency_fund': isEmergencyFund,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -1315,6 +1413,8 @@ class AccountsCompanion extends UpdateCompanion<Account> {
     Value<String>? familyId,
     Value<String>? userId,
     Value<DateTime?>? deletedAt,
+    Value<String?>? liquidityTier,
+    Value<bool>? isEmergencyFund,
     Value<int>? rowid,
   }) {
     return AccountsCompanion(
@@ -1329,6 +1429,8 @@ class AccountsCompanion extends UpdateCompanion<Account> {
       familyId: familyId ?? this.familyId,
       userId: userId ?? this.userId,
       deletedAt: deletedAt ?? this.deletedAt,
+      liquidityTier: liquidityTier ?? this.liquidityTier,
+      isEmergencyFund: isEmergencyFund ?? this.isEmergencyFund,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -1369,6 +1471,12 @@ class AccountsCompanion extends UpdateCompanion<Account> {
     if (deletedAt.present) {
       map['deleted_at'] = Variable<DateTime>(deletedAt.value);
     }
+    if (liquidityTier.present) {
+      map['liquidity_tier'] = Variable<String>(liquidityTier.value);
+    }
+    if (isEmergencyFund.present) {
+      map['is_emergency_fund'] = Variable<bool>(isEmergencyFund.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -1389,6 +1497,8 @@ class AccountsCompanion extends UpdateCompanion<Account> {
           ..write('familyId: $familyId, ')
           ..write('userId: $userId, ')
           ..write('deletedAt: $deletedAt, ')
+          ..write('liquidityTier: $liquidityTier, ')
+          ..write('isEmergencyFund: $isEmergencyFund, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -6613,6 +6723,27 @@ class $LifeProfilesTable extends LifeProfiles
     requiredDuringInsert: false,
     defaultValue: const Constant(4),
   );
+  static const VerificationMeta _incomeStabilityMeta = const VerificationMeta(
+    'incomeStability',
+  );
+  @override
+  late final GeneratedColumn<String> incomeStability = GeneratedColumn<String>(
+    'income_stability',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _efTargetMonthsOverrideMeta =
+      const VerificationMeta('efTargetMonthsOverride');
+  @override
+  late final GeneratedColumn<int> efTargetMonthsOverride = GeneratedColumn<int>(
+    'ef_target_months_override',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -6658,6 +6789,8 @@ class $LifeProfilesTable extends LifeProfiles
     expectedInflationBp,
     safeWithdrawalRateBp,
     hikeMonth,
+    incomeStability,
+    efTargetMonthsOverride,
     createdAt,
     updatedAt,
     deletedAt,
@@ -6757,6 +6890,24 @@ class $LifeProfilesTable extends LifeProfiles
         hikeMonth.isAcceptableOrUnknown(data['hike_month']!, _hikeMonthMeta),
       );
     }
+    if (data.containsKey('income_stability')) {
+      context.handle(
+        _incomeStabilityMeta,
+        incomeStability.isAcceptableOrUnknown(
+          data['income_stability']!,
+          _incomeStabilityMeta,
+        ),
+      );
+    }
+    if (data.containsKey('ef_target_months_override')) {
+      context.handle(
+        _efTargetMonthsOverrideMeta,
+        efTargetMonthsOverride.isAcceptableOrUnknown(
+          data['ef_target_months_override']!,
+          _efTargetMonthsOverrideMeta,
+        ),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -6828,6 +6979,14 @@ class $LifeProfilesTable extends LifeProfiles
         DriftSqlType.int,
         data['${effectivePrefix}hike_month'],
       )!,
+      incomeStability: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}income_stability'],
+      ),
+      efTargetMonthsOverride: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}ef_target_months_override'],
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -6860,6 +7019,8 @@ class LifeProfile extends DataClass implements Insertable<LifeProfile> {
   final int expectedInflationBp;
   final int safeWithdrawalRateBp;
   final int hikeMonth;
+  final String? incomeStability;
+  final int? efTargetMonthsOverride;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime? deletedAt;
@@ -6874,6 +7035,8 @@ class LifeProfile extends DataClass implements Insertable<LifeProfile> {
     required this.expectedInflationBp,
     required this.safeWithdrawalRateBp,
     required this.hikeMonth,
+    this.incomeStability,
+    this.efTargetMonthsOverride,
     required this.createdAt,
     required this.updatedAt,
     this.deletedAt,
@@ -6891,6 +7054,12 @@ class LifeProfile extends DataClass implements Insertable<LifeProfile> {
     map['expected_inflation_bp'] = Variable<int>(expectedInflationBp);
     map['safe_withdrawal_rate_bp'] = Variable<int>(safeWithdrawalRateBp);
     map['hike_month'] = Variable<int>(hikeMonth);
+    if (!nullToAbsent || incomeStability != null) {
+      map['income_stability'] = Variable<String>(incomeStability);
+    }
+    if (!nullToAbsent || efTargetMonthsOverride != null) {
+      map['ef_target_months_override'] = Variable<int>(efTargetMonthsOverride);
+    }
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     if (!nullToAbsent || deletedAt != null) {
@@ -6911,6 +7080,12 @@ class LifeProfile extends DataClass implements Insertable<LifeProfile> {
       expectedInflationBp: Value(expectedInflationBp),
       safeWithdrawalRateBp: Value(safeWithdrawalRateBp),
       hikeMonth: Value(hikeMonth),
+      incomeStability: incomeStability == null && nullToAbsent
+          ? const Value.absent()
+          : Value(incomeStability),
+      efTargetMonthsOverride: efTargetMonthsOverride == null && nullToAbsent
+          ? const Value.absent()
+          : Value(efTargetMonthsOverride),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
       deletedAt: deletedAt == null && nullToAbsent
@@ -6943,6 +7118,10 @@ class LifeProfile extends DataClass implements Insertable<LifeProfile> {
         json['safeWithdrawalRateBp'],
       ),
       hikeMonth: serializer.fromJson<int>(json['hikeMonth']),
+      incomeStability: serializer.fromJson<String?>(json['incomeStability']),
+      efTargetMonthsOverride: serializer.fromJson<int?>(
+        json['efTargetMonthsOverride'],
+      ),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
@@ -6962,6 +7141,8 @@ class LifeProfile extends DataClass implements Insertable<LifeProfile> {
       'expectedInflationBp': serializer.toJson<int>(expectedInflationBp),
       'safeWithdrawalRateBp': serializer.toJson<int>(safeWithdrawalRateBp),
       'hikeMonth': serializer.toJson<int>(hikeMonth),
+      'incomeStability': serializer.toJson<String?>(incomeStability),
+      'efTargetMonthsOverride': serializer.toJson<int?>(efTargetMonthsOverride),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deletedAt': serializer.toJson<DateTime?>(deletedAt),
@@ -6979,6 +7160,8 @@ class LifeProfile extends DataClass implements Insertable<LifeProfile> {
     int? expectedInflationBp,
     int? safeWithdrawalRateBp,
     int? hikeMonth,
+    Value<String?> incomeStability = const Value.absent(),
+    Value<int?> efTargetMonthsOverride = const Value.absent(),
     DateTime? createdAt,
     DateTime? updatedAt,
     Value<DateTime?> deletedAt = const Value.absent(),
@@ -6993,6 +7176,12 @@ class LifeProfile extends DataClass implements Insertable<LifeProfile> {
     expectedInflationBp: expectedInflationBp ?? this.expectedInflationBp,
     safeWithdrawalRateBp: safeWithdrawalRateBp ?? this.safeWithdrawalRateBp,
     hikeMonth: hikeMonth ?? this.hikeMonth,
+    incomeStability: incomeStability.present
+        ? incomeStability.value
+        : this.incomeStability,
+    efTargetMonthsOverride: efTargetMonthsOverride.present
+        ? efTargetMonthsOverride.value
+        : this.efTargetMonthsOverride,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
     deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
@@ -7021,6 +7210,12 @@ class LifeProfile extends DataClass implements Insertable<LifeProfile> {
           ? data.safeWithdrawalRateBp.value
           : this.safeWithdrawalRateBp,
       hikeMonth: data.hikeMonth.present ? data.hikeMonth.value : this.hikeMonth,
+      incomeStability: data.incomeStability.present
+          ? data.incomeStability.value
+          : this.incomeStability,
+      efTargetMonthsOverride: data.efTargetMonthsOverride.present
+          ? data.efTargetMonthsOverride.value
+          : this.efTargetMonthsOverride,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
       deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
@@ -7040,6 +7235,8 @@ class LifeProfile extends DataClass implements Insertable<LifeProfile> {
           ..write('expectedInflationBp: $expectedInflationBp, ')
           ..write('safeWithdrawalRateBp: $safeWithdrawalRateBp, ')
           ..write('hikeMonth: $hikeMonth, ')
+          ..write('incomeStability: $incomeStability, ')
+          ..write('efTargetMonthsOverride: $efTargetMonthsOverride, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt')
@@ -7059,6 +7256,8 @@ class LifeProfile extends DataClass implements Insertable<LifeProfile> {
     expectedInflationBp,
     safeWithdrawalRateBp,
     hikeMonth,
+    incomeStability,
+    efTargetMonthsOverride,
     createdAt,
     updatedAt,
     deletedAt,
@@ -7077,6 +7276,8 @@ class LifeProfile extends DataClass implements Insertable<LifeProfile> {
           other.expectedInflationBp == this.expectedInflationBp &&
           other.safeWithdrawalRateBp == this.safeWithdrawalRateBp &&
           other.hikeMonth == this.hikeMonth &&
+          other.incomeStability == this.incomeStability &&
+          other.efTargetMonthsOverride == this.efTargetMonthsOverride &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
           other.deletedAt == this.deletedAt);
@@ -7093,6 +7294,8 @@ class LifeProfilesCompanion extends UpdateCompanion<LifeProfile> {
   final Value<int> expectedInflationBp;
   final Value<int> safeWithdrawalRateBp;
   final Value<int> hikeMonth;
+  final Value<String?> incomeStability;
+  final Value<int?> efTargetMonthsOverride;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime?> deletedAt;
@@ -7108,6 +7311,8 @@ class LifeProfilesCompanion extends UpdateCompanion<LifeProfile> {
     this.expectedInflationBp = const Value.absent(),
     this.safeWithdrawalRateBp = const Value.absent(),
     this.hikeMonth = const Value.absent(),
+    this.incomeStability = const Value.absent(),
+    this.efTargetMonthsOverride = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
@@ -7124,6 +7329,8 @@ class LifeProfilesCompanion extends UpdateCompanion<LifeProfile> {
     this.expectedInflationBp = const Value.absent(),
     this.safeWithdrawalRateBp = const Value.absent(),
     this.hikeMonth = const Value.absent(),
+    this.incomeStability = const Value.absent(),
+    this.efTargetMonthsOverride = const Value.absent(),
     required DateTime createdAt,
     required DateTime updatedAt,
     this.deletedAt = const Value.absent(),
@@ -7145,6 +7352,8 @@ class LifeProfilesCompanion extends UpdateCompanion<LifeProfile> {
     Expression<int>? expectedInflationBp,
     Expression<int>? safeWithdrawalRateBp,
     Expression<int>? hikeMonth,
+    Expression<String>? incomeStability,
+    Expression<int>? efTargetMonthsOverride,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<DateTime>? deletedAt,
@@ -7165,6 +7374,9 @@ class LifeProfilesCompanion extends UpdateCompanion<LifeProfile> {
       if (safeWithdrawalRateBp != null)
         'safe_withdrawal_rate_bp': safeWithdrawalRateBp,
       if (hikeMonth != null) 'hike_month': hikeMonth,
+      if (incomeStability != null) 'income_stability': incomeStability,
+      if (efTargetMonthsOverride != null)
+        'ef_target_months_override': efTargetMonthsOverride,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (deletedAt != null) 'deleted_at': deletedAt,
@@ -7183,6 +7395,8 @@ class LifeProfilesCompanion extends UpdateCompanion<LifeProfile> {
     Value<int>? expectedInflationBp,
     Value<int>? safeWithdrawalRateBp,
     Value<int>? hikeMonth,
+    Value<String?>? incomeStability,
+    Value<int?>? efTargetMonthsOverride,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
     Value<DateTime?>? deletedAt,
@@ -7199,6 +7413,9 @@ class LifeProfilesCompanion extends UpdateCompanion<LifeProfile> {
       expectedInflationBp: expectedInflationBp ?? this.expectedInflationBp,
       safeWithdrawalRateBp: safeWithdrawalRateBp ?? this.safeWithdrawalRateBp,
       hikeMonth: hikeMonth ?? this.hikeMonth,
+      incomeStability: incomeStability ?? this.incomeStability,
+      efTargetMonthsOverride:
+          efTargetMonthsOverride ?? this.efTargetMonthsOverride,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -7243,6 +7460,14 @@ class LifeProfilesCompanion extends UpdateCompanion<LifeProfile> {
     if (hikeMonth.present) {
       map['hike_month'] = Variable<int>(hikeMonth.value);
     }
+    if (incomeStability.present) {
+      map['income_stability'] = Variable<String>(incomeStability.value);
+    }
+    if (efTargetMonthsOverride.present) {
+      map['ef_target_months_override'] = Variable<int>(
+        efTargetMonthsOverride.value,
+      );
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -7271,6 +7496,8 @@ class LifeProfilesCompanion extends UpdateCompanion<LifeProfile> {
           ..write('expectedInflationBp: $expectedInflationBp, ')
           ..write('safeWithdrawalRateBp: $safeWithdrawalRateBp, ')
           ..write('hikeMonth: $hikeMonth, ')
+          ..write('incomeStability: $incomeStability, ')
+          ..write('efTargetMonthsOverride: $efTargetMonthsOverride, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt, ')
@@ -13297,6 +13524,8 @@ typedef $$AccountsTableCreateCompanionBuilder =
       required String familyId,
       required String userId,
       Value<DateTime?> deletedAt,
+      Value<String?> liquidityTier,
+      Value<bool> isEmergencyFund,
       Value<int> rowid,
     });
 typedef $$AccountsTableUpdateCompanionBuilder =
@@ -13312,6 +13541,8 @@ typedef $$AccountsTableUpdateCompanionBuilder =
       Value<String> familyId,
       Value<String> userId,
       Value<DateTime?> deletedAt,
+      Value<String?> liquidityTier,
+      Value<bool> isEmergencyFund,
       Value<int> rowid,
     });
 
@@ -13492,6 +13723,16 @@ class $$AccountsTableFilterComposer
 
   ColumnFilters<DateTime> get deletedAt => $composableBuilder(
     column: $table.deletedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get liquidityTier => $composableBuilder(
+    column: $table.liquidityTier,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isEmergencyFund => $composableBuilder(
+    column: $table.isEmergencyFund,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -13696,6 +13937,16 @@ class $$AccountsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get liquidityTier => $composableBuilder(
+    column: $table.liquidityTier,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isEmergencyFund => $composableBuilder(
+    column: $table.isEmergencyFund,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$FamiliesTableOrderingComposer get familyId {
     final $$FamiliesTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -13784,6 +14035,16 @@ class $$AccountsTableAnnotationComposer
 
   GeneratedColumn<DateTime> get deletedAt =>
       $composableBuilder(column: $table.deletedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get liquidityTier => $composableBuilder(
+    column: $table.liquidityTier,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isEmergencyFund => $composableBuilder(
+    column: $table.isEmergencyFund,
+    builder: (column) => column,
+  );
 
   $$FamiliesTableAnnotationComposer get familyId {
     final $$FamiliesTableAnnotationComposer composer = $composerBuilder(
@@ -13979,6 +14240,8 @@ class $$AccountsTableTableManager
                 Value<String> familyId = const Value.absent(),
                 Value<String> userId = const Value.absent(),
                 Value<DateTime?> deletedAt = const Value.absent(),
+                Value<String?> liquidityTier = const Value.absent(),
+                Value<bool> isEmergencyFund = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => AccountsCompanion(
                 id: id,
@@ -13992,6 +14255,8 @@ class $$AccountsTableTableManager
                 familyId: familyId,
                 userId: userId,
                 deletedAt: deletedAt,
+                liquidityTier: liquidityTier,
+                isEmergencyFund: isEmergencyFund,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -14007,6 +14272,8 @@ class $$AccountsTableTableManager
                 required String familyId,
                 required String userId,
                 Value<DateTime?> deletedAt = const Value.absent(),
+                Value<String?> liquidityTier = const Value.absent(),
+                Value<bool> isEmergencyFund = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => AccountsCompanion.insert(
                 id: id,
@@ -14020,6 +14287,8 @@ class $$AccountsTableTableManager
                 familyId: familyId,
                 userId: userId,
                 deletedAt: deletedAt,
+                liquidityTier: liquidityTier,
+                isEmergencyFund: isEmergencyFund,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -18873,6 +19142,8 @@ typedef $$LifeProfilesTableCreateCompanionBuilder =
       Value<int> expectedInflationBp,
       Value<int> safeWithdrawalRateBp,
       Value<int> hikeMonth,
+      Value<String?> incomeStability,
+      Value<int?> efTargetMonthsOverride,
       required DateTime createdAt,
       required DateTime updatedAt,
       Value<DateTime?> deletedAt,
@@ -18890,6 +19161,8 @@ typedef $$LifeProfilesTableUpdateCompanionBuilder =
       Value<int> expectedInflationBp,
       Value<int> safeWithdrawalRateBp,
       Value<int> hikeMonth,
+      Value<String?> incomeStability,
+      Value<int?> efTargetMonthsOverride,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<DateTime?> deletedAt,
@@ -19019,6 +19292,16 @@ class $$LifeProfilesTableFilterComposer
 
   ColumnFilters<int> get hikeMonth => $composableBuilder(
     column: $table.hikeMonth,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get incomeStability => $composableBuilder(
+    column: $table.incomeStability,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get efTargetMonthsOverride => $composableBuilder(
+    column: $table.efTargetMonthsOverride,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -19165,6 +19448,16 @@ class $$LifeProfilesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get incomeStability => $composableBuilder(
+    column: $table.incomeStability,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get efTargetMonthsOverride => $composableBuilder(
+    column: $table.efTargetMonthsOverride,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -19251,6 +19544,16 @@ class $$LifeProfilesTableAnnotationComposer
 
   GeneratedColumn<int> get hikeMonth =>
       $composableBuilder(column: $table.hikeMonth, builder: (column) => column);
+
+  GeneratedColumn<String> get incomeStability => $composableBuilder(
+    column: $table.incomeStability,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get efTargetMonthsOverride => $composableBuilder(
+    column: $table.efTargetMonthsOverride,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -19379,6 +19682,8 @@ class $$LifeProfilesTableTableManager
                 Value<int> expectedInflationBp = const Value.absent(),
                 Value<int> safeWithdrawalRateBp = const Value.absent(),
                 Value<int> hikeMonth = const Value.absent(),
+                Value<String?> incomeStability = const Value.absent(),
+                Value<int?> efTargetMonthsOverride = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<DateTime?> deletedAt = const Value.absent(),
@@ -19394,6 +19699,8 @@ class $$LifeProfilesTableTableManager
                 expectedInflationBp: expectedInflationBp,
                 safeWithdrawalRateBp: safeWithdrawalRateBp,
                 hikeMonth: hikeMonth,
+                incomeStability: incomeStability,
+                efTargetMonthsOverride: efTargetMonthsOverride,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 deletedAt: deletedAt,
@@ -19411,6 +19718,8 @@ class $$LifeProfilesTableTableManager
                 Value<int> expectedInflationBp = const Value.absent(),
                 Value<int> safeWithdrawalRateBp = const Value.absent(),
                 Value<int> hikeMonth = const Value.absent(),
+                Value<String?> incomeStability = const Value.absent(),
+                Value<int?> efTargetMonthsOverride = const Value.absent(),
                 required DateTime createdAt,
                 required DateTime updatedAt,
                 Value<DateTime?> deletedAt = const Value.absent(),
@@ -19426,6 +19735,8 @@ class $$LifeProfilesTableTableManager
                 expectedInflationBp: expectedInflationBp,
                 safeWithdrawalRateBp: safeWithdrawalRateBp,
                 hikeMonth: hikeMonth,
+                incomeStability: incomeStability,
+                efTargetMonthsOverride: efTargetMonthsOverride,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 deletedAt: deletedAt,

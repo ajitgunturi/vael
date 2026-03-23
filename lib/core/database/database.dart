@@ -49,7 +49,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e);
 
   @override
-  int get schemaVersion => 11;
+  int get schemaVersion => 12;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -81,6 +81,13 @@ class AppDatabase extends _$AppDatabase {
         await m.addColumn(goals, goals.downPaymentPctBp);
         await m.addColumn(goals, goals.educationEscalationRateBp);
         await m.addColumn(recurringRules, recurringRules.decisionId);
+      }
+      // v11 -> v12: emergency fund columns on accounts + life_profiles
+      if (from < 12) {
+        await m.addColumn(accounts, accounts.liquidityTier);
+        await m.addColumn(accounts, accounts.isEmergencyFund);
+        await m.addColumn(lifeProfiles, lifeProfiles.incomeStability);
+        await m.addColumn(lifeProfiles, lifeProfiles.efTargetMonthsOverride);
       }
     },
     beforeOpen: (details) async {

@@ -58,4 +58,40 @@ class AccountDao extends DatabaseAccessor<AppDatabase> with _$AccountDaoMixin {
       AccountsCompanion(deletedAt: Value(DateTime.now())),
     );
   }
+
+  /// Watch all non-deleted accounts flagged as emergency fund for [familyId].
+  Stream<List<Account>> watchEmergencyFundAccounts(String familyId) {
+    return (select(accounts)..where(
+          (a) =>
+              a.familyId.equals(familyId) &
+              a.isEmergencyFund.equals(true) &
+              a.deletedAt.isNull(),
+        ))
+        .watch();
+  }
+
+  /// Update the liquidity tier for an account. Pass null to clear.
+  Future<void> setLiquidityTier(String accountId, String? tier) {
+    return (update(accounts)..where((a) => a.id.equals(accountId))).write(
+      AccountsCompanion(liquidityTier: Value(tier)),
+    );
+  }
+
+  /// Update the emergency fund flag for an account.
+  Future<void> setEmergencyFund(String accountId, bool isEf) {
+    return (update(accounts)..where((a) => a.id.equals(accountId))).write(
+      AccountsCompanion(isEmergencyFund: Value(isEf)),
+    );
+  }
+
+  /// Watch all non-deleted accounts with a liquidity tier set for [familyId].
+  Stream<List<Account>> watchByLiquidityTier(String familyId) {
+    return (select(accounts)..where(
+          (a) =>
+              a.familyId.equals(familyId) &
+              a.liquidityTier.isNotNull() &
+              a.deletedAt.isNull(),
+        ))
+        .watch();
+  }
 }

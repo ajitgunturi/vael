@@ -69,6 +69,8 @@ Account _account({required String id, String visibility = 'shared'}) {
     familyId: 'fam_a',
     userId: 'user_1',
     deletedAt: null,
+    liquidityTier: null,
+    isEmergencyFund: false,
   );
 }
 

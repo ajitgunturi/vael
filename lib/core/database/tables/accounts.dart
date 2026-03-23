@@ -17,6 +17,9 @@ class Accounts extends Table {
   TextColumn get familyId => text().references(Families, #id)();
   TextColumn get userId => text().references(Users, #id)();
   DateTimeColumn get deletedAt => dateTime().nullable()();
+  TextColumn get liquidityTier => text().nullable()(); // LiquidityTier.name
+  BoolColumn get isEmergencyFund =>
+      boolean().withDefault(const Constant(false))();
 
   @override
   Set<Column> get primaryKey => {id};

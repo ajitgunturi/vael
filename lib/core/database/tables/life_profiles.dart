@@ -19,6 +19,9 @@ class LifeProfiles extends Table {
   IntColumn get safeWithdrawalRateBp =>
       integer().withDefault(const Constant(300))();
   IntColumn get hikeMonth => integer().withDefault(const Constant(4))();
+  TextColumn get incomeStability => text().nullable()(); // IncomeStability.name
+  IntColumn get efTargetMonthsOverride =>
+      integer().nullable()(); // null = use auto-computed
   DateTimeColumn get createdAt => dateTime()();
   DateTimeColumn get updatedAt => dateTime()();
   DateTimeColumn get deletedAt => dateTime().nullable()();
