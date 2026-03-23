@@ -18,7 +18,7 @@ This roadmap extends Vael's existing 5-phase foundation (multi-account managemen
 
 - [x] **Phase 6: Life Profile & Income Model** - User establishes personal financial identity and income trajectory
 - [x] **Phase 7: FI Calculator & Net Worth Milestones** - User can see their FI number and decade-by-decade wealth trajectory (completed 2026-03-22)
-- [ ] **Phase 8: Asset Allocation & Purchase Planning** - User can see allocation targets and model major purchase impact
+- [ ] **Phase 8: Asset Allocation & Purchase Planning** - User can see allocation targets, model major purchase impact, and simulate life decisions with the Decision Modeling Framework
 - [ ] **Phase 9: Emergency Fund & Cash Tiers** - User has safety-net tracking with liquidity classification
 - [ ] **Phase 10: Sinking Funds & Savings Rate** - User can track short-term savings goals and monitor savings health
 - [ ] **Phase 11: Cash Flow & Savings Allocation** - User can see daily cash flow and get advisory surplus distribution
@@ -64,7 +64,7 @@ Plans:
 - [ ] 07-03-PLAN.md -- Milestone Dashboard screen with decade cards, status chips, edit sheet, Settings navigation wiring
 
 ### Phase 8: Asset Allocation & Purchase Planning
-**Goal**: User can see target vs actual asset allocation with rebalancing guidance, and model the financial impact of major life purchases
+**Goal**: User can see target vs actual asset allocation with rebalancing guidance, model the financial impact of major life purchases, and use the Decision Modeling Framework to simulate any life decision before committing it
 **Depends on**: Phase 7 (milestones provide trajectory context; FI number needed for purchase impact on FI date)
 **Requirements**: ALLOC-01, ALLOC-02, ALLOC-03, ALLOC-04, ALLOC-05, PURCH-01, PURCH-02, PURCH-03, PURCH-04, NAV-07
 **Success Criteria** (what must be TRUE):
@@ -73,12 +73,15 @@ Plans:
   3. User can see rebalancing delta (actual % vs target %) and customize targets for any age band
   4. User can create a major purchase goal (home/car/education) and see its impact on net worth trajectory and FI date
   5. Investment portfolio screen shows "Allocation vs Target" banner linking to the allocation detail screen
-**Plans**: TBD
+  6. User can simulate life decisions (job change, purchase, withdrawal, etc.) via 4-step wizard and implement or preview them
+**Plans**: 5 plans
 
 Plans:
-- [ ] 08-01: TBD
-- [ ] 08-02: TBD
-- [ ] 08-03: TBD
+- [ ] 08-01-PLAN.md -- Pure-math engines: AllocationEngine + PurchasePlannerEngine with TDD, enums, Indian tax constants
+- [ ] 08-02-PLAN.md -- Schema v11 migration: allocation_targets + decisions tables, Goals/RecurringRules column extensions, DAOs
+- [ ] 08-03-PLAN.md -- DecisionModelerEngine (composition engine) with TDD + Riverpod providers for allocation/purchase/decisions
+- [ ] 08-04-PLAN.md -- Allocation UI: AllocationScreen with donut charts, GlidePathEditorScreen, AllocationBanner (NAV-07), Settings tile
+- [ ] 08-05-PLAN.md -- Decision Modeler UI: 4-step wizard screen, purchase goal form extensions, goal list category sectioning
 
 **GAP Resolution**: PURCH-03 resolves M5 (goal-investment linking) for purchase goals with linked loans.
 
@@ -179,7 +182,7 @@ Note: Phases 9-10-11 (cash management track) depend on Phase 6 but not on Phases
 |-------|----------------|--------|-----------|
 | 6. Life Profile & Income Model | 3/3 | Complete | 2026-03-23 |
 | 7. FI Calculator & Net Worth Milestones | 3/3 | Complete   | 2026-03-22 |
-| 8. Asset Allocation & Purchase Planning | 0/? | Not started | - |
+| 8. Asset Allocation & Purchase Planning | 0/5 | Planned | - |
 | 9. Emergency Fund & Cash Tiers | 0/? | Not started | - |
 | 10. Sinking Funds & Savings Rate | 0/? | Not started | - |
 | 11. Cash Flow & Savings Allocation | 0/? | Not started | - |
