@@ -53,17 +53,17 @@ Requirements for the financial planning extension (Phases 6-8). Each maps to roa
 
 ### Emergency Fund
 
-- [ ] **EF-01**: User can configure emergency fund with target months (default based on income stability: stable=3, moderate=6, volatile=9-12)
-- [ ] **EF-02**: Monthly essential expenses auto-computed from budget ESSENTIAL group (3-month rolling average)
-- [ ] **EF-03**: User can link savings accounts to the emergency fund and see total coverage (months covered)
-- [ ] **EF-04**: User can manually override the target amount if auto-computation doesn't match their situation
+- [x] **EF-01**: User can configure emergency fund with target months (default based on income stability: stable=3, moderate=6, volatile=9-12)
+- [x] **EF-02**: Monthly essential expenses auto-computed from budget ESSENTIAL group (3-month rolling average)
+- [x] **EF-03**: User can link savings accounts to the emergency fund and see total coverage (months covered)
+- [x] **EF-04**: User can manually override the target amount if auto-computation doesn't match their situation
 - [ ] **EF-05**: Emergency fund progress shows current balance vs target with visual progress indicator
 
 ### Cash Tiers
 
-- [ ] **TIER-01**: User can assign each account a liquidity tier (IMMEDIATE/0 days, SHORT_TERM/30 days, MEDIUM_TERM/90 days)
+- [x] **TIER-01**: User can assign each account a liquidity tier (IMMEDIATE/0 days, SHORT_TERM/30 days, MEDIUM_TERM/90 days)
 - [ ] **TIER-02**: User can see aggregate balance by tier with weighted-average interest rate
-- [ ] **TIER-03**: App suggests optimal tier distribution based on emergency fund target (1mo immediate, 2mo short-term, rest medium-term)
+- [x] **TIER-03**: App suggests optimal tier distribution based on emergency fund target (1mo immediate, 2mo short-term, rest medium-term)
 - [ ] **TIER-04**: Account detail screen shows cash tier badge when tier is assigned
 
 ### Sinking Funds
@@ -197,14 +197,14 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PURCH-03 | Phase 8 | Complete |
 | PURCH-04 | Phase 8 | Complete |
 | NAV-07 | Phase 8 | Complete |
-| EF-01 | Phase 9 | Pending |
-| EF-02 | Phase 9 | Pending |
-| EF-03 | Phase 9 | Pending |
-| EF-04 | Phase 9 | Pending |
+| EF-01 | Phase 9 | Complete |
+| EF-02 | Phase 9 | Complete |
+| EF-03 | Phase 9 | Complete |
+| EF-04 | Phase 9 | Complete |
 | EF-05 | Phase 9 | Pending |
-| TIER-01 | Phase 9 | Pending |
+| TIER-01 | Phase 9 | Complete |
 | TIER-02 | Phase 9 | Pending |
-| TIER-03 | Phase 9 | Pending |
+| TIER-03 | Phase 9 | Complete |
 | TIER-04 | Phase 9 | Pending |
 | NAV-05 | Phase 9 | Pending |
 | NAV-06 | Phase 9 | Pending |
