@@ -9,6 +9,7 @@ import '../../../core/sync/sync_orchestrator.dart';
 import '../../../shared/theme/spacing.dart';
 import '../../../shared/theme/theme_mode_provider.dart';
 import '../../planning/providers/life_profile_provider.dart';
+import '../../planning/screens/allocation_screen.dart';
 import '../../planning/screens/fi_calculator_screen.dart';
 import '../../planning/screens/life_profile_wizard_screen.dart';
 import '../../planning/screens/milestone_dashboard_screen.dart';
@@ -93,6 +94,12 @@ class SettingsScreen extends ConsumerWidget {
             subtitle: 'Net worth targets by decade',
             onTap: () => _openMilestones(context, ref),
           ),
+          _SettingsTile(
+            icon: Icons.pie_chart_outline,
+            title: 'Allocation Targets',
+            subtitle: 'Asset allocation and glide paths',
+            onTap: () => _openAllocation(context),
+          ),
           const Divider(),
           _ThemeModeTile(ref: ref),
           const Divider(),
@@ -139,6 +146,14 @@ class SettingsScreen extends ConsumerWidget {
       MaterialPageRoute(
         builder: (_) =>
             MilestoneDashboardScreen(familyId: familyId, userId: userId),
+      ),
+    );
+  }
+
+  void _openAllocation(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => AllocationScreen(familyId: familyId, userId: userId),
       ),
     );
   }
