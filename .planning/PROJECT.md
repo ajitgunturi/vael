@@ -35,10 +35,14 @@ Privacy is non-negotiable. Data never leaves the device unencrypted. No telemetr
 - ✓ App shell with onboarding flow — Phase 5
 - ✓ Settings screen (backup, sync, passphrase, theme) — Phase 5
 - ✓ E2E test suite (~110 tests across phases) — Phase 5
+- ✓ Emergency fund engine with 6-month rolling essentials, income-stability-based targets — Phase 9
+- ✓ Cash tier classification (instant/short-term/long-term) with auto-suggest — Phase 9
+- ✓ EF detail screen with progress ring, account linking, tier summary — Phase 9
+- ✓ Navigation badges (EF shield, tier chip) on account detail/list, budget essentials link, Settings tile — Phase 9
 
 ### Active
 
-<!-- Current scope: Financial Planning Extension (Phases 6–8). -->
+<!-- Current scope: Financial Planning Extension (Phases 6–10). -->
 
 - [ ] Life profile (DOB, retirement age, risk profile, growth rates)
 - [ ] Net worth milestones by decade with on-track/behind/ahead status
@@ -46,8 +50,6 @@ Privacy is non-negotiable. Data never leaves the device unencrypted. No telemetr
 - [ ] Asset allocation targets by age band with glide path (conservative/moderate/aggressive)
 - [ ] Income growth model (salary trajectory, career stage, side income)
 - [ ] Major purchase planner (home, car, education with loan EMI impact)
-- [ ] Emergency fund tracker (target by income stability, linked accounts, months covered)
-- [ ] Cash tier classification (immediate/short-term/medium-term access)
 - [ ] Sinking funds (purpose-specific short-term savings buckets)
 - [ ] Cash flow calendar (day-by-day income/expense map with threshold alerts)
 - [ ] Savings allocation rules (priority-ordered surplus distribution)
