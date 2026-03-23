@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/database/database.dart';
 import '../../../shared/theme/spacing.dart';
 import '../../../shared/widgets/empty_state.dart';
 import '../providers/goal_providers.dart';
 import '../widgets/goal_card.dart';
 import 'goal_form_screen.dart';
 
-/// Lists all goals for a family with progress tracking.
+/// Lists all goals for a family, sectioned by goalCategory.
+///
+/// Sections: Investment Goals, Purchase Goals, Retirement.
+/// Empty sections are hidden.
 class GoalListScreen extends ConsumerWidget {
   const GoalListScreen({super.key, required this.familyId});
 
@@ -16,6 +20,7 @@ class GoalListScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final goalsAsync = ref.watch(goalListProvider(familyId));
+    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Goals')),
@@ -30,10 +35,37 @@ class GoalListScreen extends ConsumerWidget {
               onAction: () => _openForm(context),
             );
           }
-          return ListView.builder(
+
+          // Group by category
+          final investmentGoals = goals
+              .where(
+                (g) =>
+                    g.goalCategory == 'investmentGoal' ||
+                    g.goalCategory.isEmpty,
+              )
+              .toList();
+          final purchaseGoals = goals
+              .where((g) => g.goalCategory == 'purchase')
+              .toList();
+          final retirementGoals = goals
+              .where((g) => g.goalCategory == 'retirement')
+              .toList();
+
+          return ListView(
             padding: const EdgeInsets.all(Spacing.md),
-            itemCount: goals.length,
-            itemBuilder: (_, i) => GoalCard(goal: goals[i]),
+            children: [
+              if (investmentGoals.isNotEmpty)
+                _buildSection(
+                  context,
+                  theme,
+                  'Investment Goals',
+                  investmentGoals,
+                ),
+              if (purchaseGoals.isNotEmpty)
+                _buildSection(context, theme, 'Purchase Goals', purchaseGoals),
+              if (retirementGoals.isNotEmpty)
+                _buildSection(context, theme, 'Retirement', retirementGoals),
+            ],
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -43,6 +75,30 @@ class GoalListScreen extends ConsumerWidget {
         onPressed: () => _openForm(context),
         child: const Icon(Icons.add),
       ),
+    );
+  }
+
+  Widget _buildSection(
+    BuildContext context,
+    ThemeData theme,
+    String title,
+    List<Goal> goals,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: Spacing.sm),
+          child: Text(
+            title,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+        ...goals.map((goal) => GoalCard(goal: goal)),
+        const SizedBox(height: Spacing.md),
+      ],
     );
   }
 
