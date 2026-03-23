@@ -135,7 +135,7 @@ Requirements for the financial planning extension (Phases 6-8). Each maps to roa
 - [ ] **NAV-04**: Goals screen split into sections: Milestones, Sinking Funds, Investment Goals, Purchase Goals
 - [ ] **NAV-05**: Account detail shows cash tier and emergency fund badges when assigned
 - [ ] **NAV-06**: Budget screen shows monthly essentials row linking to emergency fund
-- [ ] **NAV-07**: Investment portfolio shows "Allocation vs Target" banner linking to allocation screen
+- [x] **NAV-07**: Investment portfolio shows "Allocation vs Target" banner linking to allocation screen
 - [ ] **NAV-08**: Every new screen has empty-state with navigable CTA when prerequisites are missing
 - [ ] **NAV-09**: Navigation integration tests at 3 breakpoints (400dp, 750dp, 1200dp) — minimum 32 tests
 - [ ] **NAV-10**: Cross-feature round-trip navigation tests verify back stack coherence
@@ -196,7 +196,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PURCH-02 | Phase 8 | Complete |
 | PURCH-03 | Phase 8 | Complete |
 | PURCH-04 | Phase 8 | Complete |
-| NAV-07 | Phase 8 | Pending |
+| NAV-07 | Phase 8 | Complete |
 | EF-01 | Phase 9 | Pending |
 | EF-02 | Phase 9 | Pending |
 | EF-03 | Phase 9 | Pending |
