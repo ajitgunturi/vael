@@ -8,6 +8,9 @@ import '../../../shared/theme/spacing.dart';
 import '../../../shared/utils/account_icons.dart';
 import '../../../shared/utils/formatters.dart';
 import '../../loans/screens/loan_detail_screen.dart';
+import '../../planning/screens/emergency_fund_screen.dart';
+import '../../planning/widgets/ef_badge.dart';
+import '../../planning/widgets/liquidity_tier_chip.dart';
 import 'account_form_screen.dart';
 
 /// Displays account details: name, type, balance, and recent transactions.
@@ -45,7 +48,12 @@ class AccountDetailScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.all(Spacing.md),
         children: [
-          _AccountSummaryCard(account: account, theme: theme, colors: colors),
+          _AccountSummaryCard(
+            account: account,
+            familyId: familyId,
+            theme: theme,
+            colors: colors,
+          ),
           if (isLoan) ...[
             const SizedBox(height: Spacing.md),
             _LoanDetailCard(accountId: account.id, familyId: familyId),
@@ -75,11 +83,13 @@ class AccountDetailScreen extends ConsumerWidget {
 class _AccountSummaryCard extends StatelessWidget {
   const _AccountSummaryCard({
     required this.account,
+    required this.familyId,
     required this.theme,
     required this.colors,
   });
 
   final Account account;
+  final String familyId;
   final ThemeData theme;
   final ColorTokens colors;
 
@@ -135,6 +145,28 @@ class _AccountSummaryCard extends StatelessWidget {
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: colors.onSurfaceVariant,
                 ),
+              ),
+            ],
+            if (account.isEmergencyFund || account.liquidityTier != null) ...[
+              const SizedBox(height: Spacing.sm),
+              Wrap(
+                spacing: 8,
+                runSpacing: 4,
+                children: [
+                  if (account.isEmergencyFund)
+                    EfBadge(
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => EmergencyFundScreen(
+                            familyId: familyId,
+                            userId: account.userId,
+                          ),
+                        ),
+                      ),
+                    ),
+                  if (account.liquidityTier != null)
+                    LiquidityTierChip(tier: account.liquidityTier!),
+                ],
               ),
             ],
           ],

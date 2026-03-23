@@ -158,7 +158,16 @@ class _AccountTile extends StatelessWidget {
         AccountIcons.iconFor(account.type),
         color: colors.onSurfaceVariant,
       ),
-      title: Text(account.name),
+      title: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Flexible(child: Text(account.name)),
+          if (account.isEmergencyFund) ...[
+            const SizedBox(width: 4),
+            Icon(Icons.shield_outlined, size: 14, color: Colors.green.shade400),
+          ],
+        ],
+      ),
       subtitle: Text(visLabel),
       trailing: Text(
         formatted,
