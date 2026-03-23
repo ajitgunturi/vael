@@ -73,3 +73,14 @@ enum DecisionType {
   rentalChange,
   custom,
 }
+
+/// Liquidity classification for cash management.
+enum LiquidityTier { instant, shortTerm, longTerm }
+
+/// Income stability classification for EF target defaults.
+enum IncomeStability {
+  salariedStable,
+  salariedVariable,
+  freelance,
+  selfEmployed,
+}
