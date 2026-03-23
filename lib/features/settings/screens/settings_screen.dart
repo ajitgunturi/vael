@@ -10,6 +10,7 @@ import '../../../shared/theme/spacing.dart';
 import '../../../shared/theme/theme_mode_provider.dart';
 import '../../planning/providers/life_profile_provider.dart';
 import '../../planning/screens/allocation_screen.dart';
+import '../../planning/screens/decision_modeler_screen.dart';
 import '../../planning/screens/fi_calculator_screen.dart';
 import '../../planning/screens/life_profile_wizard_screen.dart';
 import '../../planning/screens/milestone_dashboard_screen.dart';
@@ -100,6 +101,12 @@ class SettingsScreen extends ConsumerWidget {
             subtitle: 'Asset allocation and glide paths',
             onTap: () => _openAllocation(context),
           ),
+          _SettingsTile(
+            icon: Icons.compare_arrows,
+            title: 'Decision Modeler',
+            subtitle: 'Model life decisions and their financial impact',
+            onTap: () => _openDecisionModeler(context),
+          ),
           const Divider(),
           _ThemeModeTile(ref: ref),
           const Divider(),
@@ -154,6 +161,15 @@ class SettingsScreen extends ConsumerWidget {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => AllocationScreen(familyId: familyId, userId: userId),
+      ),
+    );
+  }
+
+  void _openDecisionModeler(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) =>
+            DecisionModelerScreen(familyId: familyId, userId: userId),
       ),
     );
   }

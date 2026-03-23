@@ -10,6 +10,7 @@ import '../providers/life_profile_provider.dart';
 import '../widgets/allocation_donut_pair.dart';
 import '../widgets/rebalancing_delta_table.dart';
 import 'glide_path_editor_screen.dart';
+import '../../../features/investments/screens/investment_portfolio_screen.dart';
 import 'life_profile_wizard_screen.dart';
 
 /// Displays current vs target asset allocation with rebalancing guidance.
@@ -174,8 +175,12 @@ class _EmptyNoHoldings extends StatelessWidget {
             const SizedBox(height: Spacing.lg),
             FilledButton(
               onPressed: () {
-                // Navigate to investment form (uses existing route)
-                Navigator.of(context).pop();
+                Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) =>
+                        InvestmentPortfolioScreen(familyId: familyId),
+                  ),
+                );
               },
               child: const Text('Add Investment'),
             ),
