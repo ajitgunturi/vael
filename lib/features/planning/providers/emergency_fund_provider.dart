@@ -73,8 +73,9 @@ final tierSummaryProvider = Provider.family<Map<String, int>, List<Account>>((
   final summary = <String, int>{};
   for (final a in accounts) {
     final tier = a.liquidityTier;
-    if (tier == null)
+    if (tier == null) {
       continue; // defensive; tierAccountsProvider already filters
+    }
     summary[tier] = (summary[tier] ?? 0) + a.balance;
   }
   return summary;

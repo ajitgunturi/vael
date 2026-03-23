@@ -1,4 +1,3 @@
-import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:drift/native.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -236,7 +235,7 @@ void main() {
       final suggestedMonths = EmergencyFundEngine.suggestedTargetMonths(
         'salariedStable',
       );
-      final targetMonths = override;
+      const targetMonths = override;
       final targetAmount = EmergencyFundEngine.targetAmountPaise(
         monthlyAveragePaise,
         targetMonths,
