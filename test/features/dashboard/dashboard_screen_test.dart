@@ -49,6 +49,7 @@ Goal _fakeGoal({
     status: status,
     linkedAccountId: null,
     familyId: 'fam_a',
+    goalCategory: 'investmentGoal',
     createdAt: DateTime(2025),
   );
 }

@@ -30,6 +30,7 @@ class RecurringRules extends Table {
   DateTimeColumn get deletedAt => dateTime().nullable()();
   BoolColumn get isSecondaryIncome =>
       boolean().withDefault(const Constant(false))();
+  TextColumn get decisionId => text().nullable()(); // links to decisions table
 
   @override
   Set<Column> get primaryKey => {id};

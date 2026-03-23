@@ -3866,6 +3866,40 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, Goal> {
       'REFERENCES families (id)',
     ),
   );
+  static const VerificationMeta _goalCategoryMeta = const VerificationMeta(
+    'goalCategory',
+  );
+  @override
+  late final GeneratedColumn<String> goalCategory = GeneratedColumn<String>(
+    'goal_category',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('investmentGoal'),
+  );
+  static const VerificationMeta _downPaymentPctBpMeta = const VerificationMeta(
+    'downPaymentPctBp',
+  );
+  @override
+  late final GeneratedColumn<int> downPaymentPctBp = GeneratedColumn<int>(
+    'down_payment_pct_bp',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _educationEscalationRateBpMeta =
+      const VerificationMeta('educationEscalationRateBp');
+  @override
+  late final GeneratedColumn<int> educationEscalationRateBp =
+      GeneratedColumn<int>(
+        'education_escalation_rate_bp',
+        aliasedName,
+        true,
+        type: DriftSqlType.int,
+        requiredDuringInsert: false,
+      );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -3889,6 +3923,9 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, Goal> {
     status,
     linkedAccountId,
     familyId,
+    goalCategory,
+    downPaymentPctBp,
+    educationEscalationRateBp,
     createdAt,
   ];
   @override
@@ -3982,6 +4019,33 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, Goal> {
     } else if (isInserting) {
       context.missing(_familyIdMeta);
     }
+    if (data.containsKey('goal_category')) {
+      context.handle(
+        _goalCategoryMeta,
+        goalCategory.isAcceptableOrUnknown(
+          data['goal_category']!,
+          _goalCategoryMeta,
+        ),
+      );
+    }
+    if (data.containsKey('down_payment_pct_bp')) {
+      context.handle(
+        _downPaymentPctBpMeta,
+        downPaymentPctBp.isAcceptableOrUnknown(
+          data['down_payment_pct_bp']!,
+          _downPaymentPctBpMeta,
+        ),
+      );
+    }
+    if (data.containsKey('education_escalation_rate_bp')) {
+      context.handle(
+        _educationEscalationRateBpMeta,
+        educationEscalationRateBp.isAcceptableOrUnknown(
+          data['education_escalation_rate_bp']!,
+          _educationEscalationRateBpMeta,
+        ),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -4039,6 +4103,18 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, Goal> {
         DriftSqlType.string,
         data['${effectivePrefix}family_id'],
       )!,
+      goalCategory: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}goal_category'],
+      )!,
+      downPaymentPctBp: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}down_payment_pct_bp'],
+      ),
+      educationEscalationRateBp: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}education_escalation_rate_bp'],
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -4063,6 +4139,9 @@ class Goal extends DataClass implements Insertable<Goal> {
   final String status;
   final String? linkedAccountId;
   final String familyId;
+  final String goalCategory;
+  final int? downPaymentPctBp;
+  final int? educationEscalationRateBp;
   final DateTime createdAt;
   const Goal({
     required this.id,
@@ -4075,6 +4154,9 @@ class Goal extends DataClass implements Insertable<Goal> {
     required this.status,
     this.linkedAccountId,
     required this.familyId,
+    required this.goalCategory,
+    this.downPaymentPctBp,
+    this.educationEscalationRateBp,
     required this.createdAt,
   });
   @override
@@ -4092,6 +4174,15 @@ class Goal extends DataClass implements Insertable<Goal> {
       map['linked_account_id'] = Variable<String>(linkedAccountId);
     }
     map['family_id'] = Variable<String>(familyId);
+    map['goal_category'] = Variable<String>(goalCategory);
+    if (!nullToAbsent || downPaymentPctBp != null) {
+      map['down_payment_pct_bp'] = Variable<int>(downPaymentPctBp);
+    }
+    if (!nullToAbsent || educationEscalationRateBp != null) {
+      map['education_escalation_rate_bp'] = Variable<int>(
+        educationEscalationRateBp,
+      );
+    }
     map['created_at'] = Variable<DateTime>(createdAt);
     return map;
   }
@@ -4110,6 +4201,14 @@ class Goal extends DataClass implements Insertable<Goal> {
           ? const Value.absent()
           : Value(linkedAccountId),
       familyId: Value(familyId),
+      goalCategory: Value(goalCategory),
+      downPaymentPctBp: downPaymentPctBp == null && nullToAbsent
+          ? const Value.absent()
+          : Value(downPaymentPctBp),
+      educationEscalationRateBp:
+          educationEscalationRateBp == null && nullToAbsent
+          ? const Value.absent()
+          : Value(educationEscalationRateBp),
       createdAt: Value(createdAt),
     );
   }
@@ -4130,6 +4229,11 @@ class Goal extends DataClass implements Insertable<Goal> {
       status: serializer.fromJson<String>(json['status']),
       linkedAccountId: serializer.fromJson<String?>(json['linkedAccountId']),
       familyId: serializer.fromJson<String>(json['familyId']),
+      goalCategory: serializer.fromJson<String>(json['goalCategory']),
+      downPaymentPctBp: serializer.fromJson<int?>(json['downPaymentPctBp']),
+      educationEscalationRateBp: serializer.fromJson<int?>(
+        json['educationEscalationRateBp'],
+      ),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
@@ -4147,6 +4251,11 @@ class Goal extends DataClass implements Insertable<Goal> {
       'status': serializer.toJson<String>(status),
       'linkedAccountId': serializer.toJson<String?>(linkedAccountId),
       'familyId': serializer.toJson<String>(familyId),
+      'goalCategory': serializer.toJson<String>(goalCategory),
+      'downPaymentPctBp': serializer.toJson<int?>(downPaymentPctBp),
+      'educationEscalationRateBp': serializer.toJson<int?>(
+        educationEscalationRateBp,
+      ),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
@@ -4162,6 +4271,9 @@ class Goal extends DataClass implements Insertable<Goal> {
     String? status,
     Value<String?> linkedAccountId = const Value.absent(),
     String? familyId,
+    String? goalCategory,
+    Value<int?> downPaymentPctBp = const Value.absent(),
+    Value<int?> educationEscalationRateBp = const Value.absent(),
     DateTime? createdAt,
   }) => Goal(
     id: id ?? this.id,
@@ -4176,6 +4288,13 @@ class Goal extends DataClass implements Insertable<Goal> {
         ? linkedAccountId.value
         : this.linkedAccountId,
     familyId: familyId ?? this.familyId,
+    goalCategory: goalCategory ?? this.goalCategory,
+    downPaymentPctBp: downPaymentPctBp.present
+        ? downPaymentPctBp.value
+        : this.downPaymentPctBp,
+    educationEscalationRateBp: educationEscalationRateBp.present
+        ? educationEscalationRateBp.value
+        : this.educationEscalationRateBp,
     createdAt: createdAt ?? this.createdAt,
   );
   Goal copyWithCompanion(GoalsCompanion data) {
@@ -4200,6 +4319,15 @@ class Goal extends DataClass implements Insertable<Goal> {
           ? data.linkedAccountId.value
           : this.linkedAccountId,
       familyId: data.familyId.present ? data.familyId.value : this.familyId,
+      goalCategory: data.goalCategory.present
+          ? data.goalCategory.value
+          : this.goalCategory,
+      downPaymentPctBp: data.downPaymentPctBp.present
+          ? data.downPaymentPctBp.value
+          : this.downPaymentPctBp,
+      educationEscalationRateBp: data.educationEscalationRateBp.present
+          ? data.educationEscalationRateBp.value
+          : this.educationEscalationRateBp,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
@@ -4217,6 +4345,9 @@ class Goal extends DataClass implements Insertable<Goal> {
           ..write('status: $status, ')
           ..write('linkedAccountId: $linkedAccountId, ')
           ..write('familyId: $familyId, ')
+          ..write('goalCategory: $goalCategory, ')
+          ..write('downPaymentPctBp: $downPaymentPctBp, ')
+          ..write('educationEscalationRateBp: $educationEscalationRateBp, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
@@ -4234,6 +4365,9 @@ class Goal extends DataClass implements Insertable<Goal> {
     status,
     linkedAccountId,
     familyId,
+    goalCategory,
+    downPaymentPctBp,
+    educationEscalationRateBp,
     createdAt,
   );
   @override
@@ -4250,6 +4384,9 @@ class Goal extends DataClass implements Insertable<Goal> {
           other.status == this.status &&
           other.linkedAccountId == this.linkedAccountId &&
           other.familyId == this.familyId &&
+          other.goalCategory == this.goalCategory &&
+          other.downPaymentPctBp == this.downPaymentPctBp &&
+          other.educationEscalationRateBp == this.educationEscalationRateBp &&
           other.createdAt == this.createdAt);
 }
 
@@ -4264,6 +4401,9 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
   final Value<String> status;
   final Value<String?> linkedAccountId;
   final Value<String> familyId;
+  final Value<String> goalCategory;
+  final Value<int?> downPaymentPctBp;
+  final Value<int?> educationEscalationRateBp;
   final Value<DateTime> createdAt;
   final Value<int> rowid;
   const GoalsCompanion({
@@ -4277,6 +4417,9 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
     this.status = const Value.absent(),
     this.linkedAccountId = const Value.absent(),
     this.familyId = const Value.absent(),
+    this.goalCategory = const Value.absent(),
+    this.downPaymentPctBp = const Value.absent(),
+    this.educationEscalationRateBp = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -4291,6 +4434,9 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
     this.status = const Value.absent(),
     this.linkedAccountId = const Value.absent(),
     required String familyId,
+    this.goalCategory = const Value.absent(),
+    this.downPaymentPctBp = const Value.absent(),
+    this.educationEscalationRateBp = const Value.absent(),
     required DateTime createdAt,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
@@ -4310,6 +4456,9 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
     Expression<String>? status,
     Expression<String>? linkedAccountId,
     Expression<String>? familyId,
+    Expression<String>? goalCategory,
+    Expression<int>? downPaymentPctBp,
+    Expression<int>? educationEscalationRateBp,
     Expression<DateTime>? createdAt,
     Expression<int>? rowid,
   }) {
@@ -4324,6 +4473,10 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
       if (status != null) 'status': status,
       if (linkedAccountId != null) 'linked_account_id': linkedAccountId,
       if (familyId != null) 'family_id': familyId,
+      if (goalCategory != null) 'goal_category': goalCategory,
+      if (downPaymentPctBp != null) 'down_payment_pct_bp': downPaymentPctBp,
+      if (educationEscalationRateBp != null)
+        'education_escalation_rate_bp': educationEscalationRateBp,
       if (createdAt != null) 'created_at': createdAt,
       if (rowid != null) 'rowid': rowid,
     });
@@ -4340,6 +4493,9 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
     Value<String>? status,
     Value<String?>? linkedAccountId,
     Value<String>? familyId,
+    Value<String>? goalCategory,
+    Value<int?>? downPaymentPctBp,
+    Value<int?>? educationEscalationRateBp,
     Value<DateTime>? createdAt,
     Value<int>? rowid,
   }) {
@@ -4354,6 +4510,10 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
       status: status ?? this.status,
       linkedAccountId: linkedAccountId ?? this.linkedAccountId,
       familyId: familyId ?? this.familyId,
+      goalCategory: goalCategory ?? this.goalCategory,
+      downPaymentPctBp: downPaymentPctBp ?? this.downPaymentPctBp,
+      educationEscalationRateBp:
+          educationEscalationRateBp ?? this.educationEscalationRateBp,
       createdAt: createdAt ?? this.createdAt,
       rowid: rowid ?? this.rowid,
     );
@@ -4392,6 +4552,17 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
     if (familyId.present) {
       map['family_id'] = Variable<String>(familyId.value);
     }
+    if (goalCategory.present) {
+      map['goal_category'] = Variable<String>(goalCategory.value);
+    }
+    if (downPaymentPctBp.present) {
+      map['down_payment_pct_bp'] = Variable<int>(downPaymentPctBp.value);
+    }
+    if (educationEscalationRateBp.present) {
+      map['education_escalation_rate_bp'] = Variable<int>(
+        educationEscalationRateBp.value,
+      );
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -4414,6 +4585,9 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
           ..write('status: $status, ')
           ..write('linkedAccountId: $linkedAccountId, ')
           ..write('familyId: $familyId, ')
+          ..write('goalCategory: $goalCategory, ')
+          ..write('downPaymentPctBp: $downPaymentPctBp, ')
+          ..write('educationEscalationRateBp: $educationEscalationRateBp, ')
           ..write('createdAt: $createdAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -7963,6 +8137,17 @@ class $RecurringRulesTable extends RecurringRules
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _decisionIdMeta = const VerificationMeta(
+    'decisionId',
+  );
+  @override
+  late final GeneratedColumn<String> decisionId = GeneratedColumn<String>(
+    'decision_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -7984,6 +8169,7 @@ class $RecurringRulesTable extends RecurringRules
     createdAt,
     deletedAt,
     isSecondaryIncome,
+    decisionId,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -8143,6 +8329,12 @@ class $RecurringRulesTable extends RecurringRules
         ),
       );
     }
+    if (data.containsKey('decision_id')) {
+      context.handle(
+        _decisionIdMeta,
+        decisionId.isAcceptableOrUnknown(data['decision_id']!, _decisionIdMeta),
+      );
+    }
     return context;
   }
 
@@ -8228,6 +8420,10 @@ class $RecurringRulesTable extends RecurringRules
         DriftSqlType.bool,
         data['${effectivePrefix}is_secondary_income'],
       )!,
+      decisionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}decision_id'],
+      ),
     );
   }
 
@@ -8257,6 +8453,7 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
   final DateTime createdAt;
   final DateTime? deletedAt;
   final bool isSecondaryIncome;
+  final String? decisionId;
   const RecurringRule({
     required this.id,
     required this.name,
@@ -8277,6 +8474,7 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
     required this.createdAt,
     this.deletedAt,
     required this.isSecondaryIncome,
+    this.decisionId,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -8312,6 +8510,9 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
       map['deleted_at'] = Variable<DateTime>(deletedAt);
     }
     map['is_secondary_income'] = Variable<bool>(isSecondaryIncome);
+    if (!nullToAbsent || decisionId != null) {
+      map['decision_id'] = Variable<String>(decisionId);
+    }
     return map;
   }
 
@@ -8348,6 +8549,9 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
           ? const Value.absent()
           : Value(deletedAt),
       isSecondaryIncome: Value(isSecondaryIncome),
+      decisionId: decisionId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(decisionId),
     );
   }
 
@@ -8380,6 +8584,7 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
       isSecondaryIncome: serializer.fromJson<bool>(json['isSecondaryIncome']),
+      decisionId: serializer.fromJson<String?>(json['decisionId']),
     );
   }
   @override
@@ -8405,6 +8610,7 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'deletedAt': serializer.toJson<DateTime?>(deletedAt),
       'isSecondaryIncome': serializer.toJson<bool>(isSecondaryIncome),
+      'decisionId': serializer.toJson<String?>(decisionId),
     };
   }
 
@@ -8428,6 +8634,7 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
     DateTime? createdAt,
     Value<DateTime?> deletedAt = const Value.absent(),
     bool? isSecondaryIncome,
+    Value<String?> decisionId = const Value.absent(),
   }) => RecurringRule(
     id: id ?? this.id,
     name: name ?? this.name,
@@ -8450,6 +8657,7 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
     createdAt: createdAt ?? this.createdAt,
     deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
     isSecondaryIncome: isSecondaryIncome ?? this.isSecondaryIncome,
+    decisionId: decisionId.present ? decisionId.value : this.decisionId,
   );
   RecurringRule copyWithCompanion(RecurringRulesCompanion data) {
     return RecurringRule(
@@ -8484,6 +8692,9 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
       isSecondaryIncome: data.isSecondaryIncome.present
           ? data.isSecondaryIncome.value
           : this.isSecondaryIncome,
+      decisionId: data.decisionId.present
+          ? data.decisionId.value
+          : this.decisionId,
     );
   }
 
@@ -8508,7 +8719,8 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
           ..write('userId: $userId, ')
           ..write('createdAt: $createdAt, ')
           ..write('deletedAt: $deletedAt, ')
-          ..write('isSecondaryIncome: $isSecondaryIncome')
+          ..write('isSecondaryIncome: $isSecondaryIncome, ')
+          ..write('decisionId: $decisionId')
           ..write(')'))
         .toString();
   }
@@ -8534,6 +8746,7 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
     createdAt,
     deletedAt,
     isSecondaryIncome,
+    decisionId,
   );
   @override
   bool operator ==(Object other) =>
@@ -8557,7 +8770,8 @@ class RecurringRule extends DataClass implements Insertable<RecurringRule> {
           other.userId == this.userId &&
           other.createdAt == this.createdAt &&
           other.deletedAt == this.deletedAt &&
-          other.isSecondaryIncome == this.isSecondaryIncome);
+          other.isSecondaryIncome == this.isSecondaryIncome &&
+          other.decisionId == this.decisionId);
 }
 
 class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
@@ -8580,6 +8794,7 @@ class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
   final Value<DateTime> createdAt;
   final Value<DateTime?> deletedAt;
   final Value<bool> isSecondaryIncome;
+  final Value<String?> decisionId;
   final Value<int> rowid;
   const RecurringRulesCompanion({
     this.id = const Value.absent(),
@@ -8601,6 +8816,7 @@ class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
     this.createdAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
     this.isSecondaryIncome = const Value.absent(),
+    this.decisionId = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   RecurringRulesCompanion.insert({
@@ -8623,6 +8839,7 @@ class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
     required DateTime createdAt,
     this.deletedAt = const Value.absent(),
     this.isSecondaryIncome = const Value.absent(),
+    this.decisionId = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        name = Value(name),
@@ -8654,6 +8871,7 @@ class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
     Expression<DateTime>? createdAt,
     Expression<DateTime>? deletedAt,
     Expression<bool>? isSecondaryIncome,
+    Expression<String>? decisionId,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -8677,6 +8895,7 @@ class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
       if (createdAt != null) 'created_at': createdAt,
       if (deletedAt != null) 'deleted_at': deletedAt,
       if (isSecondaryIncome != null) 'is_secondary_income': isSecondaryIncome,
+      if (decisionId != null) 'decision_id': decisionId,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -8701,6 +8920,7 @@ class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
     Value<DateTime>? createdAt,
     Value<DateTime?>? deletedAt,
     Value<bool>? isSecondaryIncome,
+    Value<String?>? decisionId,
     Value<int>? rowid,
   }) {
     return RecurringRulesCompanion(
@@ -8723,6 +8943,7 @@ class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
       createdAt: createdAt ?? this.createdAt,
       deletedAt: deletedAt ?? this.deletedAt,
       isSecondaryIncome: isSecondaryIncome ?? this.isSecondaryIncome,
+      decisionId: decisionId ?? this.decisionId,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -8789,6 +9010,9 @@ class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
     if (isSecondaryIncome.present) {
       map['is_secondary_income'] = Variable<bool>(isSecondaryIncome.value);
     }
+    if (decisionId.present) {
+      map['decision_id'] = Variable<String>(decisionId.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -8817,6 +9041,1254 @@ class RecurringRulesCompanion extends UpdateCompanion<RecurringRule> {
           ..write('createdAt: $createdAt, ')
           ..write('deletedAt: $deletedAt, ')
           ..write('isSecondaryIncome: $isSecondaryIncome, ')
+          ..write('decisionId: $decisionId, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $AllocationTargetsTable extends AllocationTargets
+    with TableInfo<$AllocationTargetsTable, AllocationTarget> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $AllocationTargetsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _lifeProfileIdMeta = const VerificationMeta(
+    'lifeProfileId',
+  );
+  @override
+  late final GeneratedColumn<String> lifeProfileId = GeneratedColumn<String>(
+    'life_profile_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES life_profiles (id)',
+    ),
+  );
+  static const VerificationMeta _ageBandStartMeta = const VerificationMeta(
+    'ageBandStart',
+  );
+  @override
+  late final GeneratedColumn<int> ageBandStart = GeneratedColumn<int>(
+    'age_band_start',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _ageBandEndMeta = const VerificationMeta(
+    'ageBandEnd',
+  );
+  @override
+  late final GeneratedColumn<int> ageBandEnd = GeneratedColumn<int>(
+    'age_band_end',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _equityBpMeta = const VerificationMeta(
+    'equityBp',
+  );
+  @override
+  late final GeneratedColumn<int> equityBp = GeneratedColumn<int>(
+    'equity_bp',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _debtBpMeta = const VerificationMeta('debtBp');
+  @override
+  late final GeneratedColumn<int> debtBp = GeneratedColumn<int>(
+    'debt_bp',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _goldBpMeta = const VerificationMeta('goldBp');
+  @override
+  late final GeneratedColumn<int> goldBp = GeneratedColumn<int>(
+    'gold_bp',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _cashBpMeta = const VerificationMeta('cashBp');
+  @override
+  late final GeneratedColumn<int> cashBp = GeneratedColumn<int>(
+    'cash_bp',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    lifeProfileId,
+    ageBandStart,
+    ageBandEnd,
+    equityBp,
+    debtBp,
+    goldBp,
+    cashBp,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'allocation_targets';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<AllocationTarget> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('life_profile_id')) {
+      context.handle(
+        _lifeProfileIdMeta,
+        lifeProfileId.isAcceptableOrUnknown(
+          data['life_profile_id']!,
+          _lifeProfileIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_lifeProfileIdMeta);
+    }
+    if (data.containsKey('age_band_start')) {
+      context.handle(
+        _ageBandStartMeta,
+        ageBandStart.isAcceptableOrUnknown(
+          data['age_band_start']!,
+          _ageBandStartMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_ageBandStartMeta);
+    }
+    if (data.containsKey('age_band_end')) {
+      context.handle(
+        _ageBandEndMeta,
+        ageBandEnd.isAcceptableOrUnknown(
+          data['age_band_end']!,
+          _ageBandEndMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_ageBandEndMeta);
+    }
+    if (data.containsKey('equity_bp')) {
+      context.handle(
+        _equityBpMeta,
+        equityBp.isAcceptableOrUnknown(data['equity_bp']!, _equityBpMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_equityBpMeta);
+    }
+    if (data.containsKey('debt_bp')) {
+      context.handle(
+        _debtBpMeta,
+        debtBp.isAcceptableOrUnknown(data['debt_bp']!, _debtBpMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_debtBpMeta);
+    }
+    if (data.containsKey('gold_bp')) {
+      context.handle(
+        _goldBpMeta,
+        goldBp.isAcceptableOrUnknown(data['gold_bp']!, _goldBpMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_goldBpMeta);
+    }
+    if (data.containsKey('cash_bp')) {
+      context.handle(
+        _cashBpMeta,
+        cashBp.isAcceptableOrUnknown(data['cash_bp']!, _cashBpMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_cashBpMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  AllocationTarget map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return AllocationTarget(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      lifeProfileId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}life_profile_id'],
+      )!,
+      ageBandStart: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}age_band_start'],
+      )!,
+      ageBandEnd: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}age_band_end'],
+      )!,
+      equityBp: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}equity_bp'],
+      )!,
+      debtBp: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}debt_bp'],
+      )!,
+      goldBp: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}gold_bp'],
+      )!,
+      cashBp: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}cash_bp'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $AllocationTargetsTable createAlias(String alias) {
+    return $AllocationTargetsTable(attachedDatabase, alias);
+  }
+}
+
+class AllocationTarget extends DataClass
+    implements Insertable<AllocationTarget> {
+  final String id;
+  final String lifeProfileId;
+  final int ageBandStart;
+  final int ageBandEnd;
+  final int equityBp;
+  final int debtBp;
+  final int goldBp;
+  final int cashBp;
+  final DateTime createdAt;
+  const AllocationTarget({
+    required this.id,
+    required this.lifeProfileId,
+    required this.ageBandStart,
+    required this.ageBandEnd,
+    required this.equityBp,
+    required this.debtBp,
+    required this.goldBp,
+    required this.cashBp,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['life_profile_id'] = Variable<String>(lifeProfileId);
+    map['age_band_start'] = Variable<int>(ageBandStart);
+    map['age_band_end'] = Variable<int>(ageBandEnd);
+    map['equity_bp'] = Variable<int>(equityBp);
+    map['debt_bp'] = Variable<int>(debtBp);
+    map['gold_bp'] = Variable<int>(goldBp);
+    map['cash_bp'] = Variable<int>(cashBp);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  AllocationTargetsCompanion toCompanion(bool nullToAbsent) {
+    return AllocationTargetsCompanion(
+      id: Value(id),
+      lifeProfileId: Value(lifeProfileId),
+      ageBandStart: Value(ageBandStart),
+      ageBandEnd: Value(ageBandEnd),
+      equityBp: Value(equityBp),
+      debtBp: Value(debtBp),
+      goldBp: Value(goldBp),
+      cashBp: Value(cashBp),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory AllocationTarget.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return AllocationTarget(
+      id: serializer.fromJson<String>(json['id']),
+      lifeProfileId: serializer.fromJson<String>(json['lifeProfileId']),
+      ageBandStart: serializer.fromJson<int>(json['ageBandStart']),
+      ageBandEnd: serializer.fromJson<int>(json['ageBandEnd']),
+      equityBp: serializer.fromJson<int>(json['equityBp']),
+      debtBp: serializer.fromJson<int>(json['debtBp']),
+      goldBp: serializer.fromJson<int>(json['goldBp']),
+      cashBp: serializer.fromJson<int>(json['cashBp']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'lifeProfileId': serializer.toJson<String>(lifeProfileId),
+      'ageBandStart': serializer.toJson<int>(ageBandStart),
+      'ageBandEnd': serializer.toJson<int>(ageBandEnd),
+      'equityBp': serializer.toJson<int>(equityBp),
+      'debtBp': serializer.toJson<int>(debtBp),
+      'goldBp': serializer.toJson<int>(goldBp),
+      'cashBp': serializer.toJson<int>(cashBp),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  AllocationTarget copyWith({
+    String? id,
+    String? lifeProfileId,
+    int? ageBandStart,
+    int? ageBandEnd,
+    int? equityBp,
+    int? debtBp,
+    int? goldBp,
+    int? cashBp,
+    DateTime? createdAt,
+  }) => AllocationTarget(
+    id: id ?? this.id,
+    lifeProfileId: lifeProfileId ?? this.lifeProfileId,
+    ageBandStart: ageBandStart ?? this.ageBandStart,
+    ageBandEnd: ageBandEnd ?? this.ageBandEnd,
+    equityBp: equityBp ?? this.equityBp,
+    debtBp: debtBp ?? this.debtBp,
+    goldBp: goldBp ?? this.goldBp,
+    cashBp: cashBp ?? this.cashBp,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  AllocationTarget copyWithCompanion(AllocationTargetsCompanion data) {
+    return AllocationTarget(
+      id: data.id.present ? data.id.value : this.id,
+      lifeProfileId: data.lifeProfileId.present
+          ? data.lifeProfileId.value
+          : this.lifeProfileId,
+      ageBandStart: data.ageBandStart.present
+          ? data.ageBandStart.value
+          : this.ageBandStart,
+      ageBandEnd: data.ageBandEnd.present
+          ? data.ageBandEnd.value
+          : this.ageBandEnd,
+      equityBp: data.equityBp.present ? data.equityBp.value : this.equityBp,
+      debtBp: data.debtBp.present ? data.debtBp.value : this.debtBp,
+      goldBp: data.goldBp.present ? data.goldBp.value : this.goldBp,
+      cashBp: data.cashBp.present ? data.cashBp.value : this.cashBp,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AllocationTarget(')
+          ..write('id: $id, ')
+          ..write('lifeProfileId: $lifeProfileId, ')
+          ..write('ageBandStart: $ageBandStart, ')
+          ..write('ageBandEnd: $ageBandEnd, ')
+          ..write('equityBp: $equityBp, ')
+          ..write('debtBp: $debtBp, ')
+          ..write('goldBp: $goldBp, ')
+          ..write('cashBp: $cashBp, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    lifeProfileId,
+    ageBandStart,
+    ageBandEnd,
+    equityBp,
+    debtBp,
+    goldBp,
+    cashBp,
+    createdAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AllocationTarget &&
+          other.id == this.id &&
+          other.lifeProfileId == this.lifeProfileId &&
+          other.ageBandStart == this.ageBandStart &&
+          other.ageBandEnd == this.ageBandEnd &&
+          other.equityBp == this.equityBp &&
+          other.debtBp == this.debtBp &&
+          other.goldBp == this.goldBp &&
+          other.cashBp == this.cashBp &&
+          other.createdAt == this.createdAt);
+}
+
+class AllocationTargetsCompanion extends UpdateCompanion<AllocationTarget> {
+  final Value<String> id;
+  final Value<String> lifeProfileId;
+  final Value<int> ageBandStart;
+  final Value<int> ageBandEnd;
+  final Value<int> equityBp;
+  final Value<int> debtBp;
+  final Value<int> goldBp;
+  final Value<int> cashBp;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const AllocationTargetsCompanion({
+    this.id = const Value.absent(),
+    this.lifeProfileId = const Value.absent(),
+    this.ageBandStart = const Value.absent(),
+    this.ageBandEnd = const Value.absent(),
+    this.equityBp = const Value.absent(),
+    this.debtBp = const Value.absent(),
+    this.goldBp = const Value.absent(),
+    this.cashBp = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  AllocationTargetsCompanion.insert({
+    required String id,
+    required String lifeProfileId,
+    required int ageBandStart,
+    required int ageBandEnd,
+    required int equityBp,
+    required int debtBp,
+    required int goldBp,
+    required int cashBp,
+    required DateTime createdAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       lifeProfileId = Value(lifeProfileId),
+       ageBandStart = Value(ageBandStart),
+       ageBandEnd = Value(ageBandEnd),
+       equityBp = Value(equityBp),
+       debtBp = Value(debtBp),
+       goldBp = Value(goldBp),
+       cashBp = Value(cashBp),
+       createdAt = Value(createdAt);
+  static Insertable<AllocationTarget> custom({
+    Expression<String>? id,
+    Expression<String>? lifeProfileId,
+    Expression<int>? ageBandStart,
+    Expression<int>? ageBandEnd,
+    Expression<int>? equityBp,
+    Expression<int>? debtBp,
+    Expression<int>? goldBp,
+    Expression<int>? cashBp,
+    Expression<DateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (lifeProfileId != null) 'life_profile_id': lifeProfileId,
+      if (ageBandStart != null) 'age_band_start': ageBandStart,
+      if (ageBandEnd != null) 'age_band_end': ageBandEnd,
+      if (equityBp != null) 'equity_bp': equityBp,
+      if (debtBp != null) 'debt_bp': debtBp,
+      if (goldBp != null) 'gold_bp': goldBp,
+      if (cashBp != null) 'cash_bp': cashBp,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  AllocationTargetsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? lifeProfileId,
+    Value<int>? ageBandStart,
+    Value<int>? ageBandEnd,
+    Value<int>? equityBp,
+    Value<int>? debtBp,
+    Value<int>? goldBp,
+    Value<int>? cashBp,
+    Value<DateTime>? createdAt,
+    Value<int>? rowid,
+  }) {
+    return AllocationTargetsCompanion(
+      id: id ?? this.id,
+      lifeProfileId: lifeProfileId ?? this.lifeProfileId,
+      ageBandStart: ageBandStart ?? this.ageBandStart,
+      ageBandEnd: ageBandEnd ?? this.ageBandEnd,
+      equityBp: equityBp ?? this.equityBp,
+      debtBp: debtBp ?? this.debtBp,
+      goldBp: goldBp ?? this.goldBp,
+      cashBp: cashBp ?? this.cashBp,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (lifeProfileId.present) {
+      map['life_profile_id'] = Variable<String>(lifeProfileId.value);
+    }
+    if (ageBandStart.present) {
+      map['age_band_start'] = Variable<int>(ageBandStart.value);
+    }
+    if (ageBandEnd.present) {
+      map['age_band_end'] = Variable<int>(ageBandEnd.value);
+    }
+    if (equityBp.present) {
+      map['equity_bp'] = Variable<int>(equityBp.value);
+    }
+    if (debtBp.present) {
+      map['debt_bp'] = Variable<int>(debtBp.value);
+    }
+    if (goldBp.present) {
+      map['gold_bp'] = Variable<int>(goldBp.value);
+    }
+    if (cashBp.present) {
+      map['cash_bp'] = Variable<int>(cashBp.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AllocationTargetsCompanion(')
+          ..write('id: $id, ')
+          ..write('lifeProfileId: $lifeProfileId, ')
+          ..write('ageBandStart: $ageBandStart, ')
+          ..write('ageBandEnd: $ageBandEnd, ')
+          ..write('equityBp: $equityBp, ')
+          ..write('debtBp: $debtBp, ')
+          ..write('goldBp: $goldBp, ')
+          ..write('cashBp: $cashBp, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $DecisionsTable extends Decisions
+    with TableInfo<$DecisionsTable, Decision> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $DecisionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _familyIdMeta = const VerificationMeta(
+    'familyId',
+  );
+  @override
+  late final GeneratedColumn<String> familyId = GeneratedColumn<String>(
+    'family_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES families (id)',
+    ),
+  );
+  static const VerificationMeta _decisionTypeMeta = const VerificationMeta(
+    'decisionType',
+  );
+  @override
+  late final GeneratedColumn<String> decisionType = GeneratedColumn<String>(
+    'decision_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _parametersMeta = const VerificationMeta(
+    'parameters',
+  );
+  @override
+  late final GeneratedColumn<String> parameters = GeneratedColumn<String>(
+    'parameters',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+    'status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('preview'),
+  );
+  static const VerificationMeta _fiDelayYearsMeta = const VerificationMeta(
+    'fiDelayYears',
+  );
+  @override
+  late final GeneratedColumn<int> fiDelayYears = GeneratedColumn<int>(
+    'fi_delay_years',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _implementedAtMeta = const VerificationMeta(
+    'implementedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> implementedAt =
+      GeneratedColumn<DateTime>(
+        'implemented_at',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> deletedAt = GeneratedColumn<DateTime>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    userId,
+    familyId,
+    decisionType,
+    name,
+    parameters,
+    status,
+    fiDelayYears,
+    createdAt,
+    implementedAt,
+    deletedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'decisions';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<Decision> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('family_id')) {
+      context.handle(
+        _familyIdMeta,
+        familyId.isAcceptableOrUnknown(data['family_id']!, _familyIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_familyIdMeta);
+    }
+    if (data.containsKey('decision_type')) {
+      context.handle(
+        _decisionTypeMeta,
+        decisionType.isAcceptableOrUnknown(
+          data['decision_type']!,
+          _decisionTypeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_decisionTypeMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('parameters')) {
+      context.handle(
+        _parametersMeta,
+        parameters.isAcceptableOrUnknown(data['parameters']!, _parametersMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_parametersMeta);
+    }
+    if (data.containsKey('status')) {
+      context.handle(
+        _statusMeta,
+        status.isAcceptableOrUnknown(data['status']!, _statusMeta),
+      );
+    }
+    if (data.containsKey('fi_delay_years')) {
+      context.handle(
+        _fiDelayYearsMeta,
+        fiDelayYears.isAcceptableOrUnknown(
+          data['fi_delay_years']!,
+          _fiDelayYearsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('implemented_at')) {
+      context.handle(
+        _implementedAtMeta,
+        implementedAt.isAcceptableOrUnknown(
+          data['implemented_at']!,
+          _implementedAtMeta,
+        ),
+      );
+    }
+    if (data.containsKey('deleted_at')) {
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Decision map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Decision(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      familyId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}family_id'],
+      )!,
+      decisionType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}decision_type'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      parameters: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}parameters'],
+      )!,
+      status: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}status'],
+      )!,
+      fiDelayYears: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}fi_delay_years'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      implementedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}implemented_at'],
+      ),
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}deleted_at'],
+      ),
+    );
+  }
+
+  @override
+  $DecisionsTable createAlias(String alias) {
+    return $DecisionsTable(attachedDatabase, alias);
+  }
+}
+
+class Decision extends DataClass implements Insertable<Decision> {
+  final String id;
+  final String userId;
+  final String familyId;
+  final String decisionType;
+  final String name;
+  final String parameters;
+  final String status;
+  final int? fiDelayYears;
+  final DateTime createdAt;
+  final DateTime? implementedAt;
+  final DateTime? deletedAt;
+  const Decision({
+    required this.id,
+    required this.userId,
+    required this.familyId,
+    required this.decisionType,
+    required this.name,
+    required this.parameters,
+    required this.status,
+    this.fiDelayYears,
+    required this.createdAt,
+    this.implementedAt,
+    this.deletedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['user_id'] = Variable<String>(userId);
+    map['family_id'] = Variable<String>(familyId);
+    map['decision_type'] = Variable<String>(decisionType);
+    map['name'] = Variable<String>(name);
+    map['parameters'] = Variable<String>(parameters);
+    map['status'] = Variable<String>(status);
+    if (!nullToAbsent || fiDelayYears != null) {
+      map['fi_delay_years'] = Variable<int>(fiDelayYears);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || implementedAt != null) {
+      map['implemented_at'] = Variable<DateTime>(implementedAt);
+    }
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt);
+    }
+    return map;
+  }
+
+  DecisionsCompanion toCompanion(bool nullToAbsent) {
+    return DecisionsCompanion(
+      id: Value(id),
+      userId: Value(userId),
+      familyId: Value(familyId),
+      decisionType: Value(decisionType),
+      name: Value(name),
+      parameters: Value(parameters),
+      status: Value(status),
+      fiDelayYears: fiDelayYears == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fiDelayYears),
+      createdAt: Value(createdAt),
+      implementedAt: implementedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(implementedAt),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
+    );
+  }
+
+  factory Decision.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Decision(
+      id: serializer.fromJson<String>(json['id']),
+      userId: serializer.fromJson<String>(json['userId']),
+      familyId: serializer.fromJson<String>(json['familyId']),
+      decisionType: serializer.fromJson<String>(json['decisionType']),
+      name: serializer.fromJson<String>(json['name']),
+      parameters: serializer.fromJson<String>(json['parameters']),
+      status: serializer.fromJson<String>(json['status']),
+      fiDelayYears: serializer.fromJson<int?>(json['fiDelayYears']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      implementedAt: serializer.fromJson<DateTime?>(json['implementedAt']),
+      deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'userId': serializer.toJson<String>(userId),
+      'familyId': serializer.toJson<String>(familyId),
+      'decisionType': serializer.toJson<String>(decisionType),
+      'name': serializer.toJson<String>(name),
+      'parameters': serializer.toJson<String>(parameters),
+      'status': serializer.toJson<String>(status),
+      'fiDelayYears': serializer.toJson<int?>(fiDelayYears),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'implementedAt': serializer.toJson<DateTime?>(implementedAt),
+      'deletedAt': serializer.toJson<DateTime?>(deletedAt),
+    };
+  }
+
+  Decision copyWith({
+    String? id,
+    String? userId,
+    String? familyId,
+    String? decisionType,
+    String? name,
+    String? parameters,
+    String? status,
+    Value<int?> fiDelayYears = const Value.absent(),
+    DateTime? createdAt,
+    Value<DateTime?> implementedAt = const Value.absent(),
+    Value<DateTime?> deletedAt = const Value.absent(),
+  }) => Decision(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    familyId: familyId ?? this.familyId,
+    decisionType: decisionType ?? this.decisionType,
+    name: name ?? this.name,
+    parameters: parameters ?? this.parameters,
+    status: status ?? this.status,
+    fiDelayYears: fiDelayYears.present ? fiDelayYears.value : this.fiDelayYears,
+    createdAt: createdAt ?? this.createdAt,
+    implementedAt: implementedAt.present
+        ? implementedAt.value
+        : this.implementedAt,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
+  );
+  Decision copyWithCompanion(DecisionsCompanion data) {
+    return Decision(
+      id: data.id.present ? data.id.value : this.id,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      familyId: data.familyId.present ? data.familyId.value : this.familyId,
+      decisionType: data.decisionType.present
+          ? data.decisionType.value
+          : this.decisionType,
+      name: data.name.present ? data.name.value : this.name,
+      parameters: data.parameters.present
+          ? data.parameters.value
+          : this.parameters,
+      status: data.status.present ? data.status.value : this.status,
+      fiDelayYears: data.fiDelayYears.present
+          ? data.fiDelayYears.value
+          : this.fiDelayYears,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      implementedAt: data.implementedAt.present
+          ? data.implementedAt.value
+          : this.implementedAt,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Decision(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('familyId: $familyId, ')
+          ..write('decisionType: $decisionType, ')
+          ..write('name: $name, ')
+          ..write('parameters: $parameters, ')
+          ..write('status: $status, ')
+          ..write('fiDelayYears: $fiDelayYears, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('implementedAt: $implementedAt, ')
+          ..write('deletedAt: $deletedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    userId,
+    familyId,
+    decisionType,
+    name,
+    parameters,
+    status,
+    fiDelayYears,
+    createdAt,
+    implementedAt,
+    deletedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Decision &&
+          other.id == this.id &&
+          other.userId == this.userId &&
+          other.familyId == this.familyId &&
+          other.decisionType == this.decisionType &&
+          other.name == this.name &&
+          other.parameters == this.parameters &&
+          other.status == this.status &&
+          other.fiDelayYears == this.fiDelayYears &&
+          other.createdAt == this.createdAt &&
+          other.implementedAt == this.implementedAt &&
+          other.deletedAt == this.deletedAt);
+}
+
+class DecisionsCompanion extends UpdateCompanion<Decision> {
+  final Value<String> id;
+  final Value<String> userId;
+  final Value<String> familyId;
+  final Value<String> decisionType;
+  final Value<String> name;
+  final Value<String> parameters;
+  final Value<String> status;
+  final Value<int?> fiDelayYears;
+  final Value<DateTime> createdAt;
+  final Value<DateTime?> implementedAt;
+  final Value<DateTime?> deletedAt;
+  final Value<int> rowid;
+  const DecisionsCompanion({
+    this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.familyId = const Value.absent(),
+    this.decisionType = const Value.absent(),
+    this.name = const Value.absent(),
+    this.parameters = const Value.absent(),
+    this.status = const Value.absent(),
+    this.fiDelayYears = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.implementedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  DecisionsCompanion.insert({
+    required String id,
+    required String userId,
+    required String familyId,
+    required String decisionType,
+    required String name,
+    required String parameters,
+    this.status = const Value.absent(),
+    this.fiDelayYears = const Value.absent(),
+    required DateTime createdAt,
+    this.implementedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       familyId = Value(familyId),
+       decisionType = Value(decisionType),
+       name = Value(name),
+       parameters = Value(parameters),
+       createdAt = Value(createdAt);
+  static Insertable<Decision> custom({
+    Expression<String>? id,
+    Expression<String>? userId,
+    Expression<String>? familyId,
+    Expression<String>? decisionType,
+    Expression<String>? name,
+    Expression<String>? parameters,
+    Expression<String>? status,
+    Expression<int>? fiDelayYears,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? implementedAt,
+    Expression<DateTime>? deletedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      if (familyId != null) 'family_id': familyId,
+      if (decisionType != null) 'decision_type': decisionType,
+      if (name != null) 'name': name,
+      if (parameters != null) 'parameters': parameters,
+      if (status != null) 'status': status,
+      if (fiDelayYears != null) 'fi_delay_years': fiDelayYears,
+      if (createdAt != null) 'created_at': createdAt,
+      if (implementedAt != null) 'implemented_at': implementedAt,
+      if (deletedAt != null) 'deleted_at': deletedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  DecisionsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? userId,
+    Value<String>? familyId,
+    Value<String>? decisionType,
+    Value<String>? name,
+    Value<String>? parameters,
+    Value<String>? status,
+    Value<int?>? fiDelayYears,
+    Value<DateTime>? createdAt,
+    Value<DateTime?>? implementedAt,
+    Value<DateTime?>? deletedAt,
+    Value<int>? rowid,
+  }) {
+    return DecisionsCompanion(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      familyId: familyId ?? this.familyId,
+      decisionType: decisionType ?? this.decisionType,
+      name: name ?? this.name,
+      parameters: parameters ?? this.parameters,
+      status: status ?? this.status,
+      fiDelayYears: fiDelayYears ?? this.fiDelayYears,
+      createdAt: createdAt ?? this.createdAt,
+      implementedAt: implementedAt ?? this.implementedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (familyId.present) {
+      map['family_id'] = Variable<String>(familyId.value);
+    }
+    if (decisionType.present) {
+      map['decision_type'] = Variable<String>(decisionType.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (parameters.present) {
+      map['parameters'] = Variable<String>(parameters.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (fiDelayYears.present) {
+      map['fi_delay_years'] = Variable<int>(fiDelayYears.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (implementedAt.present) {
+      map['implemented_at'] = Variable<DateTime>(implementedAt.value);
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DecisionsCompanion(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('familyId: $familyId, ')
+          ..write('decisionType: $decisionType, ')
+          ..write('name: $name, ')
+          ..write('parameters: $parameters, ')
+          ..write('status: $status, ')
+          ..write('fiDelayYears: $fiDelayYears, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('implementedAt: $implementedAt, ')
+          ..write('deletedAt: $deletedAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -9752,6 +11224,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $NetWorthMilestonesTable netWorthMilestones =
       $NetWorthMilestonesTable(this);
   late final $RecurringRulesTable recurringRules = $RecurringRulesTable(this);
+  late final $AllocationTargetsTable allocationTargets =
+      $AllocationTargetsTable(this);
+  late final $DecisionsTable decisions = $DecisionsTable(this);
   late final $SyncChangelogTable syncChangelog = $SyncChangelogTable(this);
   late final $SyncStateTableTable syncStateTable = $SyncStateTableTable(this);
   @override
@@ -9774,6 +11249,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     lifeProfiles,
     netWorthMilestones,
     recurringRules,
+    allocationTargets,
+    decisions,
     syncChangelog,
     syncStateTable,
   ];
@@ -10068,6 +11545,24 @@ final class $$FamiliesTableReferences
     ).filter((f) => f.familyId.id.sqlEquals($_itemColumn<String>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_recurringRulesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$DecisionsTable, List<Decision>>
+  _decisionsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.decisions,
+    aliasName: $_aliasNameGenerator(db.families.id, db.decisions.familyId),
+  );
+
+  $$DecisionsTableProcessedTableManager get decisionsRefs {
+    final manager = $$DecisionsTableTableManager(
+      $_db,
+      $_db.decisions,
+    ).filter((f) => f.familyId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_decisionsRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -10444,6 +11939,31 @@ class $$FamiliesTableFilterComposer
           }) => $$RecurringRulesTableFilterComposer(
             $db: $db,
             $table: $db.recurringRules,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> decisionsRefs(
+    Expression<bool> Function($$DecisionsTableFilterComposer f) f,
+  ) {
+    final $$DecisionsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.decisions,
+      getReferencedColumn: (t) => t.familyId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DecisionsTableFilterComposer(
+            $db: $db,
+            $table: $db.decisions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -10858,6 +12378,31 @@ class $$FamiliesTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> decisionsRefs<T extends Object>(
+    Expression<T> Function($$DecisionsTableAnnotationComposer a) f,
+  ) {
+    final $$DecisionsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.decisions,
+      getReferencedColumn: (t) => t.familyId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DecisionsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.decisions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$FamiliesTableTableManager
@@ -10888,6 +12433,7 @@ class $$FamiliesTableTableManager
             bool lifeProfilesRefs,
             bool netWorthMilestonesRefs,
             bool recurringRulesRefs,
+            bool decisionsRefs,
           })
         > {
   $$FamiliesTableTableManager(_$AppDatabase db, $FamiliesTable table)
@@ -10953,6 +12499,7 @@ class $$FamiliesTableTableManager
                 lifeProfilesRefs = false,
                 netWorthMilestonesRefs = false,
                 recurringRulesRefs = false,
+                decisionsRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -10971,6 +12518,7 @@ class $$FamiliesTableTableManager
                     if (lifeProfilesRefs) db.lifeProfiles,
                     if (netWorthMilestonesRefs) db.netWorthMilestones,
                     if (recurringRulesRefs) db.recurringRules,
+                    if (decisionsRefs) db.decisions,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
@@ -11261,6 +12809,27 @@ class $$FamiliesTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (decisionsRefs)
+                        await $_getPrefetchedData<
+                          Family,
+                          $FamiliesTable,
+                          Decision
+                        >(
+                          currentTable: table,
+                          referencedTable: $$FamiliesTableReferences
+                              ._decisionsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$FamiliesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).decisionsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.familyId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -11296,6 +12865,7 @@ typedef $$FamiliesTableProcessedTableManager =
         bool lifeProfilesRefs,
         bool netWorthMilestonesRefs,
         bool recurringRulesRefs,
+        bool decisionsRefs,
       })
     >;
 typedef $$UsersTableCreateCompanionBuilder =
@@ -15040,6 +16610,9 @@ typedef $$GoalsTableCreateCompanionBuilder =
       Value<String> status,
       Value<String?> linkedAccountId,
       required String familyId,
+      Value<String> goalCategory,
+      Value<int?> downPaymentPctBp,
+      Value<int?> educationEscalationRateBp,
       required DateTime createdAt,
       Value<int> rowid,
     });
@@ -15055,6 +16628,9 @@ typedef $$GoalsTableUpdateCompanionBuilder =
       Value<String> status,
       Value<String?> linkedAccountId,
       Value<String> familyId,
+      Value<String> goalCategory,
+      Value<int?> downPaymentPctBp,
+      Value<int?> educationEscalationRateBp,
       Value<DateTime> createdAt,
       Value<int> rowid,
     });
@@ -15169,6 +16745,21 @@ class $$GoalsTableFilterComposer extends Composer<_$AppDatabase, $GoalsTable> {
 
   ColumnFilters<String> get status => $composableBuilder(
     column: $table.status,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get goalCategory => $composableBuilder(
+    column: $table.goalCategory,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get downPaymentPctBp => $composableBuilder(
+    column: $table.downPaymentPctBp,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get educationEscalationRateBp => $composableBuilder(
+    column: $table.educationEscalationRateBp,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -15298,6 +16889,21 @@ class $$GoalsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get goalCategory => $composableBuilder(
+    column: $table.goalCategory,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get downPaymentPctBp => $composableBuilder(
+    column: $table.downPaymentPctBp,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get educationEscalationRateBp => $composableBuilder(
+    column: $table.educationEscalationRateBp,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -15390,6 +16996,21 @@ class $$GoalsTableAnnotationComposer
 
   GeneratedColumn<String> get status =>
       $composableBuilder(column: $table.status, builder: (column) => column);
+
+  GeneratedColumn<String> get goalCategory => $composableBuilder(
+    column: $table.goalCategory,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get downPaymentPctBp => $composableBuilder(
+    column: $table.downPaymentPctBp,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get educationEscalationRateBp => $composableBuilder(
+    column: $table.educationEscalationRateBp,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -15509,6 +17130,9 @@ class $$GoalsTableTableManager
                 Value<String> status = const Value.absent(),
                 Value<String?> linkedAccountId = const Value.absent(),
                 Value<String> familyId = const Value.absent(),
+                Value<String> goalCategory = const Value.absent(),
+                Value<int?> downPaymentPctBp = const Value.absent(),
+                Value<int?> educationEscalationRateBp = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => GoalsCompanion(
@@ -15522,6 +17146,9 @@ class $$GoalsTableTableManager
                 status: status,
                 linkedAccountId: linkedAccountId,
                 familyId: familyId,
+                goalCategory: goalCategory,
+                downPaymentPctBp: downPaymentPctBp,
+                educationEscalationRateBp: educationEscalationRateBp,
                 createdAt: createdAt,
                 rowid: rowid,
               ),
@@ -15537,6 +17164,9 @@ class $$GoalsTableTableManager
                 Value<String> status = const Value.absent(),
                 Value<String?> linkedAccountId = const Value.absent(),
                 required String familyId,
+                Value<String> goalCategory = const Value.absent(),
+                Value<int?> downPaymentPctBp = const Value.absent(),
+                Value<int?> educationEscalationRateBp = const Value.absent(),
                 required DateTime createdAt,
                 Value<int> rowid = const Value.absent(),
               }) => GoalsCompanion.insert(
@@ -15550,6 +17180,9 @@ class $$GoalsTableTableManager
                 status: status,
                 linkedAccountId: linkedAccountId,
                 familyId: familyId,
+                goalCategory: goalCategory,
+                downPaymentPctBp: downPaymentPctBp,
+                educationEscalationRateBp: educationEscalationRateBp,
                 createdAt: createdAt,
                 rowid: rowid,
               ),
@@ -17309,6 +18942,30 @@ final class $$LifeProfilesTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<$AllocationTargetsTable, List<AllocationTarget>>
+  _allocationTargetsRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.allocationTargets,
+        aliasName: $_aliasNameGenerator(
+          db.lifeProfiles.id,
+          db.allocationTargets.lifeProfileId,
+        ),
+      );
+
+  $$AllocationTargetsTableProcessedTableManager get allocationTargetsRefs {
+    final manager = $$AllocationTargetsTableTableManager(
+      $_db,
+      $_db.allocationTargets,
+    ).filter((f) => f.lifeProfileId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _allocationTargetsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$LifeProfilesTableFilterComposer
@@ -17419,6 +19076,31 @@ class $$LifeProfilesTableFilterComposer
           }) => $$NetWorthMilestonesTableFilterComposer(
             $db: $db,
             $table: $db.netWorthMilestones,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> allocationTargetsRefs(
+    Expression<bool> Function($$AllocationTargetsTableFilterComposer f) f,
+  ) {
+    final $$AllocationTargetsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.allocationTargets,
+      getReferencedColumn: (t) => t.lifeProfileId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AllocationTargetsTableFilterComposer(
+            $db: $db,
+            $table: $db.allocationTargets,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -17627,6 +19309,32 @@ class $$LifeProfilesTableAnnotationComposer
         );
     return f(composer);
   }
+
+  Expression<T> allocationTargetsRefs<T extends Object>(
+    Expression<T> Function($$AllocationTargetsTableAnnotationComposer a) f,
+  ) {
+    final $$AllocationTargetsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.allocationTargets,
+          getReferencedColumn: (t) => t.lifeProfileId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$AllocationTargetsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.allocationTargets,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$LifeProfilesTableTableManager
@@ -17642,7 +19350,11 @@ class $$LifeProfilesTableTableManager
           $$LifeProfilesTableUpdateCompanionBuilder,
           (LifeProfile, $$LifeProfilesTableReferences),
           LifeProfile,
-          PrefetchHooks Function({bool familyId, bool netWorthMilestonesRefs})
+          PrefetchHooks Function({
+            bool familyId,
+            bool netWorthMilestonesRefs,
+            bool allocationTargetsRefs,
+          })
         > {
   $$LifeProfilesTableTableManager(_$AppDatabase db, $LifeProfilesTable table)
     : super(
@@ -17728,11 +19440,16 @@ class $$LifeProfilesTableTableManager
               )
               .toList(),
           prefetchHooksCallback:
-              ({familyId = false, netWorthMilestonesRefs = false}) {
+              ({
+                familyId = false,
+                netWorthMilestonesRefs = false,
+                allocationTargetsRefs = false,
+              }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
                     if (netWorthMilestonesRefs) db.netWorthMilestones,
+                    if (allocationTargetsRefs) db.allocationTargets,
                   ],
                   addJoins:
                       <
@@ -17791,6 +19508,27 @@ class $$LifeProfilesTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (allocationTargetsRefs)
+                        await $_getPrefetchedData<
+                          LifeProfile,
+                          $LifeProfilesTable,
+                          AllocationTarget
+                        >(
+                          currentTable: table,
+                          referencedTable: $$LifeProfilesTableReferences
+                              ._allocationTargetsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$LifeProfilesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).allocationTargetsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.lifeProfileId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -17811,7 +19549,11 @@ typedef $$LifeProfilesTableProcessedTableManager =
       $$LifeProfilesTableUpdateCompanionBuilder,
       (LifeProfile, $$LifeProfilesTableReferences),
       LifeProfile,
-      PrefetchHooks Function({bool familyId, bool netWorthMilestonesRefs})
+      PrefetchHooks Function({
+        bool familyId,
+        bool netWorthMilestonesRefs,
+        bool allocationTargetsRefs,
+      })
     >;
 typedef $$NetWorthMilestonesTableCreateCompanionBuilder =
     NetWorthMilestonesCompanion Function({
@@ -18361,6 +20103,7 @@ typedef $$RecurringRulesTableCreateCompanionBuilder =
       required DateTime createdAt,
       Value<DateTime?> deletedAt,
       Value<bool> isSecondaryIncome,
+      Value<String?> decisionId,
       Value<int> rowid,
     });
 typedef $$RecurringRulesTableUpdateCompanionBuilder =
@@ -18384,6 +20127,7 @@ typedef $$RecurringRulesTableUpdateCompanionBuilder =
       Value<DateTime> createdAt,
       Value<DateTime?> deletedAt,
       Value<bool> isSecondaryIncome,
+      Value<String?> decisionId,
       Value<int> rowid,
     });
 
@@ -18553,6 +20297,11 @@ class $$RecurringRulesTableFilterComposer
 
   ColumnFilters<bool> get isSecondaryIncome => $composableBuilder(
     column: $table.isSecondaryIncome,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get decisionId => $composableBuilder(
+    column: $table.decisionId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -18733,6 +20482,11 @@ class $$RecurringRulesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get decisionId => $composableBuilder(
+    column: $table.decisionId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$AccountsTableOrderingComposer get accountId {
     final $$AccountsTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -18888,6 +20642,11 @@ class $$RecurringRulesTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<String> get decisionId => $composableBuilder(
+    column: $table.decisionId,
+    builder: (column) => column,
+  );
+
   $$AccountsTableAnnotationComposer get accountId {
     final $$AccountsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
@@ -19035,6 +20794,7 @@ class $$RecurringRulesTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime?> deletedAt = const Value.absent(),
                 Value<bool> isSecondaryIncome = const Value.absent(),
+                Value<String?> decisionId = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => RecurringRulesCompanion(
                 id: id,
@@ -19056,6 +20816,7 @@ class $$RecurringRulesTableTableManager
                 createdAt: createdAt,
                 deletedAt: deletedAt,
                 isSecondaryIncome: isSecondaryIncome,
+                decisionId: decisionId,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -19079,6 +20840,7 @@ class $$RecurringRulesTableTableManager
                 required DateTime createdAt,
                 Value<DateTime?> deletedAt = const Value.absent(),
                 Value<bool> isSecondaryIncome = const Value.absent(),
+                Value<String?> decisionId = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => RecurringRulesCompanion.insert(
                 id: id,
@@ -19100,6 +20862,7 @@ class $$RecurringRulesTableTableManager
                 createdAt: createdAt,
                 deletedAt: deletedAt,
                 isSecondaryIncome: isSecondaryIncome,
+                decisionId: decisionId,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -19226,6 +20989,863 @@ typedef $$RecurringRulesTableProcessedTableManager =
         bool categoryId,
         bool familyId,
       })
+    >;
+typedef $$AllocationTargetsTableCreateCompanionBuilder =
+    AllocationTargetsCompanion Function({
+      required String id,
+      required String lifeProfileId,
+      required int ageBandStart,
+      required int ageBandEnd,
+      required int equityBp,
+      required int debtBp,
+      required int goldBp,
+      required int cashBp,
+      required DateTime createdAt,
+      Value<int> rowid,
+    });
+typedef $$AllocationTargetsTableUpdateCompanionBuilder =
+    AllocationTargetsCompanion Function({
+      Value<String> id,
+      Value<String> lifeProfileId,
+      Value<int> ageBandStart,
+      Value<int> ageBandEnd,
+      Value<int> equityBp,
+      Value<int> debtBp,
+      Value<int> goldBp,
+      Value<int> cashBp,
+      Value<DateTime> createdAt,
+      Value<int> rowid,
+    });
+
+final class $$AllocationTargetsTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $AllocationTargetsTable,
+          AllocationTarget
+        > {
+  $$AllocationTargetsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $LifeProfilesTable _lifeProfileIdTable(_$AppDatabase db) =>
+      db.lifeProfiles.createAlias(
+        $_aliasNameGenerator(
+          db.allocationTargets.lifeProfileId,
+          db.lifeProfiles.id,
+        ),
+      );
+
+  $$LifeProfilesTableProcessedTableManager get lifeProfileId {
+    final $_column = $_itemColumn<String>('life_profile_id')!;
+
+    final manager = $$LifeProfilesTableTableManager(
+      $_db,
+      $_db.lifeProfiles,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_lifeProfileIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$AllocationTargetsTableFilterComposer
+    extends Composer<_$AppDatabase, $AllocationTargetsTable> {
+  $$AllocationTargetsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get ageBandStart => $composableBuilder(
+    column: $table.ageBandStart,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get ageBandEnd => $composableBuilder(
+    column: $table.ageBandEnd,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get equityBp => $composableBuilder(
+    column: $table.equityBp,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get debtBp => $composableBuilder(
+    column: $table.debtBp,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get goldBp => $composableBuilder(
+    column: $table.goldBp,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get cashBp => $composableBuilder(
+    column: $table.cashBp,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$LifeProfilesTableFilterComposer get lifeProfileId {
+    final $$LifeProfilesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.lifeProfileId,
+      referencedTable: $db.lifeProfiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LifeProfilesTableFilterComposer(
+            $db: $db,
+            $table: $db.lifeProfiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$AllocationTargetsTableOrderingComposer
+    extends Composer<_$AppDatabase, $AllocationTargetsTable> {
+  $$AllocationTargetsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get ageBandStart => $composableBuilder(
+    column: $table.ageBandStart,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get ageBandEnd => $composableBuilder(
+    column: $table.ageBandEnd,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get equityBp => $composableBuilder(
+    column: $table.equityBp,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get debtBp => $composableBuilder(
+    column: $table.debtBp,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get goldBp => $composableBuilder(
+    column: $table.goldBp,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get cashBp => $composableBuilder(
+    column: $table.cashBp,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$LifeProfilesTableOrderingComposer get lifeProfileId {
+    final $$LifeProfilesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.lifeProfileId,
+      referencedTable: $db.lifeProfiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LifeProfilesTableOrderingComposer(
+            $db: $db,
+            $table: $db.lifeProfiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$AllocationTargetsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $AllocationTargetsTable> {
+  $$AllocationTargetsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get ageBandStart => $composableBuilder(
+    column: $table.ageBandStart,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get ageBandEnd => $composableBuilder(
+    column: $table.ageBandEnd,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get equityBp =>
+      $composableBuilder(column: $table.equityBp, builder: (column) => column);
+
+  GeneratedColumn<int> get debtBp =>
+      $composableBuilder(column: $table.debtBp, builder: (column) => column);
+
+  GeneratedColumn<int> get goldBp =>
+      $composableBuilder(column: $table.goldBp, builder: (column) => column);
+
+  GeneratedColumn<int> get cashBp =>
+      $composableBuilder(column: $table.cashBp, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  $$LifeProfilesTableAnnotationComposer get lifeProfileId {
+    final $$LifeProfilesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.lifeProfileId,
+      referencedTable: $db.lifeProfiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LifeProfilesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.lifeProfiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$AllocationTargetsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $AllocationTargetsTable,
+          AllocationTarget,
+          $$AllocationTargetsTableFilterComposer,
+          $$AllocationTargetsTableOrderingComposer,
+          $$AllocationTargetsTableAnnotationComposer,
+          $$AllocationTargetsTableCreateCompanionBuilder,
+          $$AllocationTargetsTableUpdateCompanionBuilder,
+          (AllocationTarget, $$AllocationTargetsTableReferences),
+          AllocationTarget,
+          PrefetchHooks Function({bool lifeProfileId})
+        > {
+  $$AllocationTargetsTableTableManager(
+    _$AppDatabase db,
+    $AllocationTargetsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$AllocationTargetsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$AllocationTargetsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$AllocationTargetsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> lifeProfileId = const Value.absent(),
+                Value<int> ageBandStart = const Value.absent(),
+                Value<int> ageBandEnd = const Value.absent(),
+                Value<int> equityBp = const Value.absent(),
+                Value<int> debtBp = const Value.absent(),
+                Value<int> goldBp = const Value.absent(),
+                Value<int> cashBp = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => AllocationTargetsCompanion(
+                id: id,
+                lifeProfileId: lifeProfileId,
+                ageBandStart: ageBandStart,
+                ageBandEnd: ageBandEnd,
+                equityBp: equityBp,
+                debtBp: debtBp,
+                goldBp: goldBp,
+                cashBp: cashBp,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String lifeProfileId,
+                required int ageBandStart,
+                required int ageBandEnd,
+                required int equityBp,
+                required int debtBp,
+                required int goldBp,
+                required int cashBp,
+                required DateTime createdAt,
+                Value<int> rowid = const Value.absent(),
+              }) => AllocationTargetsCompanion.insert(
+                id: id,
+                lifeProfileId: lifeProfileId,
+                ageBandStart: ageBandStart,
+                ageBandEnd: ageBandEnd,
+                equityBp: equityBp,
+                debtBp: debtBp,
+                goldBp: goldBp,
+                cashBp: cashBp,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$AllocationTargetsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({lifeProfileId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (lifeProfileId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.lifeProfileId,
+                                referencedTable:
+                                    $$AllocationTargetsTableReferences
+                                        ._lifeProfileIdTable(db),
+                                referencedColumn:
+                                    $$AllocationTargetsTableReferences
+                                        ._lifeProfileIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$AllocationTargetsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $AllocationTargetsTable,
+      AllocationTarget,
+      $$AllocationTargetsTableFilterComposer,
+      $$AllocationTargetsTableOrderingComposer,
+      $$AllocationTargetsTableAnnotationComposer,
+      $$AllocationTargetsTableCreateCompanionBuilder,
+      $$AllocationTargetsTableUpdateCompanionBuilder,
+      (AllocationTarget, $$AllocationTargetsTableReferences),
+      AllocationTarget,
+      PrefetchHooks Function({bool lifeProfileId})
+    >;
+typedef $$DecisionsTableCreateCompanionBuilder =
+    DecisionsCompanion Function({
+      required String id,
+      required String userId,
+      required String familyId,
+      required String decisionType,
+      required String name,
+      required String parameters,
+      Value<String> status,
+      Value<int?> fiDelayYears,
+      required DateTime createdAt,
+      Value<DateTime?> implementedAt,
+      Value<DateTime?> deletedAt,
+      Value<int> rowid,
+    });
+typedef $$DecisionsTableUpdateCompanionBuilder =
+    DecisionsCompanion Function({
+      Value<String> id,
+      Value<String> userId,
+      Value<String> familyId,
+      Value<String> decisionType,
+      Value<String> name,
+      Value<String> parameters,
+      Value<String> status,
+      Value<int?> fiDelayYears,
+      Value<DateTime> createdAt,
+      Value<DateTime?> implementedAt,
+      Value<DateTime?> deletedAt,
+      Value<int> rowid,
+    });
+
+final class $$DecisionsTableReferences
+    extends BaseReferences<_$AppDatabase, $DecisionsTable, Decision> {
+  $$DecisionsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $FamiliesTable _familyIdTable(_$AppDatabase db) => db.families
+      .createAlias($_aliasNameGenerator(db.decisions.familyId, db.families.id));
+
+  $$FamiliesTableProcessedTableManager get familyId {
+    final $_column = $_itemColumn<String>('family_id')!;
+
+    final manager = $$FamiliesTableTableManager(
+      $_db,
+      $_db.families,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_familyIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$DecisionsTableFilterComposer
+    extends Composer<_$AppDatabase, $DecisionsTable> {
+  $$DecisionsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get decisionType => $composableBuilder(
+    column: $table.decisionType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get parameters => $composableBuilder(
+    column: $table.parameters,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get fiDelayYears => $composableBuilder(
+    column: $table.fiDelayYears,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get implementedAt => $composableBuilder(
+    column: $table.implementedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$FamiliesTableFilterComposer get familyId {
+    final $$FamiliesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.familyId,
+      referencedTable: $db.families,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$FamiliesTableFilterComposer(
+            $db: $db,
+            $table: $db.families,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DecisionsTableOrderingComposer
+    extends Composer<_$AppDatabase, $DecisionsTable> {
+  $$DecisionsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get decisionType => $composableBuilder(
+    column: $table.decisionType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get parameters => $composableBuilder(
+    column: $table.parameters,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get fiDelayYears => $composableBuilder(
+    column: $table.fiDelayYears,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get implementedAt => $composableBuilder(
+    column: $table.implementedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$FamiliesTableOrderingComposer get familyId {
+    final $$FamiliesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.familyId,
+      referencedTable: $db.families,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$FamiliesTableOrderingComposer(
+            $db: $db,
+            $table: $db.families,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DecisionsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DecisionsTable> {
+  $$DecisionsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<String> get decisionType => $composableBuilder(
+    column: $table.decisionType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get parameters => $composableBuilder(
+    column: $table.parameters,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => column);
+
+  GeneratedColumn<int> get fiDelayYears => $composableBuilder(
+    column: $table.fiDelayYears,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get implementedAt => $composableBuilder(
+    column: $table.implementedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
+
+  $$FamiliesTableAnnotationComposer get familyId {
+    final $$FamiliesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.familyId,
+      referencedTable: $db.families,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$FamiliesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.families,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DecisionsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $DecisionsTable,
+          Decision,
+          $$DecisionsTableFilterComposer,
+          $$DecisionsTableOrderingComposer,
+          $$DecisionsTableAnnotationComposer,
+          $$DecisionsTableCreateCompanionBuilder,
+          $$DecisionsTableUpdateCompanionBuilder,
+          (Decision, $$DecisionsTableReferences),
+          Decision,
+          PrefetchHooks Function({bool familyId})
+        > {
+  $$DecisionsTableTableManager(_$AppDatabase db, $DecisionsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$DecisionsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$DecisionsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$DecisionsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> userId = const Value.absent(),
+                Value<String> familyId = const Value.absent(),
+                Value<String> decisionType = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String> parameters = const Value.absent(),
+                Value<String> status = const Value.absent(),
+                Value<int?> fiDelayYears = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> implementedAt = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => DecisionsCompanion(
+                id: id,
+                userId: userId,
+                familyId: familyId,
+                decisionType: decisionType,
+                name: name,
+                parameters: parameters,
+                status: status,
+                fiDelayYears: fiDelayYears,
+                createdAt: createdAt,
+                implementedAt: implementedAt,
+                deletedAt: deletedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String userId,
+                required String familyId,
+                required String decisionType,
+                required String name,
+                required String parameters,
+                Value<String> status = const Value.absent(),
+                Value<int?> fiDelayYears = const Value.absent(),
+                required DateTime createdAt,
+                Value<DateTime?> implementedAt = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => DecisionsCompanion.insert(
+                id: id,
+                userId: userId,
+                familyId: familyId,
+                decisionType: decisionType,
+                name: name,
+                parameters: parameters,
+                status: status,
+                fiDelayYears: fiDelayYears,
+                createdAt: createdAt,
+                implementedAt: implementedAt,
+                deletedAt: deletedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$DecisionsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({familyId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (familyId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.familyId,
+                                referencedTable: $$DecisionsTableReferences
+                                    ._familyIdTable(db),
+                                referencedColumn: $$DecisionsTableReferences
+                                    ._familyIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$DecisionsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $DecisionsTable,
+      Decision,
+      $$DecisionsTableFilterComposer,
+      $$DecisionsTableOrderingComposer,
+      $$DecisionsTableAnnotationComposer,
+      $$DecisionsTableCreateCompanionBuilder,
+      $$DecisionsTableUpdateCompanionBuilder,
+      (Decision, $$DecisionsTableReferences),
+      Decision,
+      PrefetchHooks Function({bool familyId})
     >;
 typedef $$SyncChangelogTableCreateCompanionBuilder =
     SyncChangelogCompanion Function({
@@ -19734,6 +22354,10 @@ class $AppDatabaseManager {
       $$NetWorthMilestonesTableTableManager(_db, _db.netWorthMilestones);
   $$RecurringRulesTableTableManager get recurringRules =>
       $$RecurringRulesTableTableManager(_db, _db.recurringRules);
+  $$AllocationTargetsTableTableManager get allocationTargets =>
+      $$AllocationTargetsTableTableManager(_db, _db.allocationTargets);
+  $$DecisionsTableTableManager get decisions =>
+      $$DecisionsTableTableManager(_db, _db.decisions);
   $$SyncChangelogTableTableManager get syncChangelog =>
       $$SyncChangelogTableTableManager(_db, _db.syncChangelog);
   $$SyncStateTableTableTableManager get syncStateTable =>

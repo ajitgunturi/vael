@@ -1,11 +1,13 @@
 import 'package:drift/drift.dart';
 
 import 'tables/accounts.dart';
+import 'tables/allocation_targets.dart';
 import 'tables/audit_log.dart';
 import 'tables/balance_snapshots.dart';
 import 'tables/budgets.dart';
 import 'tables/categories.dart';
 import 'tables/category_groups.dart';
+import 'tables/decisions.dart';
 import 'tables/families.dart';
 import 'tables/goals.dart';
 import 'tables/investment_holdings.dart';
@@ -37,6 +39,8 @@ part 'database.g.dart';
     LifeProfiles,
     NetWorthMilestones,
     RecurringRules,
+    AllocationTargets,
+    Decisions,
     SyncChangelog,
     SyncStateTable,
   ],
@@ -45,7 +49,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e);
 
   @override
-  int get schemaVersion => 10;
+  int get schemaVersion => 11;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -68,6 +72,15 @@ class AppDatabase extends _$AppDatabase {
       // v9 -> v10: add net_worth_milestones table
       if (from < 10) {
         await m.createTable(netWorthMilestones);
+      }
+      // v10 -> v11: allocation_targets, decisions tables + goal/rule columns
+      if (from < 11) {
+        await m.createTable(allocationTargets);
+        await m.createTable(decisions);
+        await m.addColumn(goals, goals.goalCategory);
+        await m.addColumn(goals, goals.downPaymentPctBp);
+        await m.addColumn(goals, goals.educationEscalationRateBp);
+        await m.addColumn(recurringRules, recurringRules.decisionId);
       }
     },
     beforeOpen: (details) async {
