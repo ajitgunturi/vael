@@ -35,7 +35,7 @@ Requirements for the financial planning extension (Phases 6-8). Each maps to roa
 - [x] **ALLOC-02**: Default India-native glide paths provided for conservative, moderate, and aggressive profiles
 - [x] **ALLOC-03**: Current portfolio allocation computed from investment_holdings mapped to asset classes (MF/stocks→equity, PPF/EPF/FD/bonds→debt, etc.)
 - [x] **ALLOC-04**: User can see rebalancing delta (actual % vs target %) as advisory output
-- [ ] **ALLOC-05**: User can customize allocation targets for any age band
+- [x] **ALLOC-05**: User can customize allocation targets for any age band
 
 ### Income Growth
 
@@ -46,9 +46,9 @@ Requirements for the financial planning extension (Phases 6-8). Each maps to roa
 
 ### Major Purchase Planning
 
-- [ ] **PURCH-01**: User can create a major purchase goal (home, car, education) with target amount, target date, and down payment percentage
+- [x] **PURCH-01**: User can create a major purchase goal (home, car, education) with target amount, target date, and down payment percentage
 - [x] **PURCH-02**: Purchase goal shows impact on net worth trajectory and FI date (e.g., "buying house at 35 delays FI by 3 years")
-- [ ] **PURCH-03**: User can optionally create a linked loan with EMI that feeds back into recurring expenses post-purchase
+- [x] **PURCH-03**: User can optionally create a linked loan with EMI that feeds back into recurring expenses post-purchase
 - [x] **PURCH-04**: Education goals support year-specific cost escalation rate
 
 ### Emergency Fund
@@ -191,10 +191,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ALLOC-02 | Phase 8 | Complete |
 | ALLOC-03 | Phase 8 | Complete |
 | ALLOC-04 | Phase 8 | Complete |
-| ALLOC-05 | Phase 8 | Pending |
-| PURCH-01 | Phase 8 | Pending |
+| ALLOC-05 | Phase 8 | Complete |
+| PURCH-01 | Phase 8 | Complete |
 | PURCH-02 | Phase 8 | Complete |
-| PURCH-03 | Phase 8 | Pending |
+| PURCH-03 | Phase 8 | Complete |
 | PURCH-04 | Phase 8 | Complete |
 | NAV-07 | Phase 8 | Pending |
 | EF-01 | Phase 9 | Pending |
