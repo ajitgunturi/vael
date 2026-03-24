@@ -44,13 +44,15 @@ Privacy is non-negotiable. Data never leaves the device unencrypted. No telemetr
 - ✓ Savings rate computation (income - expenses / income) with MonthlyMetrics caching — Phase 10
 - ✓ 12-month savings rate trend chart with health bands (green ≥20%, amber 10-20%, red <10%) — Phase 10
 
+- ✓ Day-by-day cash flow projections from recurring rules with per-account running balances — Phase 11
+- ✓ Per-account balance threshold alerts with inline warnings and configurable minimums — Phase 11
+- ✓ Priority-ordered savings allocation rules with advisory surplus distribution (no auto-transactions) — Phase 11
+- ✓ Opportunity fund account designation with target tracking — Phase 11
+
 ### Active
 
-<!-- Current scope: Cash Flow & Savings Allocation (Phases 11–12+). -->
+<!-- Current scope: Planning Dashboard & Insights (Phase 12+). -->
 
-- [ ] Cash flow calendar (day-by-day income/expense map with threshold alerts)
-- [ ] Savings allocation rules (priority-ordered surplus distribution)
-- [ ] Opportunity fund designation and tracking
 - [ ] Unified planning dashboard ("5 numbers" financial health view)
 - [ ] Lifetime timeline visualization (decades, milestones, FI date, goals)
 - [ ] Cash flow health summary with savings waterfall
@@ -117,4 +119,4 @@ The extension plan adds a **Planning Intelligence Layer** on top of the existing
 | Savings allocation is advisory only (no auto-create transactions) | User makes the judgment call; deterministic principle | — Pending |
 
 ---
-*Last updated: 2026-03-24 after Phase 10 completion*
+*Last updated: 2026-03-24 after Phase 11 completion*
