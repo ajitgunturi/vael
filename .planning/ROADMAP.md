@@ -112,12 +112,12 @@ Plans:
   3. User can see current month savings rate (income - expenses / income) as a percentage
   4. User can see 12-month savings rate trend line with health bands (green >= 20%, amber 10-20%, red < 10%)
   5. Goals screen is split into sections: Milestones, Sinking Funds, Investment Goals, Purchase Goals
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 10-01: TBD
-- [ ] 10-02: TBD
-- [ ] 10-03: TBD
+- [ ] 10-01-PLAN.md -- SinkingFundEngine TDD + enums, schema v13 migration (MonthlyMetrics table + sinkingFundSubType column), DAOs
+- [ ] 10-02-PLAN.md -- Tabbed GoalListScreen (3 tabs), SinkingFundCard, GoalTypePicker, GoalFormScreen SF extension, contribution flow
+- [ ] 10-03-PLAN.md -- Savings rate detail screen, CustomPainter trend chart, on-demand metrics caching, dashboard badge navigation
 
 **GAP Resolution**: RATE-03 resolves C10 (balance snapshots activated for historical savings rate computation).
 
@@ -184,7 +184,7 @@ Note: Phases 9-10-11 (cash management track) depend on Phase 6 but not on Phases
 | 7. FI Calculator & Net Worth Milestones | 3/3 | Complete   | 2026-03-22 |
 | 8. Asset Allocation & Purchase Planning | 5/5 | Complete   | 2026-03-23 |
 | 9. Emergency Fund & Cash Tiers | 3/3 | Complete   | 2026-03-23 |
-| 10. Sinking Funds & Savings Rate | 0/? | Not started | - |
+| 10. Sinking Funds & Savings Rate | 0/3 | Not started | - |
 | 11. Cash Flow & Savings Allocation | 0/? | Not started | - |
 | 12. Planning Dashboard & Lifetime Timeline | 0/? | Not started | - |
 | 13. Planning Insights & Integration Polish | 0/? | Not started | - |
