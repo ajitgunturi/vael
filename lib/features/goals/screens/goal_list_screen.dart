@@ -6,105 +6,172 @@ import '../../../shared/theme/spacing.dart';
 import '../../../shared/widgets/empty_state.dart';
 import '../providers/goal_providers.dart';
 import '../widgets/goal_card.dart';
-import 'goal_form_screen.dart';
+import '../widgets/goal_type_picker.dart';
+import '../widgets/sinking_fund_card.dart';
 
-/// Lists all goals for a family, sectioned by goalCategory.
+/// Lists all goals for a family in a tabbed layout.
 ///
-/// Sections: Investment Goals, Purchase Goals, Retirement.
-/// Empty sections are hidden.
-class GoalListScreen extends ConsumerWidget {
+/// Tabs: Sinking Funds (default) | Investments | Purchases.
+/// FAB opens GoalTypePicker bottom sheet for category selection.
+class GoalListScreen extends ConsumerStatefulWidget {
   const GoalListScreen({super.key, required this.familyId});
 
   final String familyId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final goalsAsync = ref.watch(goalListProvider(familyId));
-    final theme = Theme.of(context);
+  ConsumerState<GoalListScreen> createState() => _GoalListScreenState();
+}
 
+class _GoalListScreenState extends ConsumerState<GoalListScreen>
+    with SingleTickerProviderStateMixin {
+  late final TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Goals')),
-      body: goalsAsync.when(
-        data: (goals) {
-          if (goals.isEmpty) {
-            return EmptyState(
-              icon: Icons.flag,
-              title: 'No goals yet',
-              subtitle: 'Set a savings target to start tracking progress',
-              actionLabel: 'Add Goal',
-              onAction: () => _openForm(context),
-            );
-          }
-
-          // Group by category
-          final investmentGoals = goals
-              .where(
-                (g) =>
-                    g.goalCategory == 'investmentGoal' ||
-                    g.goalCategory.isEmpty,
-              )
-              .toList();
-          final purchaseGoals = goals
-              .where((g) => g.goalCategory == 'purchase')
-              .toList();
-          final retirementGoals = goals
-              .where((g) => g.goalCategory == 'retirement')
-              .toList();
-
-          return ListView(
-            padding: const EdgeInsets.all(Spacing.md),
-            children: [
-              if (investmentGoals.isNotEmpty)
-                _buildSection(
-                  context,
-                  theme,
-                  'Investment Goals',
-                  investmentGoals,
-                ),
-              if (purchaseGoals.isNotEmpty)
-                _buildSection(context, theme, 'Purchase Goals', purchaseGoals),
-              if (retirementGoals.isNotEmpty)
-                _buildSection(context, theme, 'Retirement', retirementGoals),
-            ],
-          );
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Error: $e')),
+      appBar: AppBar(
+        title: const Text('Goals'),
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: const [
+            Tab(text: 'Sinking Funds'),
+            Tab(text: 'Investments'),
+            Tab(text: 'Purchases'),
+          ],
+        ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          _SinkingFundsTab(familyId: widget.familyId),
+          _InvestmentsTab(familyId: widget.familyId),
+          _PurchasesTab(familyId: widget.familyId),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _openForm(context),
+        onPressed: () => showGoalTypePicker(context, widget.familyId),
         child: const Icon(Icons.add),
       ),
     );
   }
+}
 
-  Widget _buildSection(
-    BuildContext context,
-    ThemeData theme,
-    String title,
-    List<Goal> goals,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: Spacing.sm),
-          child: Text(
-            title,
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-        ...goals.map((goal) => GoalCard(goal: goal)),
-        const SizedBox(height: Spacing.md),
-      ],
+/// Sinking Funds tab with active/completed split and ExpansionTile.
+class _SinkingFundsTab extends ConsumerWidget {
+  const _SinkingFundsTab({required this.familyId});
+
+  final String familyId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final goalsAsync = ref.watch(sinkingFundGoalsProvider(familyId));
+
+    return goalsAsync.when(
+      data: (goals) {
+        if (goals.isEmpty) {
+          return const EmptyState(
+            icon: Icons.savings,
+            title: 'No sinking funds yet',
+            subtitle: 'Save for specific upcoming expenses',
+          );
+        }
+
+        final active = goals.where((g) => g.status != 'completed').toList();
+        final completed = goals.where((g) => g.status == 'completed').toList();
+
+        return ListView(
+          padding: const EdgeInsets.all(Spacing.md),
+          children: [
+            ...active.map((g) => SinkingFundCard(goal: g)),
+            if (completed.isNotEmpty)
+              ExpansionTile(
+                title: Text('Completed (${completed.length})'),
+                initiallyExpanded: false,
+                children: completed
+                    .map((g) => SinkingFundCard(goal: g))
+                    .toList(),
+              ),
+          ],
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, _) => Center(child: Text('Error: $e')),
     );
   }
+}
 
-  void _openForm(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => GoalFormScreen(familyId: familyId)),
+/// Investments tab using GoalCard for investment/retirement goals.
+class _InvestmentsTab extends ConsumerWidget {
+  const _InvestmentsTab({required this.familyId});
+
+  final String familyId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final goalsAsync = ref.watch(investmentGoalsProvider(familyId));
+
+    return _buildGoalList(
+      goalsAsync,
+      emptyIcon: Icons.trending_up,
+      emptyTitle: 'No investment goals yet',
+      emptySubtitle: 'Set a long-term wealth building target',
     );
   }
+}
+
+/// Purchases tab using GoalCard for purchase goals.
+class _PurchasesTab extends ConsumerWidget {
+  const _PurchasesTab({required this.familyId});
+
+  final String familyId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final goalsAsync = ref.watch(purchaseGoalsProvider(familyId));
+
+    return _buildGoalList(
+      goalsAsync,
+      emptyIcon: Icons.shopping_cart,
+      emptyTitle: 'No purchase goals yet',
+      emptySubtitle: 'Save for a big-ticket item',
+    );
+  }
+}
+
+Widget _buildGoalList(
+  AsyncValue<List<Goal>> goalsAsync, {
+  required IconData emptyIcon,
+  required String emptyTitle,
+  required String emptySubtitle,
+}) {
+  return goalsAsync.when(
+    data: (goals) {
+      if (goals.isEmpty) {
+        return EmptyState(
+          icon: emptyIcon,
+          title: emptyTitle,
+          subtitle: emptySubtitle,
+        );
+      }
+
+      return ListView(
+        padding: const EdgeInsets.all(Spacing.md),
+        children: goals.map((g) => GoalCard(goal: g)).toList(),
+      );
+    },
+    loading: () => const Center(child: CircularProgressIndicator()),
+    error: (e, _) => Center(child: Text('Error: $e')),
+  );
 }
