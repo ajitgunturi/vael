@@ -5,6 +5,7 @@ import '../../../core/database/database.dart';
 import '../../../core/models/money.dart';
 import '../../../shared/theme/color_tokens.dart';
 import '../../../shared/theme/spacing.dart';
+import '../../../shared/widgets/empty_state.dart';
 import '../providers/savings_rate_providers.dart';
 import '../widgets/savings_rate_trend_chart.dart';
 
@@ -53,7 +54,12 @@ class _SavingsRateDetailScreenState
 
   Widget _buildBody(BuildContext context, List<MonthlyMetric> metrics) {
     if (metrics.isEmpty) {
-      return const Center(child: Text('No savings data yet'));
+      return const EmptyState(
+        icon: Icons.savings,
+        title: 'No savings data yet',
+        subtitle:
+            'Add income and expense transactions to start tracking your savings rate.',
+      );
     }
 
     // Default selected metric to current (last) month

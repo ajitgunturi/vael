@@ -5,6 +5,7 @@ import '../../../core/financial/allocation_engine.dart';
 import '../../../core/models/enums.dart';
 import '../../../shared/theme/color_tokens.dart';
 import '../../../shared/theme/spacing.dart';
+import '../../../shared/widgets/empty_state.dart';
 import '../providers/allocation_provider.dart';
 import '../providers/life_profile_provider.dart';
 import '../widgets/allocation_donut_pair.dart';
@@ -152,39 +153,15 @@ class _EmptyNoHoldings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(Spacing.xl),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.pie_chart_outline,
-              size: 64,
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-            const SizedBox(height: Spacing.md),
-            Text('No investments yet', style: theme.textTheme.headlineMedium),
-            const SizedBox(height: Spacing.sm),
-            Text(
-              'Add your investments to see how your portfolio is allocated across asset classes.',
-              style: theme.textTheme.bodyMedium,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: Spacing.lg),
-            FilledButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (_) =>
-                        InvestmentPortfolioScreen(familyId: familyId),
-                  ),
-                );
-              },
-              child: const Text('Add Investment'),
-            ),
-          ],
+    return EmptyState(
+      icon: Icons.pie_chart_outline,
+      title: 'No investments yet',
+      subtitle:
+          'Add your investments to see how your portfolio is allocated across asset classes.',
+      actionLabel: 'Add Investment',
+      onAction: () => Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => InvestmentPortfolioScreen(familyId: familyId),
         ),
       ),
     );

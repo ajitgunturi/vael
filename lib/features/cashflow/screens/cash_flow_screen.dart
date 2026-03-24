@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '../../../core/financial/cash_flow_engine.dart';
 import '../../../core/providers/session_providers.dart';
 import '../../../shared/theme/spacing.dart';
+import '../../../shared/widgets/empty_state.dart';
 import '../providers/cash_flow_providers.dart';
 import '../../recurring/screens/recurring_form_screen.dart';
 import '../widgets/cash_flow_alert_row.dart';
@@ -95,7 +96,7 @@ class _CashFlowScreenState extends ConsumerState<CashFlowScreen> {
         data: (days) => accountNamesAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (e, _) => Center(child: Text('Error: $e')),
-          data: (names) => _buildTimeline(days, names),
+          data: (names) => _buildTimeline(days, names, familyId),
         ),
       ),
     );
@@ -104,18 +105,18 @@ class _CashFlowScreenState extends ConsumerState<CashFlowScreen> {
   Widget _buildTimeline(
     List<DayProjection> days,
     Map<String, String> accountNames,
+    String familyId,
   ) {
     if (days.isEmpty) {
-      return const Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.calendar_today, size: 48),
-            SizedBox(height: Spacing.md),
-            Text('No recurring rules configured'),
-            SizedBox(height: Spacing.sm),
-            Text('Add income or expense rules to see your cash flow'),
-          ],
+      return EmptyState(
+        icon: Icons.calendar_today,
+        title: 'No recurring rules configured',
+        subtitle: 'Add income or expense rules to see your cash flow.',
+        actionLabel: 'Add Rule',
+        onAction: () => Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) => RecurringFormScreen(familyId: familyId),
+          ),
         ),
       );
     }

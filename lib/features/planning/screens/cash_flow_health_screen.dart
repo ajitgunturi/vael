@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../shared/theme/color_tokens.dart';
 import '../../../shared/theme/spacing.dart';
+import '../../../shared/widgets/empty_state.dart';
 import '../../cashflow/providers/cash_flow_providers.dart';
 import '../../dashboard/providers/dashboard_providers.dart';
 import '../providers/savings_allocation_providers.dart';
@@ -36,6 +37,21 @@ class CashFlowHealthScreen extends ConsumerWidget {
         data: (dash) {
           final income = dash.monthlySummary.totalIncome;
           final expenses = dash.monthlySummary.totalExpenses;
+
+          if (income == 0 && expenses == 0) {
+            return EmptyState(
+              icon: Icons.show_chart,
+              title: 'No cash flow data yet',
+              subtitle:
+                  'Add recurring income and expense rules to see your cash flow health.',
+              actionLabel: 'Set Up Rules',
+              onAction: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => SavingsAllocationScreen(familyId: familyId),
+                ),
+              ),
+            );
+          }
 
           return ListView(
             padding: const EdgeInsets.all(Spacing.md),

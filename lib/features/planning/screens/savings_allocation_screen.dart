@@ -8,6 +8,7 @@ import '../../../core/financial/savings_allocation_engine.dart' as engine;
 import '../../../core/models/money.dart';
 import '../../../core/providers/database_providers.dart';
 import '../../../shared/theme/spacing.dart';
+import '../../../shared/widgets/empty_state.dart';
 import '../providers/savings_allocation_providers.dart';
 
 /// Savings allocation screen: rule management with drag-to-reorder and
@@ -81,12 +82,15 @@ class _SavingsAllocationScreenState
           error: (e, _) => Text('Error loading rules: $e'),
           data: (rules) {
             if (rules.isEmpty) {
-              return const Padding(
-                padding: EdgeInsets.symmetric(vertical: Spacing.lg),
-                child: Center(
-                  child: Text(
-                    'No allocation rules yet. Add one to get started.',
-                  ),
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: Spacing.lg),
+                child: EmptyState(
+                  icon: Icons.account_tree_outlined,
+                  title: 'No allocation rules yet',
+                  subtitle:
+                      'Create rules to automatically distribute your monthly surplus across savings targets.',
+                  actionLabel: 'Add Rule',
+                  onAction: () => _showAddRuleSheet(context),
                 ),
               );
             }
