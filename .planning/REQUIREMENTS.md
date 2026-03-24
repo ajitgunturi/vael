@@ -70,8 +70,8 @@ Requirements for the financial planning extension (Phases 6-8). Each maps to roa
 
 - [x] **SINK-01**: User can create sinking fund goals with target amount, deadline, and sub-type (car repair, medical, travel, insurance, tax, home maintenance, custom)
 - [x] **SINK-02**: Sinking funds show simple monthly savings target: (target - current) / months remaining
-- [ ] **SINK-03**: Sinking funds display separately from investment goals on the Goals screen
-- [ ] **SINK-04**: User can add contributions to sinking funds via pre-filled transaction form
+- [x] **SINK-03**: Sinking funds display separately from investment goals on the Goals screen
+- [x] **SINK-04**: User can add contributions to sinking funds via pre-filled transaction form
 
 ### Cash Flow Calendar
 
@@ -132,7 +132,7 @@ Requirements for the financial planning extension (Phases 6-8). Each maps to roa
 - [ ] **NAV-01**: All new screens reachable from HomeShell via tap navigation (no dead-end screens)
 - [ ] **NAV-02**: Dashboard quick actions extended with "Cash Flow" and "Life Plan" buttons
 - [ ] **NAV-03**: Settings screen extended with "Financial Planning" section (Life Profile, Allocation, EF Setup, Cash Tiers, Savings Rules, Opportunity Fund)
-- [ ] **NAV-04**: Goals screen split into sections: Milestones, Sinking Funds, Investment Goals, Purchase Goals
+- [x] **NAV-04**: Goals screen split into sections: Milestones, Sinking Funds, Investment Goals, Purchase Goals
 - [x] **NAV-05**: Account detail shows cash tier and emergency fund badges when assigned
 - [x] **NAV-06**: Budget screen shows monthly essentials row linking to emergency fund
 - [x] **NAV-07**: Investment portfolio shows "Allocation vs Target" banner linking to allocation screen
@@ -210,13 +210,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | NAV-06 | Phase 9 | Complete |
 | SINK-01 | Phase 10 | Complete |
 | SINK-02 | Phase 10 | Complete |
-| SINK-03 | Phase 10 | Pending |
-| SINK-04 | Phase 10 | Pending |
+| SINK-03 | Phase 10 | Complete |
+| SINK-04 | Phase 10 | Complete |
 | RATE-01 | Phase 10 | Complete |
 | RATE-02 | Phase 10 | Complete |
 | RATE-03 | Phase 10 | Complete |
 | RATE-04 | Phase 10 | Complete |
-| NAV-04 | Phase 10 | Pending |
+| NAV-04 | Phase 10 | Complete |
 | FLOW-01 | Phase 11 | Pending |
 | FLOW-02 | Phase 11 | Pending |
 | FLOW-03 | Phase 11 | Pending |

@@ -20,7 +20,7 @@ This roadmap extends Vael's existing 5-phase foundation (multi-account managemen
 - [x] **Phase 7: FI Calculator & Net Worth Milestones** - User can see their FI number and decade-by-decade wealth trajectory (completed 2026-03-22)
 - [x] **Phase 8: Asset Allocation & Purchase Planning** - User can see allocation targets, model major purchase impact, and simulate life decisions with the Decision Modeling Framework (completed 2026-03-23)
 - [x] **Phase 9: Emergency Fund & Cash Tiers** - User has safety-net tracking with liquidity classification (completed 2026-03-23)
-- [ ] **Phase 10: Sinking Funds & Savings Rate** - User can track short-term savings goals and monitor savings health
+- [x] **Phase 10: Sinking Funds & Savings Rate** - User can track short-term savings goals and monitor savings health (completed 2026-03-24)
 - [ ] **Phase 11: Cash Flow & Savings Allocation** - User can see daily cash flow and get advisory surplus distribution
 - [ ] **Phase 12: Planning Dashboard & Lifetime Timeline** - User has unified financial health view and visual life plan
 - [ ] **Phase 13: Planning Insights & Integration Polish** - Deterministic alerts and cross-feature navigation coherence
@@ -184,7 +184,7 @@ Note: Phases 9-10-11 (cash management track) depend on Phase 6 but not on Phases
 | 7. FI Calculator & Net Worth Milestones | 3/3 | Complete   | 2026-03-22 |
 | 8. Asset Allocation & Purchase Planning | 5/5 | Complete   | 2026-03-23 |
 | 9. Emergency Fund & Cash Tiers | 3/3 | Complete   | 2026-03-23 |
-| 10. Sinking Funds & Savings Rate | 2/3 | In Progress|  |
+| 10. Sinking Funds & Savings Rate | 3/3 | Complete   | 2026-03-24 |
 | 11. Cash Flow & Savings Allocation | 0/? | Not started | - |
 | 12. Planning Dashboard & Lifetime Timeline | 0/? | Not started | - |
 | 13. Planning Insights & Integration Polish | 0/? | Not started | - |
