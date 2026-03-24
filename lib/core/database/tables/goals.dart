@@ -24,6 +24,8 @@ class Goals extends Table {
       integer().nullable()(); // basis points, null = not a purchase
   IntColumn get educationEscalationRateBp =>
       integer().nullable()(); // basis points, null = not education
+  TextColumn get sinkingFundSubType =>
+      text().nullable()(); // SinkingFundSubType.name or null
   DateTimeColumn get createdAt => dateTime()();
 
   @override

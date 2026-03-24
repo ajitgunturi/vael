@@ -10,6 +10,7 @@ import 'tables/category_groups.dart';
 import 'tables/decisions.dart';
 import 'tables/families.dart';
 import 'tables/goals.dart';
+import 'tables/monthly_metrics.dart';
 import 'tables/investment_holdings.dart';
 import 'tables/life_profiles.dart';
 import 'tables/loan_details.dart';
@@ -41,6 +42,7 @@ part 'database.g.dart';
     RecurringRules,
     AllocationTargets,
     Decisions,
+    MonthlyMetrics,
     SyncChangelog,
     SyncStateTable,
   ],
@@ -49,7 +51,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e);
 
   @override
-  int get schemaVersion => 12;
+  int get schemaVersion => 13;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -88,6 +90,11 @@ class AppDatabase extends _$AppDatabase {
         await m.addColumn(accounts, accounts.isEmergencyFund);
         await m.addColumn(lifeProfiles, lifeProfiles.incomeStability);
         await m.addColumn(lifeProfiles, lifeProfiles.efTargetMonthsOverride);
+      }
+      // v12 -> v13: monthly_metrics table + sinkingFundSubType column on goals
+      if (from < 13) {
+        await m.createTable(monthlyMetrics);
+        await m.addColumn(goals, goals.sinkingFundSubType);
       }
     },
     beforeOpen: (details) async {

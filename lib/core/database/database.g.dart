@@ -4010,6 +4010,17 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, Goal> {
         type: DriftSqlType.int,
         requiredDuringInsert: false,
       );
+  static const VerificationMeta _sinkingFundSubTypeMeta =
+      const VerificationMeta('sinkingFundSubType');
+  @override
+  late final GeneratedColumn<String> sinkingFundSubType =
+      GeneratedColumn<String>(
+        'sinking_fund_sub_type',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -4036,6 +4047,7 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, Goal> {
     goalCategory,
     downPaymentPctBp,
     educationEscalationRateBp,
+    sinkingFundSubType,
     createdAt,
   ];
   @override
@@ -4156,6 +4168,15 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, Goal> {
         ),
       );
     }
+    if (data.containsKey('sinking_fund_sub_type')) {
+      context.handle(
+        _sinkingFundSubTypeMeta,
+        sinkingFundSubType.isAcceptableOrUnknown(
+          data['sinking_fund_sub_type']!,
+          _sinkingFundSubTypeMeta,
+        ),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -4225,6 +4246,10 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, Goal> {
         DriftSqlType.int,
         data['${effectivePrefix}education_escalation_rate_bp'],
       ),
+      sinkingFundSubType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sinking_fund_sub_type'],
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -4252,6 +4277,7 @@ class Goal extends DataClass implements Insertable<Goal> {
   final String goalCategory;
   final int? downPaymentPctBp;
   final int? educationEscalationRateBp;
+  final String? sinkingFundSubType;
   final DateTime createdAt;
   const Goal({
     required this.id,
@@ -4267,6 +4293,7 @@ class Goal extends DataClass implements Insertable<Goal> {
     required this.goalCategory,
     this.downPaymentPctBp,
     this.educationEscalationRateBp,
+    this.sinkingFundSubType,
     required this.createdAt,
   });
   @override
@@ -4292,6 +4319,9 @@ class Goal extends DataClass implements Insertable<Goal> {
       map['education_escalation_rate_bp'] = Variable<int>(
         educationEscalationRateBp,
       );
+    }
+    if (!nullToAbsent || sinkingFundSubType != null) {
+      map['sinking_fund_sub_type'] = Variable<String>(sinkingFundSubType);
     }
     map['created_at'] = Variable<DateTime>(createdAt);
     return map;
@@ -4319,6 +4349,9 @@ class Goal extends DataClass implements Insertable<Goal> {
           educationEscalationRateBp == null && nullToAbsent
           ? const Value.absent()
           : Value(educationEscalationRateBp),
+      sinkingFundSubType: sinkingFundSubType == null && nullToAbsent
+          ? const Value.absent()
+          : Value(sinkingFundSubType),
       createdAt: Value(createdAt),
     );
   }
@@ -4344,6 +4377,9 @@ class Goal extends DataClass implements Insertable<Goal> {
       educationEscalationRateBp: serializer.fromJson<int?>(
         json['educationEscalationRateBp'],
       ),
+      sinkingFundSubType: serializer.fromJson<String?>(
+        json['sinkingFundSubType'],
+      ),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
@@ -4366,6 +4402,7 @@ class Goal extends DataClass implements Insertable<Goal> {
       'educationEscalationRateBp': serializer.toJson<int?>(
         educationEscalationRateBp,
       ),
+      'sinkingFundSubType': serializer.toJson<String?>(sinkingFundSubType),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
@@ -4384,6 +4421,7 @@ class Goal extends DataClass implements Insertable<Goal> {
     String? goalCategory,
     Value<int?> downPaymentPctBp = const Value.absent(),
     Value<int?> educationEscalationRateBp = const Value.absent(),
+    Value<String?> sinkingFundSubType = const Value.absent(),
     DateTime? createdAt,
   }) => Goal(
     id: id ?? this.id,
@@ -4405,6 +4443,9 @@ class Goal extends DataClass implements Insertable<Goal> {
     educationEscalationRateBp: educationEscalationRateBp.present
         ? educationEscalationRateBp.value
         : this.educationEscalationRateBp,
+    sinkingFundSubType: sinkingFundSubType.present
+        ? sinkingFundSubType.value
+        : this.sinkingFundSubType,
     createdAt: createdAt ?? this.createdAt,
   );
   Goal copyWithCompanion(GoalsCompanion data) {
@@ -4438,6 +4479,9 @@ class Goal extends DataClass implements Insertable<Goal> {
       educationEscalationRateBp: data.educationEscalationRateBp.present
           ? data.educationEscalationRateBp.value
           : this.educationEscalationRateBp,
+      sinkingFundSubType: data.sinkingFundSubType.present
+          ? data.sinkingFundSubType.value
+          : this.sinkingFundSubType,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
@@ -4458,6 +4502,7 @@ class Goal extends DataClass implements Insertable<Goal> {
           ..write('goalCategory: $goalCategory, ')
           ..write('downPaymentPctBp: $downPaymentPctBp, ')
           ..write('educationEscalationRateBp: $educationEscalationRateBp, ')
+          ..write('sinkingFundSubType: $sinkingFundSubType, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
@@ -4478,6 +4523,7 @@ class Goal extends DataClass implements Insertable<Goal> {
     goalCategory,
     downPaymentPctBp,
     educationEscalationRateBp,
+    sinkingFundSubType,
     createdAt,
   );
   @override
@@ -4497,6 +4543,7 @@ class Goal extends DataClass implements Insertable<Goal> {
           other.goalCategory == this.goalCategory &&
           other.downPaymentPctBp == this.downPaymentPctBp &&
           other.educationEscalationRateBp == this.educationEscalationRateBp &&
+          other.sinkingFundSubType == this.sinkingFundSubType &&
           other.createdAt == this.createdAt);
 }
 
@@ -4514,6 +4561,7 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
   final Value<String> goalCategory;
   final Value<int?> downPaymentPctBp;
   final Value<int?> educationEscalationRateBp;
+  final Value<String?> sinkingFundSubType;
   final Value<DateTime> createdAt;
   final Value<int> rowid;
   const GoalsCompanion({
@@ -4530,6 +4578,7 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
     this.goalCategory = const Value.absent(),
     this.downPaymentPctBp = const Value.absent(),
     this.educationEscalationRateBp = const Value.absent(),
+    this.sinkingFundSubType = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -4547,6 +4596,7 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
     this.goalCategory = const Value.absent(),
     this.downPaymentPctBp = const Value.absent(),
     this.educationEscalationRateBp = const Value.absent(),
+    this.sinkingFundSubType = const Value.absent(),
     required DateTime createdAt,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
@@ -4569,6 +4619,7 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
     Expression<String>? goalCategory,
     Expression<int>? downPaymentPctBp,
     Expression<int>? educationEscalationRateBp,
+    Expression<String>? sinkingFundSubType,
     Expression<DateTime>? createdAt,
     Expression<int>? rowid,
   }) {
@@ -4587,6 +4638,8 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
       if (downPaymentPctBp != null) 'down_payment_pct_bp': downPaymentPctBp,
       if (educationEscalationRateBp != null)
         'education_escalation_rate_bp': educationEscalationRateBp,
+      if (sinkingFundSubType != null)
+        'sinking_fund_sub_type': sinkingFundSubType,
       if (createdAt != null) 'created_at': createdAt,
       if (rowid != null) 'rowid': rowid,
     });
@@ -4606,6 +4659,7 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
     Value<String>? goalCategory,
     Value<int?>? downPaymentPctBp,
     Value<int?>? educationEscalationRateBp,
+    Value<String?>? sinkingFundSubType,
     Value<DateTime>? createdAt,
     Value<int>? rowid,
   }) {
@@ -4624,6 +4678,7 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
       downPaymentPctBp: downPaymentPctBp ?? this.downPaymentPctBp,
       educationEscalationRateBp:
           educationEscalationRateBp ?? this.educationEscalationRateBp,
+      sinkingFundSubType: sinkingFundSubType ?? this.sinkingFundSubType,
       createdAt: createdAt ?? this.createdAt,
       rowid: rowid ?? this.rowid,
     );
@@ -4673,6 +4728,9 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
         educationEscalationRateBp.value,
       );
     }
+    if (sinkingFundSubType.present) {
+      map['sinking_fund_sub_type'] = Variable<String>(sinkingFundSubType.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -4698,6 +4756,7 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
           ..write('goalCategory: $goalCategory, ')
           ..write('downPaymentPctBp: $downPaymentPctBp, ')
           ..write('educationEscalationRateBp: $educationEscalationRateBp, ')
+          ..write('sinkingFundSubType: $sinkingFundSubType, ')
           ..write('createdAt: $createdAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -10522,6 +10581,541 @@ class DecisionsCompanion extends UpdateCompanion<Decision> {
   }
 }
 
+class $MonthlyMetricsTable extends MonthlyMetrics
+    with TableInfo<$MonthlyMetricsTable, MonthlyMetric> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $MonthlyMetricsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _familyIdMeta = const VerificationMeta(
+    'familyId',
+  );
+  @override
+  late final GeneratedColumn<String> familyId = GeneratedColumn<String>(
+    'family_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES families (id)',
+    ),
+  );
+  static const VerificationMeta _monthMeta = const VerificationMeta('month');
+  @override
+  late final GeneratedColumn<String> month = GeneratedColumn<String>(
+    'month',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _totalIncomePaiseMeta = const VerificationMeta(
+    'totalIncomePaise',
+  );
+  @override
+  late final GeneratedColumn<int> totalIncomePaise = GeneratedColumn<int>(
+    'total_income_paise',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _totalExpensesPaiseMeta =
+      const VerificationMeta('totalExpensesPaise');
+  @override
+  late final GeneratedColumn<int> totalExpensesPaise = GeneratedColumn<int>(
+    'total_expenses_paise',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _savingsRateBpMeta = const VerificationMeta(
+    'savingsRateBp',
+  );
+  @override
+  late final GeneratedColumn<int> savingsRateBp = GeneratedColumn<int>(
+    'savings_rate_bp',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _netWorthPaiseMeta = const VerificationMeta(
+    'netWorthPaise',
+  );
+  @override
+  late final GeneratedColumn<int> netWorthPaise = GeneratedColumn<int>(
+    'net_worth_paise',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _computedAtMeta = const VerificationMeta(
+    'computedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> computedAt = GeneratedColumn<DateTime>(
+    'computed_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    familyId,
+    month,
+    totalIncomePaise,
+    totalExpensesPaise,
+    savingsRateBp,
+    netWorthPaise,
+    computedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'monthly_metrics';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<MonthlyMetric> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('family_id')) {
+      context.handle(
+        _familyIdMeta,
+        familyId.isAcceptableOrUnknown(data['family_id']!, _familyIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_familyIdMeta);
+    }
+    if (data.containsKey('month')) {
+      context.handle(
+        _monthMeta,
+        month.isAcceptableOrUnknown(data['month']!, _monthMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_monthMeta);
+    }
+    if (data.containsKey('total_income_paise')) {
+      context.handle(
+        _totalIncomePaiseMeta,
+        totalIncomePaise.isAcceptableOrUnknown(
+          data['total_income_paise']!,
+          _totalIncomePaiseMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_totalIncomePaiseMeta);
+    }
+    if (data.containsKey('total_expenses_paise')) {
+      context.handle(
+        _totalExpensesPaiseMeta,
+        totalExpensesPaise.isAcceptableOrUnknown(
+          data['total_expenses_paise']!,
+          _totalExpensesPaiseMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_totalExpensesPaiseMeta);
+    }
+    if (data.containsKey('savings_rate_bp')) {
+      context.handle(
+        _savingsRateBpMeta,
+        savingsRateBp.isAcceptableOrUnknown(
+          data['savings_rate_bp']!,
+          _savingsRateBpMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_savingsRateBpMeta);
+    }
+    if (data.containsKey('net_worth_paise')) {
+      context.handle(
+        _netWorthPaiseMeta,
+        netWorthPaise.isAcceptableOrUnknown(
+          data['net_worth_paise']!,
+          _netWorthPaiseMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_netWorthPaiseMeta);
+    }
+    if (data.containsKey('computed_at')) {
+      context.handle(
+        _computedAtMeta,
+        computedAt.isAcceptableOrUnknown(data['computed_at']!, _computedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_computedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  MonthlyMetric map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return MonthlyMetric(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      familyId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}family_id'],
+      )!,
+      month: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}month'],
+      )!,
+      totalIncomePaise: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}total_income_paise'],
+      )!,
+      totalExpensesPaise: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}total_expenses_paise'],
+      )!,
+      savingsRateBp: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}savings_rate_bp'],
+      )!,
+      netWorthPaise: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}net_worth_paise'],
+      )!,
+      computedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}computed_at'],
+      )!,
+    );
+  }
+
+  @override
+  $MonthlyMetricsTable createAlias(String alias) {
+    return $MonthlyMetricsTable(attachedDatabase, alias);
+  }
+}
+
+class MonthlyMetric extends DataClass implements Insertable<MonthlyMetric> {
+  final String id;
+  final String familyId;
+  final String month;
+  final int totalIncomePaise;
+  final int totalExpensesPaise;
+  final int savingsRateBp;
+  final int netWorthPaise;
+  final DateTime computedAt;
+  const MonthlyMetric({
+    required this.id,
+    required this.familyId,
+    required this.month,
+    required this.totalIncomePaise,
+    required this.totalExpensesPaise,
+    required this.savingsRateBp,
+    required this.netWorthPaise,
+    required this.computedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['family_id'] = Variable<String>(familyId);
+    map['month'] = Variable<String>(month);
+    map['total_income_paise'] = Variable<int>(totalIncomePaise);
+    map['total_expenses_paise'] = Variable<int>(totalExpensesPaise);
+    map['savings_rate_bp'] = Variable<int>(savingsRateBp);
+    map['net_worth_paise'] = Variable<int>(netWorthPaise);
+    map['computed_at'] = Variable<DateTime>(computedAt);
+    return map;
+  }
+
+  MonthlyMetricsCompanion toCompanion(bool nullToAbsent) {
+    return MonthlyMetricsCompanion(
+      id: Value(id),
+      familyId: Value(familyId),
+      month: Value(month),
+      totalIncomePaise: Value(totalIncomePaise),
+      totalExpensesPaise: Value(totalExpensesPaise),
+      savingsRateBp: Value(savingsRateBp),
+      netWorthPaise: Value(netWorthPaise),
+      computedAt: Value(computedAt),
+    );
+  }
+
+  factory MonthlyMetric.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return MonthlyMetric(
+      id: serializer.fromJson<String>(json['id']),
+      familyId: serializer.fromJson<String>(json['familyId']),
+      month: serializer.fromJson<String>(json['month']),
+      totalIncomePaise: serializer.fromJson<int>(json['totalIncomePaise']),
+      totalExpensesPaise: serializer.fromJson<int>(json['totalExpensesPaise']),
+      savingsRateBp: serializer.fromJson<int>(json['savingsRateBp']),
+      netWorthPaise: serializer.fromJson<int>(json['netWorthPaise']),
+      computedAt: serializer.fromJson<DateTime>(json['computedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'familyId': serializer.toJson<String>(familyId),
+      'month': serializer.toJson<String>(month),
+      'totalIncomePaise': serializer.toJson<int>(totalIncomePaise),
+      'totalExpensesPaise': serializer.toJson<int>(totalExpensesPaise),
+      'savingsRateBp': serializer.toJson<int>(savingsRateBp),
+      'netWorthPaise': serializer.toJson<int>(netWorthPaise),
+      'computedAt': serializer.toJson<DateTime>(computedAt),
+    };
+  }
+
+  MonthlyMetric copyWith({
+    String? id,
+    String? familyId,
+    String? month,
+    int? totalIncomePaise,
+    int? totalExpensesPaise,
+    int? savingsRateBp,
+    int? netWorthPaise,
+    DateTime? computedAt,
+  }) => MonthlyMetric(
+    id: id ?? this.id,
+    familyId: familyId ?? this.familyId,
+    month: month ?? this.month,
+    totalIncomePaise: totalIncomePaise ?? this.totalIncomePaise,
+    totalExpensesPaise: totalExpensesPaise ?? this.totalExpensesPaise,
+    savingsRateBp: savingsRateBp ?? this.savingsRateBp,
+    netWorthPaise: netWorthPaise ?? this.netWorthPaise,
+    computedAt: computedAt ?? this.computedAt,
+  );
+  MonthlyMetric copyWithCompanion(MonthlyMetricsCompanion data) {
+    return MonthlyMetric(
+      id: data.id.present ? data.id.value : this.id,
+      familyId: data.familyId.present ? data.familyId.value : this.familyId,
+      month: data.month.present ? data.month.value : this.month,
+      totalIncomePaise: data.totalIncomePaise.present
+          ? data.totalIncomePaise.value
+          : this.totalIncomePaise,
+      totalExpensesPaise: data.totalExpensesPaise.present
+          ? data.totalExpensesPaise.value
+          : this.totalExpensesPaise,
+      savingsRateBp: data.savingsRateBp.present
+          ? data.savingsRateBp.value
+          : this.savingsRateBp,
+      netWorthPaise: data.netWorthPaise.present
+          ? data.netWorthPaise.value
+          : this.netWorthPaise,
+      computedAt: data.computedAt.present
+          ? data.computedAt.value
+          : this.computedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MonthlyMetric(')
+          ..write('id: $id, ')
+          ..write('familyId: $familyId, ')
+          ..write('month: $month, ')
+          ..write('totalIncomePaise: $totalIncomePaise, ')
+          ..write('totalExpensesPaise: $totalExpensesPaise, ')
+          ..write('savingsRateBp: $savingsRateBp, ')
+          ..write('netWorthPaise: $netWorthPaise, ')
+          ..write('computedAt: $computedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    familyId,
+    month,
+    totalIncomePaise,
+    totalExpensesPaise,
+    savingsRateBp,
+    netWorthPaise,
+    computedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is MonthlyMetric &&
+          other.id == this.id &&
+          other.familyId == this.familyId &&
+          other.month == this.month &&
+          other.totalIncomePaise == this.totalIncomePaise &&
+          other.totalExpensesPaise == this.totalExpensesPaise &&
+          other.savingsRateBp == this.savingsRateBp &&
+          other.netWorthPaise == this.netWorthPaise &&
+          other.computedAt == this.computedAt);
+}
+
+class MonthlyMetricsCompanion extends UpdateCompanion<MonthlyMetric> {
+  final Value<String> id;
+  final Value<String> familyId;
+  final Value<String> month;
+  final Value<int> totalIncomePaise;
+  final Value<int> totalExpensesPaise;
+  final Value<int> savingsRateBp;
+  final Value<int> netWorthPaise;
+  final Value<DateTime> computedAt;
+  final Value<int> rowid;
+  const MonthlyMetricsCompanion({
+    this.id = const Value.absent(),
+    this.familyId = const Value.absent(),
+    this.month = const Value.absent(),
+    this.totalIncomePaise = const Value.absent(),
+    this.totalExpensesPaise = const Value.absent(),
+    this.savingsRateBp = const Value.absent(),
+    this.netWorthPaise = const Value.absent(),
+    this.computedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  MonthlyMetricsCompanion.insert({
+    required String id,
+    required String familyId,
+    required String month,
+    required int totalIncomePaise,
+    required int totalExpensesPaise,
+    required int savingsRateBp,
+    required int netWorthPaise,
+    required DateTime computedAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       familyId = Value(familyId),
+       month = Value(month),
+       totalIncomePaise = Value(totalIncomePaise),
+       totalExpensesPaise = Value(totalExpensesPaise),
+       savingsRateBp = Value(savingsRateBp),
+       netWorthPaise = Value(netWorthPaise),
+       computedAt = Value(computedAt);
+  static Insertable<MonthlyMetric> custom({
+    Expression<String>? id,
+    Expression<String>? familyId,
+    Expression<String>? month,
+    Expression<int>? totalIncomePaise,
+    Expression<int>? totalExpensesPaise,
+    Expression<int>? savingsRateBp,
+    Expression<int>? netWorthPaise,
+    Expression<DateTime>? computedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (familyId != null) 'family_id': familyId,
+      if (month != null) 'month': month,
+      if (totalIncomePaise != null) 'total_income_paise': totalIncomePaise,
+      if (totalExpensesPaise != null)
+        'total_expenses_paise': totalExpensesPaise,
+      if (savingsRateBp != null) 'savings_rate_bp': savingsRateBp,
+      if (netWorthPaise != null) 'net_worth_paise': netWorthPaise,
+      if (computedAt != null) 'computed_at': computedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  MonthlyMetricsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? familyId,
+    Value<String>? month,
+    Value<int>? totalIncomePaise,
+    Value<int>? totalExpensesPaise,
+    Value<int>? savingsRateBp,
+    Value<int>? netWorthPaise,
+    Value<DateTime>? computedAt,
+    Value<int>? rowid,
+  }) {
+    return MonthlyMetricsCompanion(
+      id: id ?? this.id,
+      familyId: familyId ?? this.familyId,
+      month: month ?? this.month,
+      totalIncomePaise: totalIncomePaise ?? this.totalIncomePaise,
+      totalExpensesPaise: totalExpensesPaise ?? this.totalExpensesPaise,
+      savingsRateBp: savingsRateBp ?? this.savingsRateBp,
+      netWorthPaise: netWorthPaise ?? this.netWorthPaise,
+      computedAt: computedAt ?? this.computedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (familyId.present) {
+      map['family_id'] = Variable<String>(familyId.value);
+    }
+    if (month.present) {
+      map['month'] = Variable<String>(month.value);
+    }
+    if (totalIncomePaise.present) {
+      map['total_income_paise'] = Variable<int>(totalIncomePaise.value);
+    }
+    if (totalExpensesPaise.present) {
+      map['total_expenses_paise'] = Variable<int>(totalExpensesPaise.value);
+    }
+    if (savingsRateBp.present) {
+      map['savings_rate_bp'] = Variable<int>(savingsRateBp.value);
+    }
+    if (netWorthPaise.present) {
+      map['net_worth_paise'] = Variable<int>(netWorthPaise.value);
+    }
+    if (computedAt.present) {
+      map['computed_at'] = Variable<DateTime>(computedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MonthlyMetricsCompanion(')
+          ..write('id: $id, ')
+          ..write('familyId: $familyId, ')
+          ..write('month: $month, ')
+          ..write('totalIncomePaise: $totalIncomePaise, ')
+          ..write('totalExpensesPaise: $totalExpensesPaise, ')
+          ..write('savingsRateBp: $savingsRateBp, ')
+          ..write('netWorthPaise: $netWorthPaise, ')
+          ..write('computedAt: $computedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $SyncChangelogTable extends SyncChangelog
     with TableInfo<$SyncChangelogTable, SyncChangelogData> {
   @override
@@ -11454,6 +12048,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $AllocationTargetsTable allocationTargets =
       $AllocationTargetsTable(this);
   late final $DecisionsTable decisions = $DecisionsTable(this);
+  late final $MonthlyMetricsTable monthlyMetrics = $MonthlyMetricsTable(this);
   late final $SyncChangelogTable syncChangelog = $SyncChangelogTable(this);
   late final $SyncStateTableTable syncStateTable = $SyncStateTableTable(this);
   @override
@@ -11478,6 +12073,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     recurringRules,
     allocationTargets,
     decisions,
+    monthlyMetrics,
     syncChangelog,
     syncStateTable,
   ];
@@ -11790,6 +12386,24 @@ final class $$FamiliesTableReferences
     ).filter((f) => f.familyId.id.sqlEquals($_itemColumn<String>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_decisionsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$MonthlyMetricsTable, List<MonthlyMetric>>
+  _monthlyMetricsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.monthlyMetrics,
+    aliasName: $_aliasNameGenerator(db.families.id, db.monthlyMetrics.familyId),
+  );
+
+  $$MonthlyMetricsTableProcessedTableManager get monthlyMetricsRefs {
+    final manager = $$MonthlyMetricsTableTableManager(
+      $_db,
+      $_db.monthlyMetrics,
+    ).filter((f) => f.familyId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_monthlyMetricsRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -12191,6 +12805,31 @@ class $$FamiliesTableFilterComposer
           }) => $$DecisionsTableFilterComposer(
             $db: $db,
             $table: $db.decisions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> monthlyMetricsRefs(
+    Expression<bool> Function($$MonthlyMetricsTableFilterComposer f) f,
+  ) {
+    final $$MonthlyMetricsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.monthlyMetrics,
+      getReferencedColumn: (t) => t.familyId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MonthlyMetricsTableFilterComposer(
+            $db: $db,
+            $table: $db.monthlyMetrics,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -12630,6 +13269,31 @@ class $$FamiliesTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> monthlyMetricsRefs<T extends Object>(
+    Expression<T> Function($$MonthlyMetricsTableAnnotationComposer a) f,
+  ) {
+    final $$MonthlyMetricsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.monthlyMetrics,
+      getReferencedColumn: (t) => t.familyId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MonthlyMetricsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.monthlyMetrics,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$FamiliesTableTableManager
@@ -12661,6 +13325,7 @@ class $$FamiliesTableTableManager
             bool netWorthMilestonesRefs,
             bool recurringRulesRefs,
             bool decisionsRefs,
+            bool monthlyMetricsRefs,
           })
         > {
   $$FamiliesTableTableManager(_$AppDatabase db, $FamiliesTable table)
@@ -12727,6 +13392,7 @@ class $$FamiliesTableTableManager
                 netWorthMilestonesRefs = false,
                 recurringRulesRefs = false,
                 decisionsRefs = false,
+                monthlyMetricsRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -12746,6 +13412,7 @@ class $$FamiliesTableTableManager
                     if (netWorthMilestonesRefs) db.netWorthMilestones,
                     if (recurringRulesRefs) db.recurringRules,
                     if (decisionsRefs) db.decisions,
+                    if (monthlyMetricsRefs) db.monthlyMetrics,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
@@ -13057,6 +13724,27 @@ class $$FamiliesTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (monthlyMetricsRefs)
+                        await $_getPrefetchedData<
+                          Family,
+                          $FamiliesTable,
+                          MonthlyMetric
+                        >(
+                          currentTable: table,
+                          referencedTable: $$FamiliesTableReferences
+                              ._monthlyMetricsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$FamiliesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).monthlyMetricsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.familyId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -13093,6 +13781,7 @@ typedef $$FamiliesTableProcessedTableManager =
         bool netWorthMilestonesRefs,
         bool recurringRulesRefs,
         bool decisionsRefs,
+        bool monthlyMetricsRefs,
       })
     >;
 typedef $$UsersTableCreateCompanionBuilder =
@@ -16882,6 +17571,7 @@ typedef $$GoalsTableCreateCompanionBuilder =
       Value<String> goalCategory,
       Value<int?> downPaymentPctBp,
       Value<int?> educationEscalationRateBp,
+      Value<String?> sinkingFundSubType,
       required DateTime createdAt,
       Value<int> rowid,
     });
@@ -16900,6 +17590,7 @@ typedef $$GoalsTableUpdateCompanionBuilder =
       Value<String> goalCategory,
       Value<int?> downPaymentPctBp,
       Value<int?> educationEscalationRateBp,
+      Value<String?> sinkingFundSubType,
       Value<DateTime> createdAt,
       Value<int> rowid,
     });
@@ -17029,6 +17720,11 @@ class $$GoalsTableFilterComposer extends Composer<_$AppDatabase, $GoalsTable> {
 
   ColumnFilters<int> get educationEscalationRateBp => $composableBuilder(
     column: $table.educationEscalationRateBp,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sinkingFundSubType => $composableBuilder(
+    column: $table.sinkingFundSubType,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -17173,6 +17869,11 @@ class $$GoalsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get sinkingFundSubType => $composableBuilder(
+    column: $table.sinkingFundSubType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -17278,6 +17979,11 @@ class $$GoalsTableAnnotationComposer
 
   GeneratedColumn<int> get educationEscalationRateBp => $composableBuilder(
     column: $table.educationEscalationRateBp,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get sinkingFundSubType => $composableBuilder(
+    column: $table.sinkingFundSubType,
     builder: (column) => column,
   );
 
@@ -17402,6 +18108,7 @@ class $$GoalsTableTableManager
                 Value<String> goalCategory = const Value.absent(),
                 Value<int?> downPaymentPctBp = const Value.absent(),
                 Value<int?> educationEscalationRateBp = const Value.absent(),
+                Value<String?> sinkingFundSubType = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => GoalsCompanion(
@@ -17418,6 +18125,7 @@ class $$GoalsTableTableManager
                 goalCategory: goalCategory,
                 downPaymentPctBp: downPaymentPctBp,
                 educationEscalationRateBp: educationEscalationRateBp,
+                sinkingFundSubType: sinkingFundSubType,
                 createdAt: createdAt,
                 rowid: rowid,
               ),
@@ -17436,6 +18144,7 @@ class $$GoalsTableTableManager
                 Value<String> goalCategory = const Value.absent(),
                 Value<int?> downPaymentPctBp = const Value.absent(),
                 Value<int?> educationEscalationRateBp = const Value.absent(),
+                Value<String?> sinkingFundSubType = const Value.absent(),
                 required DateTime createdAt,
                 Value<int> rowid = const Value.absent(),
               }) => GoalsCompanion.insert(
@@ -17452,6 +18161,7 @@ class $$GoalsTableTableManager
                 goalCategory: goalCategory,
                 downPaymentPctBp: downPaymentPctBp,
                 educationEscalationRateBp: educationEscalationRateBp,
+                sinkingFundSubType: sinkingFundSubType,
                 createdAt: createdAt,
                 rowid: rowid,
               ),
@@ -22158,6 +22868,399 @@ typedef $$DecisionsTableProcessedTableManager =
       Decision,
       PrefetchHooks Function({bool familyId})
     >;
+typedef $$MonthlyMetricsTableCreateCompanionBuilder =
+    MonthlyMetricsCompanion Function({
+      required String id,
+      required String familyId,
+      required String month,
+      required int totalIncomePaise,
+      required int totalExpensesPaise,
+      required int savingsRateBp,
+      required int netWorthPaise,
+      required DateTime computedAt,
+      Value<int> rowid,
+    });
+typedef $$MonthlyMetricsTableUpdateCompanionBuilder =
+    MonthlyMetricsCompanion Function({
+      Value<String> id,
+      Value<String> familyId,
+      Value<String> month,
+      Value<int> totalIncomePaise,
+      Value<int> totalExpensesPaise,
+      Value<int> savingsRateBp,
+      Value<int> netWorthPaise,
+      Value<DateTime> computedAt,
+      Value<int> rowid,
+    });
+
+final class $$MonthlyMetricsTableReferences
+    extends BaseReferences<_$AppDatabase, $MonthlyMetricsTable, MonthlyMetric> {
+  $$MonthlyMetricsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $FamiliesTable _familyIdTable(_$AppDatabase db) =>
+      db.families.createAlias(
+        $_aliasNameGenerator(db.monthlyMetrics.familyId, db.families.id),
+      );
+
+  $$FamiliesTableProcessedTableManager get familyId {
+    final $_column = $_itemColumn<String>('family_id')!;
+
+    final manager = $$FamiliesTableTableManager(
+      $_db,
+      $_db.families,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_familyIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$MonthlyMetricsTableFilterComposer
+    extends Composer<_$AppDatabase, $MonthlyMetricsTable> {
+  $$MonthlyMetricsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get month => $composableBuilder(
+    column: $table.month,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get totalIncomePaise => $composableBuilder(
+    column: $table.totalIncomePaise,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get totalExpensesPaise => $composableBuilder(
+    column: $table.totalExpensesPaise,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get savingsRateBp => $composableBuilder(
+    column: $table.savingsRateBp,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get netWorthPaise => $composableBuilder(
+    column: $table.netWorthPaise,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get computedAt => $composableBuilder(
+    column: $table.computedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$FamiliesTableFilterComposer get familyId {
+    final $$FamiliesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.familyId,
+      referencedTable: $db.families,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$FamiliesTableFilterComposer(
+            $db: $db,
+            $table: $db.families,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$MonthlyMetricsTableOrderingComposer
+    extends Composer<_$AppDatabase, $MonthlyMetricsTable> {
+  $$MonthlyMetricsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get month => $composableBuilder(
+    column: $table.month,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get totalIncomePaise => $composableBuilder(
+    column: $table.totalIncomePaise,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get totalExpensesPaise => $composableBuilder(
+    column: $table.totalExpensesPaise,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get savingsRateBp => $composableBuilder(
+    column: $table.savingsRateBp,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get netWorthPaise => $composableBuilder(
+    column: $table.netWorthPaise,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get computedAt => $composableBuilder(
+    column: $table.computedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$FamiliesTableOrderingComposer get familyId {
+    final $$FamiliesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.familyId,
+      referencedTable: $db.families,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$FamiliesTableOrderingComposer(
+            $db: $db,
+            $table: $db.families,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$MonthlyMetricsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $MonthlyMetricsTable> {
+  $$MonthlyMetricsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get month =>
+      $composableBuilder(column: $table.month, builder: (column) => column);
+
+  GeneratedColumn<int> get totalIncomePaise => $composableBuilder(
+    column: $table.totalIncomePaise,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get totalExpensesPaise => $composableBuilder(
+    column: $table.totalExpensesPaise,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get savingsRateBp => $composableBuilder(
+    column: $table.savingsRateBp,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get netWorthPaise => $composableBuilder(
+    column: $table.netWorthPaise,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get computedAt => $composableBuilder(
+    column: $table.computedAt,
+    builder: (column) => column,
+  );
+
+  $$FamiliesTableAnnotationComposer get familyId {
+    final $$FamiliesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.familyId,
+      referencedTable: $db.families,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$FamiliesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.families,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$MonthlyMetricsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $MonthlyMetricsTable,
+          MonthlyMetric,
+          $$MonthlyMetricsTableFilterComposer,
+          $$MonthlyMetricsTableOrderingComposer,
+          $$MonthlyMetricsTableAnnotationComposer,
+          $$MonthlyMetricsTableCreateCompanionBuilder,
+          $$MonthlyMetricsTableUpdateCompanionBuilder,
+          (MonthlyMetric, $$MonthlyMetricsTableReferences),
+          MonthlyMetric,
+          PrefetchHooks Function({bool familyId})
+        > {
+  $$MonthlyMetricsTableTableManager(
+    _$AppDatabase db,
+    $MonthlyMetricsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$MonthlyMetricsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$MonthlyMetricsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$MonthlyMetricsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> familyId = const Value.absent(),
+                Value<String> month = const Value.absent(),
+                Value<int> totalIncomePaise = const Value.absent(),
+                Value<int> totalExpensesPaise = const Value.absent(),
+                Value<int> savingsRateBp = const Value.absent(),
+                Value<int> netWorthPaise = const Value.absent(),
+                Value<DateTime> computedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => MonthlyMetricsCompanion(
+                id: id,
+                familyId: familyId,
+                month: month,
+                totalIncomePaise: totalIncomePaise,
+                totalExpensesPaise: totalExpensesPaise,
+                savingsRateBp: savingsRateBp,
+                netWorthPaise: netWorthPaise,
+                computedAt: computedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String familyId,
+                required String month,
+                required int totalIncomePaise,
+                required int totalExpensesPaise,
+                required int savingsRateBp,
+                required int netWorthPaise,
+                required DateTime computedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => MonthlyMetricsCompanion.insert(
+                id: id,
+                familyId: familyId,
+                month: month,
+                totalIncomePaise: totalIncomePaise,
+                totalExpensesPaise: totalExpensesPaise,
+                savingsRateBp: savingsRateBp,
+                netWorthPaise: netWorthPaise,
+                computedAt: computedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$MonthlyMetricsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({familyId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (familyId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.familyId,
+                                referencedTable: $$MonthlyMetricsTableReferences
+                                    ._familyIdTable(db),
+                                referencedColumn:
+                                    $$MonthlyMetricsTableReferences
+                                        ._familyIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$MonthlyMetricsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $MonthlyMetricsTable,
+      MonthlyMetric,
+      $$MonthlyMetricsTableFilterComposer,
+      $$MonthlyMetricsTableOrderingComposer,
+      $$MonthlyMetricsTableAnnotationComposer,
+      $$MonthlyMetricsTableCreateCompanionBuilder,
+      $$MonthlyMetricsTableUpdateCompanionBuilder,
+      (MonthlyMetric, $$MonthlyMetricsTableReferences),
+      MonthlyMetric,
+      PrefetchHooks Function({bool familyId})
+    >;
 typedef $$SyncChangelogTableCreateCompanionBuilder =
     SyncChangelogCompanion Function({
       Value<int> id,
@@ -22669,6 +23772,8 @@ class $AppDatabaseManager {
       $$AllocationTargetsTableTableManager(_db, _db.allocationTargets);
   $$DecisionsTableTableManager get decisions =>
       $$DecisionsTableTableManager(_db, _db.decisions);
+  $$MonthlyMetricsTableTableManager get monthlyMetrics =>
+      $$MonthlyMetricsTableTableManager(_db, _db.monthlyMetrics);
   $$SyncChangelogTableTableManager get syncChangelog =>
       $$SyncChangelogTableTableManager(_db, _db.syncChangelog);
   $$SyncStateTableTableTableManager get syncStateTable =>
