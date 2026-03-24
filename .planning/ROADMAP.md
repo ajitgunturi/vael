@@ -170,9 +170,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 13-01: TBD
-- [ ] 13-02: TBD
-- [ ] 13-03: TBD
+- [ ] 13-01-PLAN.md -- InsightsEngine TDD + alert providers + Settings Financial Planning reorganization (NAV-03)
+- [ ] 13-02-PLAN.md -- Alert UI on planning dashboard + empty states with navigable CTAs on all planning screens (NAV-01, NAV-08)
+- [ ] 13-03-PLAN.md -- Navigation integration tests at 3 breakpoints with cross-feature round-trip verification (NAV-09, NAV-10)
 
 ## Progress
 
@@ -189,4 +189,4 @@ Note: Phases 9-10-11 (cash management track) depend on Phase 6 but not on Phases
 | 10. Sinking Funds & Savings Rate | 4/4 | Complete    | 2026-03-24 |
 | 11. Cash Flow & Savings Allocation | 4/4 | Complete    | 2026-03-24 |
 | 12. Planning Dashboard & Lifetime Timeline | 3/3 | Complete    | 2026-03-24 |
-| 13. Planning Insights & Integration Polish | 0/? | Not started | - |
+| 13. Planning Insights & Integration Polish | 0/3 | Not started | - |
