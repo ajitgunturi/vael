@@ -108,7 +108,7 @@ class _GoalFormScreenState extends ConsumerState<GoalFormScreen> {
             if (isSinkingFund) ...[
               const SizedBox(height: Spacing.md),
               DropdownButtonFormField<SinkingFundSubType>(
-                value: _sinkingFundSubType,
+                initialValue: _sinkingFundSubType,
                 decoration: const InputDecoration(labelText: 'Sub-type'),
                 items: SinkingFundSubType.values
                     .map(
@@ -176,7 +176,7 @@ class _GoalFormScreenState extends ConsumerState<GoalFormScreen> {
       children: [
         const SizedBox(height: Spacing.md),
         DropdownButtonFormField<String>(
-          value: _purchaseType,
+          initialValue: _purchaseType,
           decoration: const InputDecoration(labelText: 'Purchase Type'),
           items: [
             'Home',
