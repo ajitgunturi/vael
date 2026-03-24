@@ -75,16 +75,16 @@ Requirements for the financial planning extension (Phases 6-8). Each maps to roa
 
 ### Cash Flow Calendar
 
-- [ ] **FLOW-01**: User can see day-by-day income/expense map for any month based on recurring rules and known upcoming expenses
-- [ ] **FLOW-02**: Running balance computed daily showing when balance dips below configurable threshold
-- [ ] **FLOW-03**: Threshold alerts flag dates where running balance goes negative or below minimum
+- [x] **FLOW-01**: User can see day-by-day income/expense map for any month based on recurring rules and known upcoming expenses
+- [x] **FLOW-02**: Running balance computed daily showing when balance dips below configurable threshold
+- [x] **FLOW-03**: Threshold alerts flag dates where running balance goes negative or below minimum
 - [ ] **FLOW-04**: Tapping an income/expense item navigates to the source recurring rule or transaction
 
 ### Savings Allocation
 
-- [ ] **SAVE-01**: User can create priority-ordered savings allocation rules targeting emergency fund, sinking funds, investment goals, or opportunity fund
-- [ ] **SAVE-02**: Rules support fixed amount or percentage of surplus allocation types
-- [ ] **SAVE-03**: Allocation engine processes rules in priority order, skipping targets that are already met
+- [x] **SAVE-01**: User can create priority-ordered savings allocation rules targeting emergency fund, sinking funds, investment goals, or opportunity fund
+- [x] **SAVE-02**: Rules support fixed amount or percentage of surplus allocation types
+- [x] **SAVE-03**: Allocation engine processes rules in priority order, skipping targets that are already met
 - [ ] **SAVE-04**: Output is advisory (shows where money should go) — does NOT auto-create transactions
 
 ### Savings Rate
@@ -96,9 +96,9 @@ Requirements for the financial planning extension (Phases 6-8). Each maps to roa
 
 ### Opportunity Fund
 
-- [ ] **OPP-01**: User can designate an account as opportunity fund with a target amount
+- [x] **OPP-01**: User can designate an account as opportunity fund with a target amount
 - [ ] **OPP-02**: Opportunity fund tracked separately from emergency fund on settings/planning screens
-- [ ] **OPP-03**: Opportunity fund can be a target in savings allocation rules
+- [x] **OPP-03**: Opportunity fund can be a target in savings allocation rules
 
 ### Planning Dashboard
 
@@ -217,17 +217,17 @@ Which phases cover which requirements. Updated during roadmap creation.
 | RATE-03 | Phase 10 | Complete |
 | RATE-04 | Phase 10 | Complete |
 | NAV-04 | Phase 10 | Complete |
-| FLOW-01 | Phase 11 | Pending |
-| FLOW-02 | Phase 11 | Pending |
-| FLOW-03 | Phase 11 | Pending |
+| FLOW-01 | Phase 11 | Complete |
+| FLOW-02 | Phase 11 | Complete |
+| FLOW-03 | Phase 11 | Complete |
 | FLOW-04 | Phase 11 | Pending |
-| SAVE-01 | Phase 11 | Pending |
-| SAVE-02 | Phase 11 | Pending |
-| SAVE-03 | Phase 11 | Pending |
+| SAVE-01 | Phase 11 | Complete |
+| SAVE-02 | Phase 11 | Complete |
+| SAVE-03 | Phase 11 | Complete |
 | SAVE-04 | Phase 11 | Pending |
-| OPP-01 | Phase 11 | Pending |
+| OPP-01 | Phase 11 | Complete |
 | OPP-02 | Phase 11 | Pending |
-| OPP-03 | Phase 11 | Pending |
+| OPP-03 | Phase 11 | Complete |
 | DASH-01 | Phase 12 | Pending |
 | DASH-02 | Phase 12 | Pending |
 | DASH-03 | Phase 12 | Pending |
