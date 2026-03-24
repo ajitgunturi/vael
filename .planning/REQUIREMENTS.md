@@ -85,7 +85,7 @@ Requirements for the financial planning extension (Phases 6-8). Each maps to roa
 - [x] **SAVE-01**: User can create priority-ordered savings allocation rules targeting emergency fund, sinking funds, investment goals, or opportunity fund
 - [x] **SAVE-02**: Rules support fixed amount or percentage of surplus allocation types
 - [x] **SAVE-03**: Allocation engine processes rules in priority order, skipping targets that are already met
-- [ ] **SAVE-04**: Output is advisory (shows where money should go) — does NOT auto-create transactions
+- [x] **SAVE-04**: Output is advisory (shows where money should go) — does NOT auto-create transactions
 
 ### Savings Rate
 
@@ -97,7 +97,7 @@ Requirements for the financial planning extension (Phases 6-8). Each maps to roa
 ### Opportunity Fund
 
 - [x] **OPP-01**: User can designate an account as opportunity fund with a target amount
-- [ ] **OPP-02**: Opportunity fund tracked separately from emergency fund on settings/planning screens
+- [x] **OPP-02**: Opportunity fund tracked separately from emergency fund on settings/planning screens
 - [x] **OPP-03**: Opportunity fund can be a target in savings allocation rules
 
 ### Planning Dashboard
@@ -224,9 +224,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SAVE-01 | Phase 11 | Complete |
 | SAVE-02 | Phase 11 | Complete |
 | SAVE-03 | Phase 11 | Complete |
-| SAVE-04 | Phase 11 | Pending |
+| SAVE-04 | Phase 11 | Complete |
 | OPP-01 | Phase 11 | Complete |
-| OPP-02 | Phase 11 | Pending |
+| OPP-02 | Phase 11 | Complete |
 | OPP-03 | Phase 11 | Complete |
 | DASH-01 | Phase 12 | Pending |
 | DASH-02 | Phase 12 | Pending |

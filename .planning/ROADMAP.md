@@ -21,7 +21,7 @@ This roadmap extends Vael's existing 5-phase foundation (multi-account managemen
 - [x] **Phase 8: Asset Allocation & Purchase Planning** - User can see allocation targets, model major purchase impact, and simulate life decisions with the Decision Modeling Framework (completed 2026-03-23)
 - [x] **Phase 9: Emergency Fund & Cash Tiers** - User has safety-net tracking with liquidity classification (completed 2026-03-23)
 - [x] **Phase 10: Sinking Funds & Savings Rate** - User can track short-term savings goals and monitor savings health (completed 2026-03-24)
-- [ ] **Phase 11: Cash Flow & Savings Allocation** - User can see daily cash flow and get advisory surplus distribution
+- [x] **Phase 11: Cash Flow & Savings Allocation** - User can see daily cash flow and get advisory surplus distribution (completed 2026-03-24)
 - [ ] **Phase 12: Planning Dashboard & Lifetime Timeline** - User has unified financial health view and visual life plan
 - [ ] **Phase 13: Planning Insights & Integration Polish** - Deterministic alerts and cross-feature navigation coherence
 
@@ -186,6 +186,6 @@ Note: Phases 9-10-11 (cash management track) depend on Phase 6 but not on Phases
 | 8. Asset Allocation & Purchase Planning | 5/5 | Complete   | 2026-03-23 |
 | 9. Emergency Fund & Cash Tiers | 3/3 | Complete   | 2026-03-23 |
 | 10. Sinking Funds & Savings Rate | 4/4 | Complete    | 2026-03-24 |
-| 11. Cash Flow & Savings Allocation | 2/3 | In Progress|  |
+| 11. Cash Flow & Savings Allocation | 3/3 | Complete   | 2026-03-24 |
 | 12. Planning Dashboard & Lifetime Timeline | 0/? | Not started | - |
 | 13. Planning Insights & Integration Polish | 0/? | Not started | - |
