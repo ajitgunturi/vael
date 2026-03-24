@@ -238,7 +238,7 @@ void main() {
       await tester.pumpWidget(
         _buildApp(
           milestones: [
-            MilestoneDisplayItem(
+            const MilestoneDisplayItem(
               age: 40,
               targetAmountPaise: 50000000,
               projectedAmountPaise: 45000000,
