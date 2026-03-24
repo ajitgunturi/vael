@@ -68,8 +68,8 @@ Requirements for the financial planning extension (Phases 6-8). Each maps to roa
 
 ### Sinking Funds
 
-- [ ] **SINK-01**: User can create sinking fund goals with target amount, deadline, and sub-type (car repair, medical, travel, insurance, tax, home maintenance, custom)
-- [ ] **SINK-02**: Sinking funds show simple monthly savings target: (target - current) / months remaining
+- [x] **SINK-01**: User can create sinking fund goals with target amount, deadline, and sub-type (car repair, medical, travel, insurance, tax, home maintenance, custom)
+- [x] **SINK-02**: Sinking funds show simple monthly savings target: (target - current) / months remaining
 - [ ] **SINK-03**: Sinking funds display separately from investment goals on the Goals screen
 - [ ] **SINK-04**: User can add contributions to sinking funds via pre-filled transaction form
 
@@ -91,7 +91,7 @@ Requirements for the financial planning extension (Phases 6-8). Each maps to roa
 
 - [ ] **RATE-01**: User can see monthly savings rate: (income - expenses) / income as percentage
 - [ ] **RATE-02**: 12-month trend line displayed with health bands (green >= 20%, amber 10-20%, red < 10%)
-- [ ] **RATE-03**: Historical monthly metrics stored for trend computation (requires GAP C10 balance snapshot resolution)
+- [x] **RATE-03**: Historical monthly metrics stored for trend computation (requires GAP C10 balance snapshot resolution)
 - [ ] **RATE-04**: Current month rate shown even with insufficient history for trend
 
 ### Opportunity Fund
@@ -208,13 +208,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TIER-04 | Phase 9 | Complete |
 | NAV-05 | Phase 9 | Complete |
 | NAV-06 | Phase 9 | Complete |
-| SINK-01 | Phase 10 | Pending |
-| SINK-02 | Phase 10 | Pending |
+| SINK-01 | Phase 10 | Complete |
+| SINK-02 | Phase 10 | Complete |
 | SINK-03 | Phase 10 | Pending |
 | SINK-04 | Phase 10 | Pending |
 | RATE-01 | Phase 10 | Pending |
 | RATE-02 | Phase 10 | Pending |
-| RATE-03 | Phase 10 | Pending |
+| RATE-03 | Phase 10 | Complete |
 | RATE-04 | Phase 10 | Pending |
 | NAV-04 | Phase 10 | Pending |
 | FLOW-01 | Phase 11 | Pending |
