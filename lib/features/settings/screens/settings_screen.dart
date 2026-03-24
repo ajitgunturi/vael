@@ -17,6 +17,7 @@ import '../../planning/screens/life_profile_wizard_screen.dart';
 import '../../planning/screens/milestone_dashboard_screen.dart';
 import '../../planning/screens/opportunity_fund_screen.dart';
 import '../../planning/screens/savings_allocation_screen.dart';
+import '../../cashflow/screens/cash_flow_screen.dart';
 import 'category_management_screen.dart';
 import 'family_backup_screen.dart';
 import 'passphrase_setup_screen.dart';
@@ -80,11 +81,60 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ),
           ),
+          // 6 tiles in locked setup-flow order
           _SettingsTile(
             icon: Icons.person_outline,
             title: 'Life Profile',
             subtitle: 'Age, retirement, risk & growth rates',
             onTap: () => _openLifeProfile(context, ref),
+          ),
+          _SettingsTile(
+            icon: Icons.shield_outlined,
+            title: 'Emergency Fund',
+            subtitle: 'Safety net coverage and cash tiers',
+            onTap: () => _openEmergencyFund(context),
+          ),
+          _SettingsTile(
+            icon: Icons.water_drop,
+            title: 'Cash Tiers',
+            subtitle: 'Liquidity tier assignment',
+            onTap: () => _openCashTiers(context),
+          ),
+          _SettingsTile(
+            icon: Icons.account_balance_wallet,
+            title: 'Savings Allocation Rules',
+            subtitle: 'Prioritized surplus distribution',
+            onTap: () => _openSavingsAllocation(context),
+          ),
+          _SettingsTile(
+            icon: Icons.savings,
+            title: 'Opportunity Fund',
+            subtitle: 'Designate and track opportunity fund',
+            onTap: () => _openOpportunityFund(context),
+          ),
+          _SettingsTile(
+            icon: Icons.calendar_month,
+            title: 'Cash Flow',
+            subtitle: 'Day-by-day income & expense map',
+            onTap: () => _openCashFlow(context),
+          ),
+          const Divider(),
+          const Padding(
+            padding: EdgeInsets.only(left: 16, top: 8, bottom: 4),
+            child: Text(
+              'Planning Tools',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: Colors.grey,
+              ),
+            ),
+          ),
+          _SettingsTile(
+            icon: Icons.pie_chart_outline,
+            title: 'Allocation Targets',
+            subtitle: 'Asset allocation and glide paths',
+            onTap: () => _openAllocation(context),
           ),
           _SettingsTile(
             icon: Icons.calculate_outlined,
@@ -99,34 +149,10 @@ class SettingsScreen extends ConsumerWidget {
             onTap: () => _openMilestones(context, ref),
           ),
           _SettingsTile(
-            icon: Icons.pie_chart_outline,
-            title: 'Allocation Targets',
-            subtitle: 'Asset allocation and glide paths',
-            onTap: () => _openAllocation(context),
-          ),
-          _SettingsTile(
             icon: Icons.compare_arrows,
             title: 'Decision Modeler',
             subtitle: 'Model life decisions and their financial impact',
             onTap: () => _openDecisionModeler(context),
-          ),
-          _SettingsTile(
-            icon: Icons.shield_outlined,
-            title: 'Emergency Fund',
-            subtitle: 'Safety net coverage and cash tiers',
-            onTap: () => _openEmergencyFund(context),
-          ),
-          _SettingsTile(
-            icon: Icons.account_balance_wallet,
-            title: 'Savings Allocation',
-            subtitle: 'Prioritized surplus distribution rules',
-            onTap: () => _openSavingsAllocation(context),
-          ),
-          _SettingsTile(
-            icon: Icons.savings,
-            title: 'Opportunity Fund',
-            subtitle: 'Designate and track opportunity fund',
-            onTap: () => _openOpportunityFund(context),
           ),
           const Divider(),
           _ThemeModeTile(ref: ref),
@@ -193,6 +219,20 @@ class SettingsScreen extends ConsumerWidget {
             DecisionModelerScreen(familyId: familyId, userId: userId),
       ),
     );
+  }
+
+  void _openCashTiers(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => EmergencyFundScreen(familyId: familyId, userId: userId),
+      ),
+    );
+  }
+
+  void _openCashFlow(BuildContext context) {
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const CashFlowScreen()));
   }
 
   void _openEmergencyFund(BuildContext context) {

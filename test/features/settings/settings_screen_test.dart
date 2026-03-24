@@ -133,6 +133,95 @@ void main() {
       expect(find.text('Open Settings'), findsOneWidget);
     });
 
+    testWidgets('Financial Planning section has exactly 6 tiles', (
+      tester,
+    ) async {
+      await tester.pumpWidget(buildScreen());
+      final scrollable = find.byType(Scrollable).first;
+
+      // Verify the 6 Financial Planning tiles exist (scrolling as needed)
+      expect(find.text('Life Profile'), findsOneWidget);
+      expect(find.text('Emergency Fund'), findsOneWidget);
+
+      await tester.scrollUntilVisible(
+        find.text('Cash Tiers'),
+        200,
+        scrollable: scrollable,
+      );
+      await tester.pump();
+      expect(find.text('Cash Tiers'), findsOneWidget);
+
+      await tester.scrollUntilVisible(
+        find.text('Savings Allocation Rules'),
+        200,
+        scrollable: scrollable,
+      );
+      await tester.pump();
+      expect(find.text('Savings Allocation Rules'), findsOneWidget);
+
+      await tester.scrollUntilVisible(
+        find.text('Opportunity Fund'),
+        200,
+        scrollable: scrollable,
+      );
+      await tester.pump();
+      expect(find.text('Opportunity Fund'), findsOneWidget);
+
+      await tester.scrollUntilVisible(
+        find.text('Cash Flow'),
+        200,
+        scrollable: scrollable,
+      );
+      await tester.pump();
+      expect(find.text('Cash Flow'), findsOneWidget);
+    });
+
+    testWidgets('Planning Tools section exists with 4 tools', (tester) async {
+      await tester.pumpWidget(buildScreen());
+
+      // Scroll to Planning Tools section header
+      await tester.scrollUntilVisible(
+        find.text('Planning Tools'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pump();
+      expect(find.text('Planning Tools'), findsOneWidget);
+
+      // Verify the 4 Planning Tools tiles
+      await tester.scrollUntilVisible(
+        find.text('Allocation Targets'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pump();
+      expect(find.text('Allocation Targets'), findsOneWidget);
+
+      await tester.scrollUntilVisible(
+        find.text('FI Calculator'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pump();
+      expect(find.text('FI Calculator'), findsOneWidget);
+
+      await tester.scrollUntilVisible(
+        find.text('Milestones'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pump();
+      expect(find.text('Milestones'), findsOneWidget);
+
+      await tester.scrollUntilVisible(
+        find.text('Decision Modeler'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pump();
+      expect(find.text('Decision Modeler'), findsOneWidget);
+    });
+
     testWidgets('shows app version info section', (tester) async {
       await tester.pumpWidget(buildScreen());
       // App info is at the bottom of the list -- scroll into view
