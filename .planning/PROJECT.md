@@ -39,21 +39,17 @@ Privacy is non-negotiable. Data never leaves the device unencrypted. No telemetr
 - ✓ Cash tier classification (instant/short-term/long-term) with auto-suggest — Phase 9
 - ✓ EF detail screen with progress ring, account linking, tier summary — Phase 9
 - ✓ Navigation badges (EF shield, tier chip) on account detail/list, budget essentials link, Settings tile — Phase 9
+- ✓ Sinking fund engine with monthly targets, pace status, sub-types (vacation, electronics, gifts, home, medical, other) — Phase 10
+- ✓ 4-tab Goals screen (Sinking Funds, Investments, Purchases, Milestones) with SinkingFundCard and contribution flow — Phase 10
+- ✓ Savings rate computation (income - expenses / income) with MonthlyMetrics caching — Phase 10
+- ✓ 12-month savings rate trend chart with health bands (green ≥20%, amber 10-20%, red <10%) — Phase 10
 
 ### Active
 
-<!-- Current scope: Financial Planning Extension (Phases 6–10). -->
+<!-- Current scope: Cash Flow & Savings Allocation (Phases 11–12+). -->
 
-- [ ] Life profile (DOB, retirement age, risk profile, growth rates)
-- [ ] Net worth milestones by decade with on-track/behind/ahead status
-- [ ] Financial independence (FI) calculator (FI number, years-to-FI, Coast FI)
-- [ ] Asset allocation targets by age band with glide path (conservative/moderate/aggressive)
-- [ ] Income growth model (salary trajectory, career stage, side income)
-- [ ] Major purchase planner (home, car, education with loan EMI impact)
-- [ ] Sinking funds (purpose-specific short-term savings buckets)
 - [ ] Cash flow calendar (day-by-day income/expense map with threshold alerts)
 - [ ] Savings allocation rules (priority-ordered surplus distribution)
-- [ ] Savings rate trend (12-month history with health bands)
 - [ ] Opportunity fund designation and tracking
 - [ ] Unified planning dashboard ("5 numbers" financial health view)
 - [ ] Lifetime timeline visualization (decades, milestones, FI date, goals)
@@ -121,4 +117,4 @@ The extension plan adds a **Planning Intelligence Layer** on top of the existing
 | Savings allocation is advisory only (no auto-create transactions) | User makes the judgment call; deterministic principle | — Pending |
 
 ---
-*Last updated: 2026-03-22 after initialization*
+*Last updated: 2026-03-24 after Phase 10 completion*
