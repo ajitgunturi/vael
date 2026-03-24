@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:vael/core/database/database.dart';
 import 'package:vael/features/goals/providers/goal_providers.dart';
 import 'package:vael/features/goals/screens/goal_list_screen.dart';
+import 'package:vael/features/goals/widgets/sinking_fund_card.dart';
 import 'package:vael/shared/theme/app_theme.dart';
 
 const _familyId = 'fam_goals';
@@ -16,27 +17,44 @@ Goal _fakeGoal({
   int currentSavings = 0,
   String status = 'active',
   int priority = 1,
+  String goalCategory = 'investmentGoal',
+  String? sinkingFundSubType,
+  DateTime? targetDate,
+  DateTime? createdAt,
 }) {
   return Goal(
     id: id,
     name: name,
     targetAmount: targetAmount,
-    targetDate: DateTime(2027, 6, 1),
+    targetDate: targetDate ?? DateTime(2027, 6, 1),
     currentSavings: currentSavings,
     inflationRate: 0.06,
     priority: priority,
     status: status,
     linkedAccountId: null,
     familyId: _familyId,
-    goalCategory: 'investmentGoal',
-    createdAt: DateTime(2025),
+    goalCategory: goalCategory,
+    sinkingFundSubType: sinkingFundSubType,
+    createdAt: createdAt ?? DateTime(2025),
   );
 }
 
-Widget _buildApp({required List<Goal> goals}) {
+Widget _buildApp({
+  List<Goal> sinkingFunds = const [],
+  List<Goal> investments = const [],
+  List<Goal> purchases = const [],
+}) {
   return ProviderScope(
     overrides: [
-      goalListProvider(_familyId).overrideWith((_) => Stream.value(goals)),
+      sinkingFundGoalsProvider(
+        _familyId,
+      ).overrideWith((_) => Stream.value(sinkingFunds)),
+      investmentGoalsProvider(
+        _familyId,
+      ).overrideWith((_) => Stream.value(investments)),
+      purchaseGoalsProvider(
+        _familyId,
+      ).overrideWith((_) => Stream.value(purchases)),
     ],
     child: MaterialApp(
       theme: AppTheme.light(),
@@ -47,97 +65,135 @@ Widget _buildApp({required List<Goal> goals}) {
 
 void main() {
   group('GoalListScreen', () {
-    testWidgets('shows empty state when no goals', (tester) async {
-      await tester.pumpWidget(_buildApp(goals: []));
-      await tester.pumpAndSettle();
+    testWidgets('renders 3 tabs: Sinking Funds, Investments, Purchases', (
+      tester,
+    ) async {
+      await tester.pumpWidget(_buildApp());
+      await tester.pump();
 
-      expect(find.text('No goals yet'), findsOneWidget);
+      expect(find.byType(TabBar), findsOneWidget);
+      expect(find.text('Sinking Funds'), findsOneWidget);
+      expect(find.text('Investments'), findsOneWidget);
+      expect(find.text('Purchases'), findsOneWidget);
     });
 
-    testWidgets('shows goal cards with name and progress', (tester) async {
+    testWidgets('Sinking Funds tab is selected by default (index 0)', (
+      tester,
+    ) async {
+      await tester.pumpWidget(_buildApp());
+      await tester.pump();
+
+      // The first tab content (empty state for sinking funds) should be visible
+      expect(find.text('No sinking funds yet'), findsOneWidget);
+    });
+
+    testWidgets('shows SinkingFundCard for sinking fund goals', (tester) async {
       await tester.pumpWidget(
         _buildApp(
-          goals: [
+          sinkingFunds: [
             _fakeGoal(
-              id: 'g1',
-              name: 'Emergency Fund',
-              targetAmount: 50000000,
-              currentSavings: 20000000,
-            ),
-            _fakeGoal(
-              id: 'g2',
-              name: 'House Down Payment',
-              targetAmount: 200000000,
-              currentSavings: 50000000,
+              id: 'sf1',
+              name: 'Tax Fund',
+              targetAmount: 10000000,
+              currentSavings: 3000000,
+              goalCategory: 'sinkingFund',
+              sinkingFundSubType: 'tax',
+              createdAt: DateTime(2025, 1, 1),
+              targetDate: DateTime(2026, 12, 31),
             ),
           ],
         ),
       );
-      await tester.pumpAndSettle();
+      await tester.pump();
 
-      expect(find.text('Emergency Fund'), findsOneWidget);
-      expect(find.text('House Down Payment'), findsOneWidget);
-      expect(find.byType(LinearProgressIndicator), findsNWidgets(2));
+      expect(find.byType(SinkingFundCard), findsOneWidget);
+      expect(find.text('Tax Fund'), findsOneWidget);
     });
 
-    testWidgets('shows status chips for different statuses', (tester) async {
+    testWidgets('shows GoalCard for investment goals on Investments tab', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         _buildApp(
-          goals: [
+          investments: [
             _fakeGoal(
-              id: 'g1',
-              name: 'Active Goal',
-              targetAmount: 100000,
-              status: 'active',
-            ),
-            _fakeGoal(
-              id: 'g2',
-              name: 'Completed Goal',
-              targetAmount: 100000,
-              status: 'completed',
-              currentSavings: 100000,
-            ),
-            _fakeGoal(
-              id: 'g3',
-              name: 'At Risk Goal',
-              targetAmount: 100000,
-              status: 'atRisk',
+              id: 'inv1',
+              name: 'Retirement Corpus',
+              targetAmount: 500000000,
+              currentSavings: 100000000,
             ),
           ],
         ),
       );
-      await tester.pumpAndSettle();
+      await tester.pump();
 
-      expect(find.text('Active'), findsOneWidget);
-      expect(find.text('Completed'), findsOneWidget);
-      expect(find.text('At Risk'), findsOneWidget);
+      // Tap Investments tab and wait for tab animation + stream resolution
+      await tester.tap(find.text('Investments'));
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+      await tester.pump();
+
+      expect(find.text('Retirement Corpus'), findsOneWidget);
+    });
+
+    testWidgets('shows empty state on Purchases tab when no goals', (
+      tester,
+    ) async {
+      await tester.pumpWidget(_buildApp());
+      await tester.pump();
+
+      // Tap Purchases tab and wait for tab animation + stream resolution
+      await tester.tap(find.text('Purchases'));
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+      await tester.pump();
+
+      expect(find.text('No purchase goals yet'), findsOneWidget);
     });
 
     testWidgets('shows FAB for adding new goal', (tester) async {
-      await tester.pumpWidget(_buildApp(goals: []));
-      await tester.pumpAndSettle();
+      await tester.pumpWidget(_buildApp());
+      await tester.pump();
 
       expect(find.byType(FloatingActionButton), findsOneWidget);
     });
 
-    testWidgets('shows formatted amounts in INR', (tester) async {
+    testWidgets('completed sinking funds show in collapsed section', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         _buildApp(
-          goals: [
+          sinkingFunds: [
             _fakeGoal(
-              id: 'g1',
-              name: 'Big Goal',
-              targetAmount: 100000000, // ₹10 lakh
-              currentSavings: 25000000, // ₹2.5 lakh
+              id: 'sf1',
+              name: 'Active Fund',
+              targetAmount: 10000000,
+              currentSavings: 3000000,
+              goalCategory: 'sinkingFund',
+              sinkingFundSubType: 'travel',
+              createdAt: DateTime(2025, 1, 1),
+              targetDate: DateTime(2026, 12, 31),
+            ),
+            _fakeGoal(
+              id: 'sf2',
+              name: 'Done Fund',
+              targetAmount: 5000000,
+              currentSavings: 5000000,
+              status: 'completed',
+              goalCategory: 'sinkingFund',
+              sinkingFundSubType: 'gifts',
+              createdAt: DateTime(2024, 1, 1),
+              targetDate: DateTime(2025, 6, 1),
             ),
           ],
         ),
       );
-      await tester.pumpAndSettle();
+      await tester.pump();
 
-      // Indian notation: 10,00,000 and 2,50,000
-      expect(find.textContaining('10,00,000'), findsOneWidget);
-      expect(find.textContaining('2,50,000'), findsOneWidget);
+      expect(find.text('Active Fund'), findsOneWidget);
+      expect(find.text('Completed (1)'), findsOneWidget);
+      // Completed fund should be hidden inside collapsed ExpansionTile
+      expect(find.text('Done Fund'), findsNothing);
     });
   });
 }

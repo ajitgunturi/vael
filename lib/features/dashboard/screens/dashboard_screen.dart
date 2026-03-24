@@ -11,6 +11,7 @@ import '../../projections/screens/projection_screen.dart';
 import '../../recurring/screens/recurring_rules_screen.dart';
 import '../../transactions/screens/transaction_form_screen.dart';
 import '../providers/dashboard_providers.dart';
+import 'savings_rate_detail_screen.dart';
 
 /// Main dashboard showing net worth hero, monthly tiles, quick actions,
 /// savings rate badge, goals, and scope toggle.
@@ -111,7 +112,7 @@ class _DashboardBody extends StatelessWidget {
           onNavigateToTab: onNavigateToTab,
         ),
         const SizedBox(height: Spacing.md),
-        _SavingsRateBadge(rate: data.savingsRate),
+        _SavingsRateBadge(rate: data.savingsRate, familyId: familyId),
         const SizedBox(height: Spacing.md),
         _QuickActionsRow(
           familyId: familyId,
@@ -264,10 +265,12 @@ class _CompactTile extends StatelessWidget {
 }
 
 /// Savings rate badge — green >= 20%, amber 10-20%, red < 10%.
+/// Tappable: navigates to [SavingsRateDetailScreen].
 class _SavingsRateBadge extends StatelessWidget {
-  const _SavingsRateBadge({required this.rate});
+  const _SavingsRateBadge({required this.rate, required this.familyId});
 
   final double rate;
+  final String familyId;
 
   @override
   Widget build(BuildContext context) {
@@ -283,13 +286,18 @@ class _SavingsRateBadge extends StatelessWidget {
 
     return Align(
       alignment: Alignment.centerLeft,
-      child: Chip(
+      child: ActionChip(
         label: Text(
           'Savings Rate: ${rate.toStringAsFixed(0)}%',
           style: TextStyle(color: chipColor, fontWeight: FontWeight.w600),
         ),
         side: BorderSide(color: chipColor),
         backgroundColor: chipColor.withValues(alpha: 0.1),
+        onPressed: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => SavingsRateDetailScreen(familyId: familyId),
+          ),
+        ),
       ),
     );
   }
