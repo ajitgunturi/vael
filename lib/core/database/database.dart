@@ -53,7 +53,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e);
 
   @override
-  int get schemaVersion => 14;
+  int get schemaVersion => 15;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -104,6 +104,10 @@ class AppDatabase extends _$AppDatabase {
         await m.addColumn(accounts, accounts.isOpportunityFund);
         await m.addColumn(accounts, accounts.opportunityFundTargetPaise);
         await m.addColumn(accounts, accounts.minimumBalancePaise);
+      }
+      // v14 -> v15: yearsToFi column on monthly_metrics for FI date slipping
+      if (from < 15) {
+        await m.addColumn(monthlyMetrics, monthlyMetrics.yearsToFi);
       }
     },
     beforeOpen: (details) async {

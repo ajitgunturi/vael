@@ -31,6 +31,15 @@ class MonthlyMetricsDao extends DatabaseAccessor<AppDatabase>
     return into(monthlyMetrics).insertOnConflictUpdate(entry);
   }
 
+  /// Updates only the yearsToFi column for an existing row.
+  ///
+  /// No-ops if the row does not exist.
+  Future<void> updateYearsToFi(String id, int? yearsToFi) {
+    return (update(monthlyMetrics)..where((m) => m.id.equals(id))).write(
+      MonthlyMetricsCompanion(yearsToFi: Value(yearsToFi)),
+    );
+  }
+
   /// Watches the most recent [months] metrics for [familyId], ordered by month DESC.
   Stream<List<MonthlyMetric>> watchRecent(String familyId, int months) {
     return (select(monthlyMetrics)

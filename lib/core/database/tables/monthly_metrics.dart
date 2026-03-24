@@ -11,6 +11,7 @@ class MonthlyMetrics extends Table {
   IntColumn get totalExpensesPaise => integer()();
   IntColumn get savingsRateBp => integer()(); // basis points
   IntColumn get netWorthPaise => integer()();
+  IntColumn get yearsToFi => integer().nullable()();
   DateTimeColumn get computedAt => dateTime()();
 
   @override

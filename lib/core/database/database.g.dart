@@ -10841,6 +10841,17 @@ class $MonthlyMetricsTable extends MonthlyMetrics
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _yearsToFiMeta = const VerificationMeta(
+    'yearsToFi',
+  );
+  @override
+  late final GeneratedColumn<int> yearsToFi = GeneratedColumn<int>(
+    'years_to_fi',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _computedAtMeta = const VerificationMeta(
     'computedAt',
   );
@@ -10861,6 +10872,7 @@ class $MonthlyMetricsTable extends MonthlyMetrics
     totalExpensesPaise,
     savingsRateBp,
     netWorthPaise,
+    yearsToFi,
     computedAt,
   ];
   @override
@@ -10940,6 +10952,12 @@ class $MonthlyMetricsTable extends MonthlyMetrics
     } else if (isInserting) {
       context.missing(_netWorthPaiseMeta);
     }
+    if (data.containsKey('years_to_fi')) {
+      context.handle(
+        _yearsToFiMeta,
+        yearsToFi.isAcceptableOrUnknown(data['years_to_fi']!, _yearsToFiMeta),
+      );
+    }
     if (data.containsKey('computed_at')) {
       context.handle(
         _computedAtMeta,
@@ -10985,6 +11003,10 @@ class $MonthlyMetricsTable extends MonthlyMetrics
         DriftSqlType.int,
         data['${effectivePrefix}net_worth_paise'],
       )!,
+      yearsToFi: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}years_to_fi'],
+      ),
       computedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}computed_at'],
@@ -11006,6 +11028,7 @@ class MonthlyMetric extends DataClass implements Insertable<MonthlyMetric> {
   final int totalExpensesPaise;
   final int savingsRateBp;
   final int netWorthPaise;
+  final int? yearsToFi;
   final DateTime computedAt;
   const MonthlyMetric({
     required this.id,
@@ -11015,6 +11038,7 @@ class MonthlyMetric extends DataClass implements Insertable<MonthlyMetric> {
     required this.totalExpensesPaise,
     required this.savingsRateBp,
     required this.netWorthPaise,
+    this.yearsToFi,
     required this.computedAt,
   });
   @override
@@ -11027,6 +11051,9 @@ class MonthlyMetric extends DataClass implements Insertable<MonthlyMetric> {
     map['total_expenses_paise'] = Variable<int>(totalExpensesPaise);
     map['savings_rate_bp'] = Variable<int>(savingsRateBp);
     map['net_worth_paise'] = Variable<int>(netWorthPaise);
+    if (!nullToAbsent || yearsToFi != null) {
+      map['years_to_fi'] = Variable<int>(yearsToFi);
+    }
     map['computed_at'] = Variable<DateTime>(computedAt);
     return map;
   }
@@ -11040,6 +11067,9 @@ class MonthlyMetric extends DataClass implements Insertable<MonthlyMetric> {
       totalExpensesPaise: Value(totalExpensesPaise),
       savingsRateBp: Value(savingsRateBp),
       netWorthPaise: Value(netWorthPaise),
+      yearsToFi: yearsToFi == null && nullToAbsent
+          ? const Value.absent()
+          : Value(yearsToFi),
       computedAt: Value(computedAt),
     );
   }
@@ -11057,6 +11087,7 @@ class MonthlyMetric extends DataClass implements Insertable<MonthlyMetric> {
       totalExpensesPaise: serializer.fromJson<int>(json['totalExpensesPaise']),
       savingsRateBp: serializer.fromJson<int>(json['savingsRateBp']),
       netWorthPaise: serializer.fromJson<int>(json['netWorthPaise']),
+      yearsToFi: serializer.fromJson<int?>(json['yearsToFi']),
       computedAt: serializer.fromJson<DateTime>(json['computedAt']),
     );
   }
@@ -11071,6 +11102,7 @@ class MonthlyMetric extends DataClass implements Insertable<MonthlyMetric> {
       'totalExpensesPaise': serializer.toJson<int>(totalExpensesPaise),
       'savingsRateBp': serializer.toJson<int>(savingsRateBp),
       'netWorthPaise': serializer.toJson<int>(netWorthPaise),
+      'yearsToFi': serializer.toJson<int?>(yearsToFi),
       'computedAt': serializer.toJson<DateTime>(computedAt),
     };
   }
@@ -11083,6 +11115,7 @@ class MonthlyMetric extends DataClass implements Insertable<MonthlyMetric> {
     int? totalExpensesPaise,
     int? savingsRateBp,
     int? netWorthPaise,
+    Value<int?> yearsToFi = const Value.absent(),
     DateTime? computedAt,
   }) => MonthlyMetric(
     id: id ?? this.id,
@@ -11092,6 +11125,7 @@ class MonthlyMetric extends DataClass implements Insertable<MonthlyMetric> {
     totalExpensesPaise: totalExpensesPaise ?? this.totalExpensesPaise,
     savingsRateBp: savingsRateBp ?? this.savingsRateBp,
     netWorthPaise: netWorthPaise ?? this.netWorthPaise,
+    yearsToFi: yearsToFi.present ? yearsToFi.value : this.yearsToFi,
     computedAt: computedAt ?? this.computedAt,
   );
   MonthlyMetric copyWithCompanion(MonthlyMetricsCompanion data) {
@@ -11111,6 +11145,7 @@ class MonthlyMetric extends DataClass implements Insertable<MonthlyMetric> {
       netWorthPaise: data.netWorthPaise.present
           ? data.netWorthPaise.value
           : this.netWorthPaise,
+      yearsToFi: data.yearsToFi.present ? data.yearsToFi.value : this.yearsToFi,
       computedAt: data.computedAt.present
           ? data.computedAt.value
           : this.computedAt,
@@ -11127,6 +11162,7 @@ class MonthlyMetric extends DataClass implements Insertable<MonthlyMetric> {
           ..write('totalExpensesPaise: $totalExpensesPaise, ')
           ..write('savingsRateBp: $savingsRateBp, ')
           ..write('netWorthPaise: $netWorthPaise, ')
+          ..write('yearsToFi: $yearsToFi, ')
           ..write('computedAt: $computedAt')
           ..write(')'))
         .toString();
@@ -11141,6 +11177,7 @@ class MonthlyMetric extends DataClass implements Insertable<MonthlyMetric> {
     totalExpensesPaise,
     savingsRateBp,
     netWorthPaise,
+    yearsToFi,
     computedAt,
   );
   @override
@@ -11154,6 +11191,7 @@ class MonthlyMetric extends DataClass implements Insertable<MonthlyMetric> {
           other.totalExpensesPaise == this.totalExpensesPaise &&
           other.savingsRateBp == this.savingsRateBp &&
           other.netWorthPaise == this.netWorthPaise &&
+          other.yearsToFi == this.yearsToFi &&
           other.computedAt == this.computedAt);
 }
 
@@ -11165,6 +11203,7 @@ class MonthlyMetricsCompanion extends UpdateCompanion<MonthlyMetric> {
   final Value<int> totalExpensesPaise;
   final Value<int> savingsRateBp;
   final Value<int> netWorthPaise;
+  final Value<int?> yearsToFi;
   final Value<DateTime> computedAt;
   final Value<int> rowid;
   const MonthlyMetricsCompanion({
@@ -11175,6 +11214,7 @@ class MonthlyMetricsCompanion extends UpdateCompanion<MonthlyMetric> {
     this.totalExpensesPaise = const Value.absent(),
     this.savingsRateBp = const Value.absent(),
     this.netWorthPaise = const Value.absent(),
+    this.yearsToFi = const Value.absent(),
     this.computedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -11186,6 +11226,7 @@ class MonthlyMetricsCompanion extends UpdateCompanion<MonthlyMetric> {
     required int totalExpensesPaise,
     required int savingsRateBp,
     required int netWorthPaise,
+    this.yearsToFi = const Value.absent(),
     required DateTime computedAt,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
@@ -11204,6 +11245,7 @@ class MonthlyMetricsCompanion extends UpdateCompanion<MonthlyMetric> {
     Expression<int>? totalExpensesPaise,
     Expression<int>? savingsRateBp,
     Expression<int>? netWorthPaise,
+    Expression<int>? yearsToFi,
     Expression<DateTime>? computedAt,
     Expression<int>? rowid,
   }) {
@@ -11216,6 +11258,7 @@ class MonthlyMetricsCompanion extends UpdateCompanion<MonthlyMetric> {
         'total_expenses_paise': totalExpensesPaise,
       if (savingsRateBp != null) 'savings_rate_bp': savingsRateBp,
       if (netWorthPaise != null) 'net_worth_paise': netWorthPaise,
+      if (yearsToFi != null) 'years_to_fi': yearsToFi,
       if (computedAt != null) 'computed_at': computedAt,
       if (rowid != null) 'rowid': rowid,
     });
@@ -11229,6 +11272,7 @@ class MonthlyMetricsCompanion extends UpdateCompanion<MonthlyMetric> {
     Value<int>? totalExpensesPaise,
     Value<int>? savingsRateBp,
     Value<int>? netWorthPaise,
+    Value<int?>? yearsToFi,
     Value<DateTime>? computedAt,
     Value<int>? rowid,
   }) {
@@ -11240,6 +11284,7 @@ class MonthlyMetricsCompanion extends UpdateCompanion<MonthlyMetric> {
       totalExpensesPaise: totalExpensesPaise ?? this.totalExpensesPaise,
       savingsRateBp: savingsRateBp ?? this.savingsRateBp,
       netWorthPaise: netWorthPaise ?? this.netWorthPaise,
+      yearsToFi: yearsToFi ?? this.yearsToFi,
       computedAt: computedAt ?? this.computedAt,
       rowid: rowid ?? this.rowid,
     );
@@ -11269,6 +11314,9 @@ class MonthlyMetricsCompanion extends UpdateCompanion<MonthlyMetric> {
     if (netWorthPaise.present) {
       map['net_worth_paise'] = Variable<int>(netWorthPaise.value);
     }
+    if (yearsToFi.present) {
+      map['years_to_fi'] = Variable<int>(yearsToFi.value);
+    }
     if (computedAt.present) {
       map['computed_at'] = Variable<DateTime>(computedAt.value);
     }
@@ -11288,6 +11336,7 @@ class MonthlyMetricsCompanion extends UpdateCompanion<MonthlyMetric> {
           ..write('totalExpensesPaise: $totalExpensesPaise, ')
           ..write('savingsRateBp: $savingsRateBp, ')
           ..write('netWorthPaise: $netWorthPaise, ')
+          ..write('yearsToFi: $yearsToFi, ')
           ..write('computedAt: $computedAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -23912,6 +23961,7 @@ typedef $$MonthlyMetricsTableCreateCompanionBuilder =
       required int totalExpensesPaise,
       required int savingsRateBp,
       required int netWorthPaise,
+      Value<int?> yearsToFi,
       required DateTime computedAt,
       Value<int> rowid,
     });
@@ -23924,6 +23974,7 @@ typedef $$MonthlyMetricsTableUpdateCompanionBuilder =
       Value<int> totalExpensesPaise,
       Value<int> savingsRateBp,
       Value<int> netWorthPaise,
+      Value<int?> yearsToFi,
       Value<DateTime> computedAt,
       Value<int> rowid,
     });
@@ -23995,6 +24046,11 @@ class $$MonthlyMetricsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<int> get yearsToFi => $composableBuilder(
+    column: $table.yearsToFi,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<DateTime> get computedAt => $composableBuilder(
     column: $table.computedAt,
     builder: (column) => ColumnFilters(column),
@@ -24063,6 +24119,11 @@ class $$MonthlyMetricsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get yearsToFi => $composableBuilder(
+    column: $table.yearsToFi,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get computedAt => $composableBuilder(
     column: $table.computedAt,
     builder: (column) => ColumnOrderings(column),
@@ -24126,6 +24187,9 @@ class $$MonthlyMetricsTableAnnotationComposer
     column: $table.netWorthPaise,
     builder: (column) => column,
   );
+
+  GeneratedColumn<int> get yearsToFi =>
+      $composableBuilder(column: $table.yearsToFi, builder: (column) => column);
 
   GeneratedColumn<DateTime> get computedAt => $composableBuilder(
     column: $table.computedAt,
@@ -24193,6 +24257,7 @@ class $$MonthlyMetricsTableTableManager
                 Value<int> totalExpensesPaise = const Value.absent(),
                 Value<int> savingsRateBp = const Value.absent(),
                 Value<int> netWorthPaise = const Value.absent(),
+                Value<int?> yearsToFi = const Value.absent(),
                 Value<DateTime> computedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => MonthlyMetricsCompanion(
@@ -24203,6 +24268,7 @@ class $$MonthlyMetricsTableTableManager
                 totalExpensesPaise: totalExpensesPaise,
                 savingsRateBp: savingsRateBp,
                 netWorthPaise: netWorthPaise,
+                yearsToFi: yearsToFi,
                 computedAt: computedAt,
                 rowid: rowid,
               ),
@@ -24215,6 +24281,7 @@ class $$MonthlyMetricsTableTableManager
                 required int totalExpensesPaise,
                 required int savingsRateBp,
                 required int netWorthPaise,
+                Value<int?> yearsToFi = const Value.absent(),
                 required DateTime computedAt,
                 Value<int> rowid = const Value.absent(),
               }) => MonthlyMetricsCompanion.insert(
@@ -24225,6 +24292,7 @@ class $$MonthlyMetricsTableTableManager
                 totalExpensesPaise: totalExpensesPaise,
                 savingsRateBp: savingsRateBp,
                 netWorthPaise: netWorthPaise,
+                yearsToFi: yearsToFi,
                 computedAt: computedAt,
                 rowid: rowid,
               ),
