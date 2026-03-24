@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/financial/insights_engine.dart';
-import '../../../core/providers/database_providers.dart';
 import '../../dashboard/providers/savings_rate_providers.dart';
 import 'emergency_fund_provider.dart';
 import 'planning_health_providers.dart';
