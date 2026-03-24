@@ -22,7 +22,7 @@ class ThresholdConfigSheet extends ConsumerStatefulWidget {
 
 class _ThresholdConfigSheetState extends ConsumerState<ThresholdConfigSheet> {
   Map<String, int>? _thresholds;
-  Map<String, TextEditingController> _controllers = {};
+  final Map<String, TextEditingController> _controllers = {};
   bool _loading = true;
 
   @override
@@ -110,7 +110,7 @@ class _ThresholdConfigSheetState extends ConsumerState<ThresholdConfigSheet> {
             accountNamesAsync.when(
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (e, _) => Text('Error: $e'),
-              data: (names) => _buildAccountList(names),
+              data: _buildAccountList,
             ),
           const SizedBox(height: Spacing.md),
           SizedBox(
@@ -134,7 +134,7 @@ class _ThresholdConfigSheetState extends ConsumerState<ThresholdConfigSheet> {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: names.length,
-      separatorBuilder: (_, __) => const SizedBox(height: Spacing.sm),
+      separatorBuilder: (_, _) => const SizedBox(height: Spacing.sm),
       itemBuilder: (context, index) {
         final accountId = names.keys.elementAt(index);
         final accountName = names[accountId]!;

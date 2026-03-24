@@ -226,7 +226,7 @@ class _DesignateSheetState extends ConsumerState<_DesignateSheet> {
                   return const Text('No eligible accounts available.');
                 }
                 return DropdownButtonFormField<String>(
-                  value: _selectedAccountId,
+                  initialValue: _selectedAccountId,
                   decoration: const InputDecoration(labelText: 'Account'),
                   items: accounts
                       .map(

@@ -372,7 +372,7 @@ class _AddRuleSheetState extends ConsumerState<_AddRuleSheet> {
             ),
             const SizedBox(height: Spacing.md),
             DropdownButtonFormField<String>(
-              value: _targetType,
+              initialValue: _targetType,
               decoration: const InputDecoration(labelText: 'Target Type'),
               items: const [
                 DropdownMenuItem(

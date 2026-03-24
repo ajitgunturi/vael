@@ -41,7 +41,7 @@ Widget _buildApp({Account? account}) {
     ],
     child: MaterialApp(
       theme: AppTheme.light(),
-      home: OpportunityFundScreen(familyId: _familyId),
+      home: const OpportunityFundScreen(familyId: _familyId),
     ),
   );
 }
