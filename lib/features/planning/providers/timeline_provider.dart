@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/database/database.dart';
 import '../../../core/database/daos/goal_dao.dart';
 import '../../../core/financial/fi_calculator.dart';
 import '../../../core/financial/milestone_engine.dart';

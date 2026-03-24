@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import '../providers/timeline_provider.dart';
 
 /// Position of a painted timeline node for hit-testing.
-class _NodePosition {
+class NodePosition {
   final Offset center;
   final TimelineNode node;
-  const _NodePosition({required this.center, required this.node});
+  const NodePosition({required this.center, required this.node});
 }
 
 /// CustomPainter that renders a horizontal decade-based lifetime timeline.
@@ -29,7 +29,7 @@ class TimelinePainter extends CustomPainter {
   final Color textColor;
 
   /// Stored node positions for external hit-testing.
-  final List<_NodePosition> nodePositions = [];
+  final List<NodePosition> nodePositions = [];
 
   static const _topPad = 24.0;
   static const _bottomPad = 40.0;
@@ -57,7 +57,7 @@ class TimelinePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     nodePositions.clear();
 
-    final chartLeft = _leftPad;
+    const chartLeft = _leftPad;
     final chartRight = size.width - _rightPad;
     final chartWidth = chartRight - chartLeft;
     final axisY = size.height / 2;
@@ -149,7 +149,7 @@ class TimelinePainter extends CustomPainter {
         align: TextAlign.center,
       );
 
-      nodePositions.add(_NodePosition(center: center, node: node));
+      nodePositions.add(NodePosition(center: center, node: node));
     }
   }
 

@@ -3,7 +3,6 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/financial/cash_flow_engine.dart';
 import '../../../shared/theme/color_tokens.dart';
 import '../../../shared/theme/spacing.dart';
 import '../../cashflow/providers/cash_flow_providers.dart';
@@ -189,7 +188,7 @@ class _WaterfallSection extends ConsumerWidget {
 
     return allocAsync.when(
       loading: () => const SizedBox(height: 60),
-      error: (_, __) => const SizedBox.shrink(),
+      error: (_, _) => const SizedBox.shrink(),
       data: (allocations) {
         if (allocations.isEmpty) {
           return Column(
@@ -248,7 +247,7 @@ class _MiniViewSection extends ConsumerWidget {
 
     return projAsync.when(
       loading: () => const SizedBox(height: 60),
-      error: (_, __) => const CashFlowMiniView(projections: []),
+      error: (_, _) => const CashFlowMiniView(projections: []),
       data: (projections) {
         // Filter to next 7 days from today
         final today = DateTime(now.year, now.month, now.day);

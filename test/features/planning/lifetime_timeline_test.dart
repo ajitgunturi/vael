@@ -7,7 +7,7 @@ import 'package:vael/shared/theme/app_theme.dart';
 
 const _userId = 'u1';
 const _familyId = 'f1';
-final _params = (userId: _userId, familyId: _familyId);
+const _params = (userId: _userId, familyId: _familyId);
 
 Widget _buildApp({required List<TimelineNode> nodes, int? currentAge}) {
   return ProviderScope(
