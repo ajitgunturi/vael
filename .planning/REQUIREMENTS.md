@@ -105,7 +105,7 @@ Requirements for the financial planning extension (Phases 6-8). Each maps to roa
 - [x] **DASH-01**: User can see 5-number financial health view: Net Worth, Savings Rate, Emergency Coverage, FI Progress, Milestone Status
 - [x] **DASH-02**: Each metric is a tappable card drilling into its respective detail screen
 - [x] **DASH-03**: Dashboard shows only available metrics with "Set up" CTAs for unconfigured features (graceful degradation)
-- [ ] **DASH-04**: "Financial Health" summary card added to main dashboard with "View All" link to planning dashboard
+- [x] **DASH-04**: "Financial Health" summary card added to main dashboard with "View All" link to planning dashboard
 
 ### Lifetime Timeline
 
@@ -130,7 +130,7 @@ Requirements for the financial planning extension (Phases 6-8). Each maps to roa
 ### Horizontal Integration
 
 - [ ] **NAV-01**: All new screens reachable from HomeShell via tap navigation (no dead-end screens)
-- [ ] **NAV-02**: Dashboard quick actions extended with "Cash Flow" and "Life Plan" buttons
+- [x] **NAV-02**: Dashboard quick actions extended with "Cash Flow" and "Life Plan" buttons
 - [ ] **NAV-03**: Settings screen extended with "Financial Planning" section (Life Profile, Allocation, EF Setup, Cash Tiers, Savings Rules, Opportunity Fund)
 - [x] **NAV-04**: Goals screen split into sections: Milestones, Sinking Funds, Investment Goals, Purchase Goals
 - [x] **NAV-05**: Account detail shows cash tier and emergency fund badges when assigned
@@ -231,14 +231,14 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DASH-01 | Phase 12 | Complete |
 | DASH-02 | Phase 12 | Complete |
 | DASH-03 | Phase 12 | Complete |
-| DASH-04 | Phase 12 | Pending |
+| DASH-04 | Phase 12 | Complete |
 | TIME-01 | Phase 12 | Complete |
 | TIME-02 | Phase 12 | Complete |
 | TIME-03 | Phase 12 | Complete |
 | HEALTH-01 | Phase 12 | Complete |
 | HEALTH-02 | Phase 12 | Complete |
 | HEALTH-03 | Phase 12 | Complete |
-| NAV-02 | Phase 12 | Pending |
+| NAV-02 | Phase 12 | Complete |
 | INSIGHT-01 | Phase 13 | Pending |
 | INSIGHT-02 | Phase 13 | Pending |
 | INSIGHT-03 | Phase 13 | Pending |
