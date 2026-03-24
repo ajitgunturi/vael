@@ -62,7 +62,20 @@ enum GoalStatus { active, onTrack, atRisk, completed }
 enum AssetClass { equity, debt, gold, cash }
 
 /// Category of a financial goal.
-enum GoalCategory { investmentGoal, purchase, retirement }
+enum GoalCategory { investmentGoal, purchase, retirement, sinkingFund }
+
+/// Sub-type classification for sinking fund goals.
+enum SinkingFundSubType {
+  tax,
+  carMaintenance,
+  travel,
+  medical,
+  insurance,
+  gifts,
+  homeRepair,
+  techUpgrade,
+  custom,
+}
 
 /// Type of financial decision being modeled.
 enum DecisionType {
