@@ -7,6 +7,8 @@ import 'package:vael/features/cashflow/providers/cash_flow_providers.dart';
 import 'package:vael/features/cashflow/screens/cash_flow_screen.dart';
 import 'package:vael/features/cashflow/widgets/cash_flow_alert_row.dart';
 import 'package:vael/features/cashflow/widgets/cash_flow_day_row.dart';
+import 'package:vael/features/recurring/screens/recurring_form_screen.dart';
+import 'package:vael/features/accounts/providers/account_ui_providers.dart';
 import 'package:vael/shared/theme/app_theme.dart';
 
 /// Mock DayProjection data with 3 days, 5 items, and 1 alert.
@@ -90,6 +92,11 @@ class _TestSessionFamilyIdNotifier extends SessionFamilyIdNotifier {
   String? build() => 'fam_test';
 }
 
+class _TestSessionUserIdNotifier extends SessionUserIdNotifier {
+  @override
+  String? build() => 'user_test';
+}
+
 class _TestSelectedMonthNotifier extends SelectedCashFlowMonthNotifier {
   @override
   DateTime build() => DateTime(2026, 3);
@@ -102,6 +109,7 @@ Widget _buildApp({
   return ProviderScope(
     overrides: [
       sessionFamilyIdProvider.overrideWith(_TestSessionFamilyIdNotifier.new),
+      sessionUserIdProvider.overrideWith(_TestSessionUserIdNotifier.new),
       selectedCashFlowMonthProvider.overrideWith(
         _TestSelectedMonthNotifier.new,
       ),
@@ -110,6 +118,7 @@ Widget _buildApp({
         month: DateTime(2026, 3),
       )).overrideWith((_) async => projections),
       accountNamesProvider('fam_test').overrideWith((_) async => accountNames),
+      allAccountsProvider('fam_test').overrideWith((_) => Stream.value([])),
     ],
     child: MaterialApp(theme: AppTheme.light(), home: const CashFlowScreen()),
   );
@@ -198,6 +207,20 @@ void main() {
 
       expect(find.text('Cash Flow'), findsOneWidget);
       expect(find.text('March 2026'), findsOneWidget);
+    });
+
+    testWidgets('tapping item navigates to RecurringFormScreen with ruleId', (
+      tester,
+    ) async {
+      await tester.pumpWidget(_buildApp(projections: _mockProjections()));
+      await tester.pumpAndSettle();
+
+      // Tap the first item (Salary with ruleId 'r1')
+      await tester.tap(find.text('Salary'));
+      await tester.pumpAndSettle();
+
+      // Verify RecurringFormScreen was pushed
+      expect(find.byType(RecurringFormScreen), findsOneWidget);
     });
   });
 }

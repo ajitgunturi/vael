@@ -6,6 +6,7 @@ import '../../../core/financial/cash_flow_engine.dart';
 import '../../../core/providers/session_providers.dart';
 import '../../../shared/theme/spacing.dart';
 import '../providers/cash_flow_providers.dart';
+import '../../recurring/screens/recurring_form_screen.dart';
 import '../widgets/cash_flow_alert_row.dart';
 import '../widgets/cash_flow_day_row.dart';
 import '../widgets/threshold_config_sheet.dart';
@@ -150,8 +151,14 @@ class _CashFlowScreenState extends ConsumerState<CashFlowScreen> {
   }
 
   void _onItemTap(String ruleId) {
-    // Navigate to recurring rule detail (wired in future plan)
-    debugPrint('Navigate to rule: $ruleId');
+    final familyId = ref.read(sessionFamilyIdProvider);
+    if (familyId == null) return;
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) =>
+            RecurringFormScreen(familyId: familyId, editingId: ruleId),
+      ),
+    );
   }
 
   void _openThresholdConfig(String familyId) {
