@@ -14,7 +14,8 @@ MonthlyMetric _metric({
   int expensesPaise = 8000000,
   int? rateBp,
 }) {
-  final rate = rateBp ??
+  final rate =
+      rateBp ??
       (incomePaise == 0
           ? 0
           : ((incomePaise - expensesPaise) * 10000 ~/ incomePaise));
@@ -30,14 +31,10 @@ MonthlyMetric _metric({
   );
 }
 
-Widget _buildApp({
-  required List<MonthlyMetric> metrics,
-}) {
+Widget _buildApp({required List<MonthlyMetric> metrics}) {
   return ProviderScope(
     overrides: [
-      savingsRateMetricsProvider('fam_a').overrideWith(
-        (_) async => metrics,
-      ),
+      savingsRateMetricsProvider('fam_a').overrideWith((_) async => metrics),
     ],
     child: MaterialApp(
       theme: AppTheme.light(),
@@ -119,8 +116,9 @@ void main() {
       expect(find.text('0.0%'), findsOneWidget);
     });
 
-    testWidgets('shows current month rate with only 1 month of history',
-        (tester) async {
+    testWidgets('shows current month rate with only 1 month of history', (
+      tester,
+    ) async {
       final metrics = [_metric(month: '2026-03', rateBp: 4667)];
       await tester.pumpWidget(_buildApp(metrics: metrics));
       await tester.pumpAndSettle();
@@ -182,10 +180,7 @@ void main() {
       await tester.pumpWidget(_buildApp(metrics: metrics));
       await tester.pumpAndSettle();
 
-      expect(
-        find.textContaining('Showing 3 months of data'),
-        findsOneWidget,
-      );
+      expect(find.textContaining('Showing 3 months of data'), findsOneWidget);
     });
   });
 }
