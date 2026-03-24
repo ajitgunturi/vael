@@ -129,14 +129,14 @@ Requirements for the financial planning extension (Phases 6-8). Each maps to roa
 
 ### Horizontal Integration
 
-- [ ] **NAV-01**: All new screens reachable from HomeShell via tap navigation (no dead-end screens)
+- [x] **NAV-01**: All new screens reachable from HomeShell via tap navigation (no dead-end screens)
 - [x] **NAV-02**: Dashboard quick actions extended with "Cash Flow" and "Life Plan" buttons
 - [x] **NAV-03**: Settings screen extended with "Financial Planning" section (Life Profile, Allocation, EF Setup, Cash Tiers, Savings Rules, Opportunity Fund)
 - [x] **NAV-04**: Goals screen split into sections: Milestones, Sinking Funds, Investment Goals, Purchase Goals
 - [x] **NAV-05**: Account detail shows cash tier and emergency fund badges when assigned
 - [x] **NAV-06**: Budget screen shows monthly essentials row linking to emergency fund
 - [x] **NAV-07**: Investment portfolio shows "Allocation vs Target" banner linking to allocation screen
-- [ ] **NAV-08**: Every new screen has empty-state with navigable CTA when prerequisites are missing
+- [x] **NAV-08**: Every new screen has empty-state with navigable CTA when prerequisites are missing
 - [ ] **NAV-09**: Navigation integration tests at 3 breakpoints (400dp, 750dp, 1200dp) — minimum 32 tests
 - [ ] **NAV-10**: Cross-feature round-trip navigation tests verify back stack coherence
 
@@ -244,9 +244,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INSIGHT-03 | Phase 13 | Complete |
 | INSIGHT-04 | Phase 13 | Complete |
 | INSIGHT-05 | Phase 13 | Complete |
-| NAV-01 | Phase 13 | Pending |
+| NAV-01 | Phase 13 | Complete |
 | NAV-03 | Phase 13 | Complete |
-| NAV-08 | Phase 13 | Pending |
+| NAV-08 | Phase 13 | Complete |
 | NAV-09 | Phase 13 | Pending |
 | NAV-10 | Phase 13 | Pending |
 
