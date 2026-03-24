@@ -13,6 +13,7 @@ import '../providers/goal_providers.dart';
 ///
 /// When goalCategory is PURCHASE, shows conditional fields:
 /// purchase type dropdown, down payment slider, education escalation slider.
+/// When goalCategory is SINKING_FUND, shows sub-type picker.
 class GoalFormScreen extends ConsumerStatefulWidget {
   const GoalFormScreen({
     super.key,
@@ -37,6 +38,7 @@ class _GoalFormScreenState extends ConsumerState<GoalFormScreen> {
   String _purchaseType = 'Home';
   int _downPaymentBp = 2000; // 20%
   int _educationEscalationBp = 1000; // 10%
+  SinkingFundSubType _sinkingFundSubType = SinkingFundSubType.custom;
 
   @override
   void initState() {
@@ -53,11 +55,14 @@ class _GoalFormScreenState extends ConsumerState<GoalFormScreen> {
 
   String get _appBarTitle {
     if (_goalCategory == GoalCategory.purchase) return 'New Purchase Goal';
+    if (_goalCategory == GoalCategory.sinkingFund) return 'New Sinking Fund';
     return 'New Goal';
   }
 
   @override
   Widget build(BuildContext context) {
+    final isSinkingFund = _goalCategory == GoalCategory.sinkingFund;
+
     return Scaffold(
       appBar: AppBar(title: Text(_appBarTitle)),
       body: Form(
@@ -65,35 +70,59 @@ class _GoalFormScreenState extends ConsumerState<GoalFormScreen> {
         child: ListView(
           padding: const EdgeInsets.all(Spacing.md),
           children: [
-            // Goal category segmented button
-            SegmentedButton<GoalCategory>(
-              segments: const [
-                ButtonSegment(
-                  value: GoalCategory.investmentGoal,
-                  label: Text('Investment'),
-                ),
-                ButtonSegment(
-                  value: GoalCategory.purchase,
-                  label: Text('Purchase'),
-                ),
-                ButtonSegment(
-                  value: GoalCategory.retirement,
-                  label: Text('Retirement'),
-                ),
-              ],
-              selected: {_goalCategory},
-              onSelectionChanged: (selected) {
-                setState(() => _goalCategory = selected.first);
-              },
-            ),
-            const SizedBox(height: Spacing.md),
+            // Goal category segmented button -- hide for sinking fund
+            // since user already chose via GoalTypePicker
+            if (!isSinkingFund) ...[
+              SegmentedButton<GoalCategory>(
+                segments: const [
+                  ButtonSegment(
+                    value: GoalCategory.investmentGoal,
+                    label: Text('Investment'),
+                  ),
+                  ButtonSegment(
+                    value: GoalCategory.purchase,
+                    label: Text('Purchase'),
+                  ),
+                  ButtonSegment(
+                    value: GoalCategory.retirement,
+                    label: Text('Retirement'),
+                  ),
+                ],
+                selected: {_goalCategory},
+                onSelectionChanged: (selected) {
+                  setState(() => _goalCategory = selected.first);
+                },
+              ),
+              const SizedBox(height: Spacing.md),
+            ],
             TextFormField(
               controller: _nameController,
-              decoration: const InputDecoration(labelText: 'Goal Name'),
+              decoration: InputDecoration(
+                labelText: isSinkingFund ? 'Fund Name' : 'Goal Name',
+              ),
               validator: (v) => (v == null || v.trim().isEmpty)
-                  ? 'Please enter a goal name'
+                  ? 'Please enter a ${isSinkingFund ? "fund" : "goal"} name'
                   : null,
             ),
+            // Sinking fund sub-type picker
+            if (isSinkingFund) ...[
+              const SizedBox(height: Spacing.md),
+              DropdownButtonFormField<SinkingFundSubType>(
+                value: _sinkingFundSubType,
+                decoration: const InputDecoration(labelText: 'Sub-type'),
+                items: SinkingFundSubType.values
+                    .map(
+                      (t) => DropdownMenuItem(
+                        value: t,
+                        child: Text(_sinkingFundSubTypeLabel(t)),
+                      ),
+                    )
+                    .toList(),
+                onChanged: (v) {
+                  if (v != null) setState(() => _sinkingFundSubType = v);
+                },
+              ),
+            ],
             const SizedBox(height: Spacing.md),
             TextFormField(
               controller: _amountController,
@@ -225,6 +254,7 @@ class _GoalFormScreenState extends ConsumerState<GoalFormScreen> {
     final amountRupees = int.parse(_amountController.text.replaceAll(',', ''));
     final amountPaise = amountRupees * 100;
     final date = _targetDate ?? DateTime.now().add(const Duration(days: 365));
+    final isSinkingFund = _goalCategory == GoalCategory.sinkingFund;
 
     final dao = ref.read(goalDaoProvider);
     await dao.insertGoal(
@@ -235,6 +265,9 @@ class _GoalFormScreenState extends ConsumerState<GoalFormScreen> {
         targetDate: date,
         familyId: widget.familyId,
         goalCategory: Value(_goalCategory.name),
+        sinkingFundSubType: isSinkingFund
+            ? Value(_sinkingFundSubType.name)
+            : const Value.absent(),
         downPaymentPctBp: _goalCategory == GoalCategory.purchase
             ? Value(_downPaymentBp)
             : const Value.absent(),
@@ -248,5 +281,19 @@ class _GoalFormScreenState extends ConsumerState<GoalFormScreen> {
     );
 
     if (mounted) Navigator.of(context).pop();
+  }
+
+  static String _sinkingFundSubTypeLabel(SinkingFundSubType type) {
+    return switch (type) {
+      SinkingFundSubType.tax => 'Tax',
+      SinkingFundSubType.carMaintenance => 'Car Maintenance',
+      SinkingFundSubType.travel => 'Travel',
+      SinkingFundSubType.medical => 'Medical',
+      SinkingFundSubType.insurance => 'Insurance',
+      SinkingFundSubType.gifts => 'Gifts',
+      SinkingFundSubType.homeRepair => 'Home Repair',
+      SinkingFundSubType.techUpgrade => 'Tech Upgrade',
+      SinkingFundSubType.custom => 'Custom',
+    };
   }
 }

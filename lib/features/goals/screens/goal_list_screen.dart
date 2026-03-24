@@ -6,6 +6,7 @@ import '../../../shared/theme/spacing.dart';
 import '../../../shared/widgets/empty_state.dart';
 import '../providers/goal_providers.dart';
 import '../widgets/goal_card.dart';
+import '../widgets/contribution_sheet.dart';
 import '../widgets/goal_type_picker.dart';
 import '../widgets/sinking_fund_card.dart';
 
@@ -94,13 +95,27 @@ class _SinkingFundsTab extends ConsumerWidget {
         return ListView(
           padding: const EdgeInsets.all(Spacing.md),
           children: [
-            ...active.map((g) => SinkingFundCard(goal: g)),
+            ...active.map(
+              (g) => SinkingFundCard(
+                goal: g,
+                onTap: g.status != 'completed'
+                    ? () => showContributionSheet(context, g)
+                    : null,
+              ),
+            ),
             if (completed.isNotEmpty)
               ExpansionTile(
                 title: Text('Completed (${completed.length})'),
                 initiallyExpanded: false,
                 children: completed
-                    .map((g) => SinkingFundCard(goal: g))
+                    .map(
+                      (g) => SinkingFundCard(
+                        goal: g,
+                        onTap: g.status != 'completed'
+                            ? () => showContributionSheet(context, g)
+                            : null,
+                      ),
+                    )
                     .toList(),
               ),
           ],
