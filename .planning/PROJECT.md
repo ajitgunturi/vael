@@ -49,13 +49,15 @@ Privacy is non-negotiable. Data never leaves the device unencrypted. No telemetr
 - ✓ Priority-ordered savings allocation rules with advisory surplus distribution (no auto-transactions) — Phase 11
 - ✓ Opportunity fund account designation with target tracking — Phase 11
 
+- ✓ Unified planning dashboard with 5-number financial health view (Net Worth, Savings Rate, EF Coverage, FI Progress, Milestones) — Phase 12
+- ✓ Horizontal decade timeline with milestones, purchases, FI date (color-coded status) — Phase 12
+- ✓ Cash flow health summary with income/expense bar chart and savings waterfall — Phase 12
+- ✓ Main dashboard Financial Health card with "View All" + Cash Flow and Life Plan quick actions — Phase 12
+
 ### Active
 
-<!-- Current scope: Planning Dashboard & Insights (Phase 12+). -->
+<!-- Current scope: Planning Insights (Phase 13+). -->
 
-- [ ] Unified planning dashboard ("5 numbers" financial health view)
-- [ ] Lifetime timeline visualization (decades, milestones, FI date, goals)
-- [ ] Cash flow health summary with savings waterfall
 - [ ] Planning insights integration (deterministic threshold-based alerts)
 
 ### Out of Scope
@@ -119,4 +121,4 @@ The extension plan adds a **Planning Intelligence Layer** on top of the existing
 | Savings allocation is advisory only (no auto-create transactions) | User makes the judgment call; deterministic principle | — Pending |
 
 ---
-*Last updated: 2026-03-24 after Phase 11 completion*
+*Last updated: 2026-03-24 after Phase 12 completion*
