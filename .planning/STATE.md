@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 12-01-PLAN.md
+stopped_at: Completed 12-02-PLAN.md
 last_updated: "2026-03-24T13:48:45.288Z"
 progress:
   total_phases: 8
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 ## Current Position
 
 Phase: 12 (planning-dashboard-lifetime-timeline) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 
 ## Performance Metrics
 
@@ -66,6 +66,7 @@ Plan: 2 of 3
 | Phase 11 P03 | 12min | 2 tasks | 7 files |
 | Phase 11 P04 | 3min | 1 task | 2 files |
 | Phase 12 P01 | 5min | 2 tasks | 4 files |
+| Phase 12 P02 | 7min | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -136,6 +137,9 @@ Recent decisions affecting current work:
 - [Phase 12]: planningHealthProvider uses FutureProvider.family watching mixed StreamProvider and Provider sources
 - [Phase 12]: Null metrics pattern: each metric nullable, null = unconfigured, triggers Set up CTA in UI
 - [Phase 12]: Health bands for savings rate: green >= 20%, amber >= 10%, red < 10% (consistent with Phase 10)
+- [Phase 12]: FractionallySizedBox with Expanded for income/expense bars to prevent overflow in constrained widths
+- [Phase 12]: TimelinePainter stores nodePositions for external hit-testing via hitTestNode method
+- [Phase 12]: Purchase goal age computed from targetDate difference (no stored age field on Goal)
 
 ### GAP Remediation Plan
 
@@ -154,6 +158,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-24T13:48:45.285Z
-Stopped at: Completed 12-01-PLAN.md
-Resume file: None
+Last session: 2026-03-24T13:49:54Z
+Stopped at: Completed 12-02-PLAN.md
+Resume file: .planning/phases/12-planning-dashboard-lifetime-timeline/12-02-SUMMARY.md

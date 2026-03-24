@@ -109,15 +109,15 @@ Requirements for the financial planning extension (Phases 6-8). Each maps to roa
 
 ### Lifetime Timeline
 
-- [ ] **TIME-01**: User can see horizontal scrollable decade timeline with current age, decade milestones, purchase goals, and FI date marker
-- [ ] **TIME-02**: Timeline elements color-coded: green (on track), amber (at risk), red (behind)
-- [ ] **TIME-03**: Tapping milestone/goal nodes navigates to respective detail screens
+- [x] **TIME-01**: User can see horizontal scrollable decade timeline with current age, decade milestones, purchase goals, and FI date marker
+- [x] **TIME-02**: Timeline elements color-coded: green (on track), amber (at risk), red (behind)
+- [x] **TIME-03**: Tapping milestone/goal nodes navigates to respective detail screens
 
 ### Cash Flow Health
 
-- [ ] **HEALTH-01**: User can see monthly cash flow health summary with total income vs expenses bar chart
-- [ ] **HEALTH-02**: Savings waterfall visualization: income → expenses → EF → sinking funds → investments → unallocated
-- [ ] **HEALTH-03**: Next 7-day cash flow mini-view with threshold alerts
+- [x] **HEALTH-01**: User can see monthly cash flow health summary with total income vs expenses bar chart
+- [x] **HEALTH-02**: Savings waterfall visualization: income → expenses → EF → sinking funds → investments → unallocated
+- [x] **HEALTH-03**: Next 7-day cash flow mini-view with threshold alerts
 
 ### Planning Insights
 
@@ -232,12 +232,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DASH-02 | Phase 12 | Complete |
 | DASH-03 | Phase 12 | Complete |
 | DASH-04 | Phase 12 | Pending |
-| TIME-01 | Phase 12 | Pending |
-| TIME-02 | Phase 12 | Pending |
-| TIME-03 | Phase 12 | Pending |
-| HEALTH-01 | Phase 12 | Pending |
-| HEALTH-02 | Phase 12 | Pending |
-| HEALTH-03 | Phase 12 | Pending |
+| TIME-01 | Phase 12 | Complete |
+| TIME-02 | Phase 12 | Complete |
+| TIME-03 | Phase 12 | Complete |
+| HEALTH-01 | Phase 12 | Complete |
+| HEALTH-02 | Phase 12 | Complete |
+| HEALTH-03 | Phase 12 | Complete |
 | NAV-02 | Phase 12 | Pending |
 | INSIGHT-01 | Phase 13 | Pending |
 | INSIGHT-02 | Phase 13 | Pending |
