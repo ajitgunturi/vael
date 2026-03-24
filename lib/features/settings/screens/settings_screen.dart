@@ -15,6 +15,8 @@ import '../../planning/screens/emergency_fund_screen.dart';
 import '../../planning/screens/fi_calculator_screen.dart';
 import '../../planning/screens/life_profile_wizard_screen.dart';
 import '../../planning/screens/milestone_dashboard_screen.dart';
+import '../../planning/screens/opportunity_fund_screen.dart';
+import '../../planning/screens/savings_allocation_screen.dart';
 import 'category_management_screen.dart';
 import 'family_backup_screen.dart';
 import 'passphrase_setup_screen.dart';
@@ -114,6 +116,18 @@ class SettingsScreen extends ConsumerWidget {
             subtitle: 'Safety net coverage and cash tiers',
             onTap: () => _openEmergencyFund(context),
           ),
+          _SettingsTile(
+            icon: Icons.account_balance_wallet,
+            title: 'Savings Allocation',
+            subtitle: 'Prioritized surplus distribution rules',
+            onTap: () => _openSavingsAllocation(context),
+          ),
+          _SettingsTile(
+            icon: Icons.savings,
+            title: 'Opportunity Fund',
+            subtitle: 'Designate and track opportunity fund',
+            onTap: () => _openOpportunityFund(context),
+          ),
           const Divider(),
           _ThemeModeTile(ref: ref),
           const Divider(),
@@ -185,6 +199,22 @@ class SettingsScreen extends ConsumerWidget {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => EmergencyFundScreen(familyId: familyId, userId: userId),
+      ),
+    );
+  }
+
+  void _openSavingsAllocation(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => SavingsAllocationScreen(familyId: familyId),
+      ),
+    );
+  }
+
+  void _openOpportunityFund(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => OpportunityFundScreen(familyId: familyId),
       ),
     );
   }
