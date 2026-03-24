@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vael/features/dashboard/widgets/financial_health_summary_card.dart';
+import 'package:vael/features/planning/providers/insights_provider.dart';
 import 'package:vael/features/planning/providers/planning_health_providers.dart';
 import 'package:vael/shared/theme/app_theme.dart';
 
@@ -15,6 +16,10 @@ Widget _buildApp({required PlanningHealthData health}) {
         familyId: _familyId,
         userId: _userId,
       )).overrideWith((_) async => health),
+      insightsProvider((
+        familyId: _familyId,
+        userId: _userId,
+      )).overrideWith((_) async => const []),
     ],
     child: MaterialApp(
       theme: AppTheme.light(),

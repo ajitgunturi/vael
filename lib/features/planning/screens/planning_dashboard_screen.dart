@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/financial/insights_engine.dart';
 import '../../../shared/theme/color_tokens.dart';
 import '../../../shared/theme/spacing.dart';
 import '../../../shared/utils/formatters.dart';
 import '../../dashboard/screens/savings_rate_detail_screen.dart';
+import '../../goals/screens/goal_list_screen.dart';
+import '../providers/insights_provider.dart';
 import '../providers/planning_health_providers.dart';
 import '../widgets/health_metric_card.dart';
+import '../widgets/insight_alert_card.dart';
+import 'allocation_screen.dart';
 import 'emergency_fund_screen.dart';
 import 'fi_calculator_screen.dart';
 import 'life_profile_wizard_screen.dart';
@@ -32,14 +37,21 @@ class PlanningDashboardScreen extends ConsumerWidget {
     final healthAsync = ref.watch(
       planningHealthProvider((familyId: familyId, userId: userId)),
     );
+    final insightsAsync = ref.watch(
+      insightsProvider((familyId: familyId, userId: userId)),
+    );
 
     return Scaffold(
       appBar: AppBar(title: const Text('Financial Health')),
       body: healthAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Error: $e')),
-        data: (health) =>
-            _HealthGrid(health: health, familyId: familyId, userId: userId),
+        data: (health) => _HealthGrid(
+          health: health,
+          familyId: familyId,
+          userId: userId,
+          insights: insightsAsync.whenOrNull(data: (d) => d) ?? [],
+        ),
       ),
     );
   }
@@ -50,19 +62,53 @@ class _HealthGrid extends StatelessWidget {
     required this.health,
     required this.familyId,
     required this.userId,
+    required this.insights,
   });
 
   final PlanningHealthData health;
   final String familyId;
   final String userId;
+  final List<PlanningInsight> insights;
+
+  void _navigateForInsight(BuildContext context, InsightType type) {
+    final Widget screen;
+    switch (type) {
+      case InsightType.efBelowTarget:
+        screen = EmergencyFundScreen(familyId: familyId, userId: userId);
+      case InsightType.allocationOffTarget:
+        screen = AllocationScreen(familyId: familyId, userId: userId);
+      case InsightType.fiDateSlipping:
+        screen = FiCalculatorScreen(familyId: familyId, userId: userId);
+      case InsightType.sinkingFundUnderfunded:
+        screen = GoalListScreen(familyId: familyId);
+    }
+    Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => screen));
+  }
 
   @override
   Widget build(BuildContext context) {
     final colors = ColorTokens.of(context);
+    final theme = Theme.of(context);
 
     return ListView(
       padding: const EdgeInsets.all(Spacing.md),
       children: [
+        // Alerts section (only when insights exist)
+        if (insights.isNotEmpty) ...[
+          Text(
+            'Alerts',
+            style: theme.textTheme.titleSmall?.copyWith(
+              color: colors.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: Spacing.sm),
+          for (final insight in insights)
+            InsightAlertCard(
+              insight: insight,
+              onTap: () => _navigateForInsight(context, insight.type),
+            ),
+          const SizedBox(height: Spacing.md),
+        ],
         // 2-column grid with first 4 cards
         GridView.count(
           crossAxisCount: 2,

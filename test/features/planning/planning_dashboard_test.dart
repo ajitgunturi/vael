@@ -3,8 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:vael/core/financial/insights_engine.dart';
+import 'package:vael/features/planning/providers/insights_provider.dart';
 import 'package:vael/features/planning/providers/planning_health_providers.dart';
 import 'package:vael/features/planning/screens/planning_dashboard_screen.dart';
+import 'package:vael/features/planning/widgets/insight_alert_card.dart';
 import 'package:vael/shared/theme/app_theme.dart';
 
 PlanningHealthData _fullyConfigured() => const PlanningHealthData(
@@ -27,13 +30,20 @@ PlanningHealthData _unconfigured() => const PlanningHealthData(
   hasEmergencyFund: false,
 );
 
-Widget _buildApp(PlanningHealthData data) {
+Widget _buildApp(
+  PlanningHealthData data, {
+  List<PlanningInsight> insights = const [],
+}) {
   return ProviderScope(
     overrides: [
       planningHealthProvider((
         familyId: 'fam_a',
         userId: 'user_a',
       )).overrideWith((_) async => data),
+      insightsProvider((
+        familyId: 'fam_a',
+        userId: 'user_a',
+      )).overrideWith((_) async => insights),
     ],
     child: MaterialApp(
       theme: AppTheme.light(),
@@ -91,6 +101,29 @@ void main() {
       expect(text.style?.color, const Color(0xFF2D7A2D));
     });
 
+    testWidgets('shows alert cards when insights provider returns alerts', (
+      tester,
+    ) async {
+      final alerts = [
+        const PlanningInsight(
+          type: InsightType.efBelowTarget,
+          severity: InsightSeverity.critical,
+          title: 'Emergency fund below target',
+          description: '3.0 months short of 6-month target',
+        ),
+      ];
+
+      await tester.pumpWidget(_buildApp(_fullyConfigured(), insights: alerts));
+      await tester.pumpAndSettle();
+
+      // Alert section header
+      expect(find.text('Alerts'), findsOneWidget);
+      // Alert card content
+      expect(find.byType(InsightAlertCard), findsOneWidget);
+      expect(find.text('Emergency fund below target'), findsOneWidget);
+      expect(find.text('3.0 months short of 6-month target'), findsOneWidget);
+    });
+
     testWidgets('shows loading indicator while data loads', (tester) async {
       final completer = Completer<PlanningHealthData>();
 
@@ -101,6 +134,10 @@ void main() {
               familyId: 'fam_a',
               userId: 'user_a',
             )).overrideWith((_) => completer.future),
+            insightsProvider((
+              familyId: 'fam_a',
+              userId: 'user_a',
+            )).overrideWith((_) async => <PlanningInsight>[]),
           ],
           child: MaterialApp(
             theme: AppTheme.light(),
