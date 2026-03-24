@@ -132,12 +132,12 @@ Plans:
   3. User can create priority-ordered savings allocation rules targeting EF, sinking funds, investment goals, or opportunity fund
   4. Allocation engine processes rules in priority order, showing advisory output (where surplus should go) without auto-creating transactions
   5. User can designate an account as opportunity fund with target amount, tracked separately from emergency fund
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 11-01: TBD
-- [ ] 11-02: TBD
-- [ ] 11-03: TBD
+- [ ] 11-01-PLAN.md -- CashFlowEngine + SavingsAllocationEngine TDD, schema v14 migration, savings_allocation_rules table, account columns, DAOs
+- [ ] 11-02-PLAN.md -- Cash flow screen with vertical timeline, day row widgets, alert rows, providers, month navigation
+- [ ] 11-03-PLAN.md -- Savings allocation screen with advisory output, opportunity fund screen, Settings wiring
 
 ### Phase 12: Planning Dashboard & Lifetime Timeline
 **Goal**: User has a unified financial health view (the "5 numbers") and a visual lifetime plan showing decades, milestones, purchases, and FI date
@@ -149,7 +149,7 @@ Plans:
   3. User can see horizontal scrollable decade timeline with current age, milestones, purchase goals, and FI date marker (color-coded by status)
   4. User can see monthly cash flow health summary with income vs expenses bar chart and savings waterfall visualization
   5. Main dashboard shows "Financial Health" summary card with "View All" link; quick actions include "Cash Flow" and "Life Plan"
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
 - [ ] 12-01: TBD
@@ -166,7 +166,7 @@ Plans:
   3. Settings screen has "Financial Planning" section with links to Life Profile, Allocation, EF Setup, Cash Tiers, Savings Rules, Opportunity Fund
   4. Every new screen has empty-state with navigable CTA when prerequisites are missing
   5. Navigation integration tests pass at 3 breakpoints (400dp, 750dp, 1200dp) with minimum 32 tests and cross-feature round-trip verification
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
 - [ ] 13-01: TBD
@@ -186,6 +186,6 @@ Note: Phases 9-10-11 (cash management track) depend on Phase 6 but not on Phases
 | 8. Asset Allocation & Purchase Planning | 5/5 | Complete   | 2026-03-23 |
 | 9. Emergency Fund & Cash Tiers | 3/3 | Complete   | 2026-03-23 |
 | 10. Sinking Funds & Savings Rate | 4/4 | Complete    | 2026-03-24 |
-| 11. Cash Flow & Savings Allocation | 0/? | Not started | - |
+| 11. Cash Flow & Savings Allocation | 0/3 | Not started | - |
 | 12. Planning Dashboard & Lifetime Timeline | 0/? | Not started | - |
 | 13. Planning Insights & Integration Polish | 0/? | Not started | - |
