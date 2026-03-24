@@ -102,9 +102,9 @@ Requirements for the financial planning extension (Phases 6-8). Each maps to roa
 
 ### Planning Dashboard
 
-- [ ] **DASH-01**: User can see 5-number financial health view: Net Worth, Savings Rate, Emergency Coverage, FI Progress, Milestone Status
-- [ ] **DASH-02**: Each metric is a tappable card drilling into its respective detail screen
-- [ ] **DASH-03**: Dashboard shows only available metrics with "Set up" CTAs for unconfigured features (graceful degradation)
+- [x] **DASH-01**: User can see 5-number financial health view: Net Worth, Savings Rate, Emergency Coverage, FI Progress, Milestone Status
+- [x] **DASH-02**: Each metric is a tappable card drilling into its respective detail screen
+- [x] **DASH-03**: Dashboard shows only available metrics with "Set up" CTAs for unconfigured features (graceful degradation)
 - [ ] **DASH-04**: "Financial Health" summary card added to main dashboard with "View All" link to planning dashboard
 
 ### Lifetime Timeline
@@ -228,9 +228,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | OPP-01 | Phase 11 | Complete |
 | OPP-02 | Phase 11 | Complete |
 | OPP-03 | Phase 11 | Complete |
-| DASH-01 | Phase 12 | Pending |
-| DASH-02 | Phase 12 | Pending |
-| DASH-03 | Phase 12 | Pending |
+| DASH-01 | Phase 12 | Complete |
+| DASH-02 | Phase 12 | Complete |
+| DASH-03 | Phase 12 | Complete |
 | DASH-04 | Phase 12 | Pending |
 | TIME-01 | Phase 12 | Pending |
 | TIME-02 | Phase 12 | Pending |
