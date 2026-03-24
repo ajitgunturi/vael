@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:vael/core/financial/dashboard_aggregation.dart';
 import 'package:vael/features/dashboard/providers/dashboard_providers.dart';
 import 'package:vael/features/dashboard/screens/dashboard_screen.dart';
+import 'package:vael/features/planning/providers/planning_health_providers.dart';
 import 'package:vael/shared/theme/app_theme.dart';
 
 DashboardData _fakeData() {
@@ -31,6 +32,10 @@ void main() {
           'fam_a',
         ).overrideWith((_) => Stream.value(_fakeData())),
         dashboardScopeProvider.overrideWith(DashboardScopeNotifier.new),
+        planningHealthProvider((
+          familyId: 'fam_a',
+          userId: 'user_a',
+        )).overrideWith((_) async => const PlanningHealthData()),
       ],
       child: MaterialApp(
         theme: AppTheme.light(),

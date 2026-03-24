@@ -11,6 +11,9 @@ import '../../projections/screens/projection_screen.dart';
 import '../../recurring/screens/recurring_rules_screen.dart';
 import '../../transactions/screens/transaction_form_screen.dart';
 import '../providers/dashboard_providers.dart';
+import '../widgets/financial_health_summary_card.dart';
+import '../../planning/screens/cash_flow_health_screen.dart';
+import '../../planning/screens/lifetime_timeline_screen.dart';
 import 'savings_rate_detail_screen.dart';
 
 /// Main dashboard showing net worth hero, monthly tiles, quick actions,
@@ -102,6 +105,8 @@ class _DashboardBody extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(Spacing.md),
       children: [
+        FinancialHealthSummaryCard(familyId: familyId, userId: userId),
+        const SizedBox(height: Spacing.md),
         _HeroNetWorthCard(
           netWorth: data.netWorth,
           onTap: onNavigateToTab != null ? () => onNavigateToTab!(1) : null,
@@ -386,6 +391,40 @@ class _QuickActionsRow extends StatelessWidget {
             icon: const Icon(Icons.trending_up),
             label: const Text('60-Month Projection'),
           ),
+        ),
+        const SizedBox(height: Spacing.sm),
+        Row(
+          children: [
+            Expanded(
+              child: FilledButton.tonalIcon(
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => CashFlowHealthScreen(
+                      familyId: familyId,
+                      userId: userId,
+                    ),
+                  ),
+                ),
+                icon: const Icon(Icons.waterfall_chart),
+                label: const Text('Cash Flow'),
+              ),
+            ),
+            const SizedBox(width: Spacing.sm),
+            Expanded(
+              child: FilledButton.tonalIcon(
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => LifetimeTimelineScreen(
+                      familyId: familyId,
+                      userId: userId,
+                    ),
+                  ),
+                ),
+                icon: const Icon(Icons.timeline),
+                label: const Text('Life Plan'),
+              ),
+            ),
+          ],
         ),
       ],
     );

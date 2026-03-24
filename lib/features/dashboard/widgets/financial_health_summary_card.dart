@@ -29,7 +29,7 @@ class FinancialHealthSummaryCard extends ConsumerWidget {
 
     return healthAsync.when(
       loading: () => const SizedBox.shrink(),
-      error: (_, __) => const SizedBox.shrink(),
+      error: (_, _) => const SizedBox.shrink(),
       data: (data) {
         if (!data.hasLifeProfile) return const SizedBox.shrink();
         return _HealthCard(data: data, familyId: familyId, userId: userId);
