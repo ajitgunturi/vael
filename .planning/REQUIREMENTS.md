@@ -121,17 +121,17 @@ Requirements for the financial planning extension (Phases 6-8). Each maps to roa
 
 ### Planning Insights
 
-- [ ] **INSIGHT-01**: "Emergency fund below target" alert shown with severity (months short)
-- [ ] **INSIGHT-02**: "Asset allocation off-target" alert shown with severity (% deviation from glide path)
-- [ ] **INSIGHT-03**: "FI date slipping" alert shown when projected FI date moves later than previous month
-- [ ] **INSIGHT-04**: "Sinking fund underfunded" alert shown when monthly contribution is insufficient to meet deadline
-- [ ] **INSIGHT-05**: All alerts are deterministic threshold calculations, not predictions
+- [x] **INSIGHT-01**: "Emergency fund below target" alert shown with severity (months short)
+- [x] **INSIGHT-02**: "Asset allocation off-target" alert shown with severity (% deviation from glide path)
+- [x] **INSIGHT-03**: "FI date slipping" alert shown when projected FI date moves later than previous month
+- [x] **INSIGHT-04**: "Sinking fund underfunded" alert shown when monthly contribution is insufficient to meet deadline
+- [x] **INSIGHT-05**: All alerts are deterministic threshold calculations, not predictions
 
 ### Horizontal Integration
 
 - [ ] **NAV-01**: All new screens reachable from HomeShell via tap navigation (no dead-end screens)
 - [x] **NAV-02**: Dashboard quick actions extended with "Cash Flow" and "Life Plan" buttons
-- [ ] **NAV-03**: Settings screen extended with "Financial Planning" section (Life Profile, Allocation, EF Setup, Cash Tiers, Savings Rules, Opportunity Fund)
+- [x] **NAV-03**: Settings screen extended with "Financial Planning" section (Life Profile, Allocation, EF Setup, Cash Tiers, Savings Rules, Opportunity Fund)
 - [x] **NAV-04**: Goals screen split into sections: Milestones, Sinking Funds, Investment Goals, Purchase Goals
 - [x] **NAV-05**: Account detail shows cash tier and emergency fund badges when assigned
 - [x] **NAV-06**: Budget screen shows monthly essentials row linking to emergency fund
@@ -239,13 +239,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | HEALTH-02 | Phase 12 | Complete |
 | HEALTH-03 | Phase 12 | Complete |
 | NAV-02 | Phase 12 | Complete |
-| INSIGHT-01 | Phase 13 | Pending |
-| INSIGHT-02 | Phase 13 | Pending |
-| INSIGHT-03 | Phase 13 | Pending |
-| INSIGHT-04 | Phase 13 | Pending |
-| INSIGHT-05 | Phase 13 | Pending |
+| INSIGHT-01 | Phase 13 | Complete |
+| INSIGHT-02 | Phase 13 | Complete |
+| INSIGHT-03 | Phase 13 | Complete |
+| INSIGHT-04 | Phase 13 | Complete |
+| INSIGHT-05 | Phase 13 | Complete |
 | NAV-01 | Phase 13 | Pending |
-| NAV-03 | Phase 13 | Pending |
+| NAV-03 | Phase 13 | Complete |
 | NAV-08 | Phase 13 | Pending |
 | NAV-09 | Phase 13 | Pending |
 | NAV-10 | Phase 13 | Pending |
