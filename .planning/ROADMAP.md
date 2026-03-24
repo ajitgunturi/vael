@@ -153,9 +153,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 12-01: TBD
-- [ ] 12-02: TBD
-- [ ] 12-03: TBD
+- [ ] 12-01-PLAN.md -- Planning health providers + 5-number dashboard screen with metric cards and drill-through navigation
+- [ ] 12-02-PLAN.md -- Lifetime timeline with decade CustomPainter + cash flow health screen with waterfall and 7-day mini-view
+- [ ] 12-03-PLAN.md -- Main dashboard integration: Financial Health summary card, Cash Flow and Life Plan quick actions
 
 ### Phase 13: Planning Insights & Integration Polish
 **Goal**: User receives deterministic threshold-based alerts for financial health issues, and all new features are navigable, tested, and polished across breakpoints
@@ -188,5 +188,5 @@ Note: Phases 9-10-11 (cash management track) depend on Phase 6 but not on Phases
 | 9. Emergency Fund & Cash Tiers | 3/3 | Complete   | 2026-03-23 |
 | 10. Sinking Funds & Savings Rate | 4/4 | Complete    | 2026-03-24 |
 | 11. Cash Flow & Savings Allocation | 4/4 | Complete    | 2026-03-24 |
-| 12. Planning Dashboard & Lifetime Timeline | 0/? | Not started | - |
+| 12. Planning Dashboard & Lifetime Timeline | 0/3 | Not started | - |
 | 13. Planning Insights & Integration Polish | 0/? | Not started | - |
