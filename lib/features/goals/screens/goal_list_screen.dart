@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/database/database.dart';
+import '../../../core/providers/session_providers.dart';
 import '../../../shared/theme/spacing.dart';
 import '../../../shared/widgets/empty_state.dart';
+import '../../planning/providers/milestone_provider.dart';
+import '../../planning/widgets/milestone_card.dart';
 import '../providers/goal_providers.dart';
 import '../widgets/goal_card.dart';
 import '../widgets/contribution_sheet.dart';
@@ -12,7 +15,7 @@ import '../widgets/sinking_fund_card.dart';
 
 /// Lists all goals for a family in a tabbed layout.
 ///
-/// Tabs: Sinking Funds (default) | Investments | Purchases.
+/// Tabs: Sinking Funds (default) | Investments | Purchases | Milestones.
 /// FAB opens GoalTypePicker bottom sheet for category selection.
 class GoalListScreen extends ConsumerStatefulWidget {
   const GoalListScreen({super.key, required this.familyId});
@@ -30,7 +33,7 @@ class _GoalListScreenState extends ConsumerState<GoalListScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
   }
 
   @override
@@ -50,6 +53,7 @@ class _GoalListScreenState extends ConsumerState<GoalListScreen>
             Tab(text: 'Sinking Funds'),
             Tab(text: 'Investments'),
             Tab(text: 'Purchases'),
+            Tab(text: 'Milestones'),
           ],
         ),
       ),
@@ -59,6 +63,7 @@ class _GoalListScreenState extends ConsumerState<GoalListScreen>
           _SinkingFundsTab(familyId: widget.familyId),
           _InvestmentsTab(familyId: widget.familyId),
           _PurchasesTab(familyId: widget.familyId),
+          _MilestonesTab(familyId: widget.familyId),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -161,6 +166,55 @@ class _PurchasesTab extends ConsumerWidget {
       emptyIcon: Icons.shopping_cart,
       emptyTitle: 'No purchase goals yet',
       emptySubtitle: 'Save for a big-ticket item',
+    );
+  }
+}
+
+/// Milestones tab showing net worth milestone cards from life profile data.
+class _MilestonesTab extends ConsumerWidget {
+  const _MilestonesTab({required this.familyId});
+
+  final String familyId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userId = ref.watch(sessionUserIdProvider);
+    if (userId == null) {
+      return const EmptyState(
+        icon: Icons.flag_outlined,
+        title: 'No user session',
+        subtitle: 'Sign in to see milestones',
+      );
+    }
+
+    final milestonesAsync = ref.watch(
+      milestoneListProvider((userId: userId, familyId: familyId)),
+    );
+
+    return milestonesAsync.when(
+      data: (items) {
+        if (items.isEmpty) {
+          return const EmptyState(
+            icon: Icons.flag_outlined,
+            title: 'No milestones yet',
+            subtitle: 'Set up your life profile to see net worth milestones',
+          );
+        }
+
+        return ListView(
+          padding: const EdgeInsets.all(Spacing.md),
+          children: items
+              .map(
+                (item) => Padding(
+                  padding: const EdgeInsets.only(bottom: Spacing.md),
+                  child: MilestoneCard(item: item),
+                ),
+              )
+              .toList(),
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, _) => Center(child: Text('Error: $e')),
     );
   }
 }
