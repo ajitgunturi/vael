@@ -8,20 +8,20 @@ void main() {
         '3 rules in priority order allocates surplus to highest priority first',
         () {
           final rules = [
-            AllocationRule(
+            const AllocationRule(
               priority: 1,
               targetType: 'emergencyFund',
               allocationType: 'fixed',
               amountPaise: 5000,
             ),
-            AllocationRule(
+            const AllocationRule(
               priority: 2,
               targetType: 'sinkingFund',
               targetId: 'sf1',
               allocationType: 'fixed',
               amountPaise: 3000,
             ),
-            AllocationRule(
+            const AllocationRule(
               priority: 3,
               targetType: 'investmentGoal',
               targetId: 'ig1',
@@ -30,20 +30,20 @@ void main() {
             ),
           ];
           final targets = {
-            'emergencyFund:null': AllocationTarget(
+            'emergencyFund:null': const AllocationTarget(
               targetType: 'emergencyFund',
               targetName: 'EF',
               currentPaise: 0,
               targetPaise: 100000,
             ),
-            'sinkingFund:sf1': AllocationTarget(
+            'sinkingFund:sf1': const AllocationTarget(
               targetType: 'sinkingFund',
               targetId: 'sf1',
               targetName: 'Vacation',
               currentPaise: 0,
               targetPaise: 50000,
             ),
-            'investmentGoal:ig1': AllocationTarget(
+            'investmentGoal:ig1': const AllocationTarget(
               targetType: 'investmentGoal',
               targetId: 'ig1',
               targetName: 'Retirement',
@@ -69,7 +69,7 @@ void main() {
         'fixed allocation: min(amountPaise, remainingSurplus, remainingToTarget)',
         () {
           final rules = [
-            AllocationRule(
+            const AllocationRule(
               priority: 1,
               targetType: 'emergencyFund',
               allocationType: 'fixed',
@@ -77,7 +77,7 @@ void main() {
             ),
           ];
           final targets = {
-            'emergencyFund:null': AllocationTarget(
+            'emergencyFund:null': const AllocationTarget(
               targetType: 'emergencyFund',
               targetName: 'EF',
               currentPaise: 95000,
@@ -99,7 +99,7 @@ void main() {
 
       test('percentage allocation: surplusPaise * percentageBp / 10000', () {
         final rules = [
-          AllocationRule(
+          const AllocationRule(
             priority: 1,
             targetType: 'sinkingFund',
             targetId: 'sf1',
@@ -108,7 +108,7 @@ void main() {
           ), // 50%
         ];
         final targets = {
-          'sinkingFund:sf1': AllocationTarget(
+          'sinkingFund:sf1': const AllocationTarget(
             targetType: 'sinkingFund',
             targetId: 'sf1',
             targetName: 'Car',
@@ -129,13 +129,13 @@ void main() {
 
       test('skips rule when target is already met', () {
         final rules = [
-          AllocationRule(
+          const AllocationRule(
             priority: 1,
             targetType: 'emergencyFund',
             allocationType: 'fixed',
             amountPaise: 5000,
           ),
-          AllocationRule(
+          const AllocationRule(
             priority: 2,
             targetType: 'sinkingFund',
             targetId: 'sf1',
@@ -144,13 +144,13 @@ void main() {
           ),
         ];
         final targets = {
-          'emergencyFund:null': AllocationTarget(
+          'emergencyFund:null': const AllocationTarget(
             targetType: 'emergencyFund',
             targetName: 'EF',
             currentPaise: 100000,
             targetPaise: 100000,
           ),
-          'sinkingFund:sf1': AllocationTarget(
+          'sinkingFund:sf1': const AllocationTarget(
             targetType: 'sinkingFund',
             targetId: 'sf1',
             targetName: 'Vacation',
@@ -173,13 +173,13 @@ void main() {
 
       test('stops allocating when surplus is exhausted', () {
         final rules = [
-          AllocationRule(
+          const AllocationRule(
             priority: 1,
             targetType: 'emergencyFund',
             allocationType: 'fixed',
             amountPaise: 8000,
           ),
-          AllocationRule(
+          const AllocationRule(
             priority: 2,
             targetType: 'sinkingFund',
             targetId: 'sf1',
@@ -188,13 +188,13 @@ void main() {
           ),
         ];
         final targets = {
-          'emergencyFund:null': AllocationTarget(
+          'emergencyFund:null': const AllocationTarget(
             targetType: 'emergencyFund',
             targetName: 'EF',
             currentPaise: 0,
             targetPaise: 100000,
           ),
-          'sinkingFund:sf1': AllocationTarget(
+          'sinkingFund:sf1': const AllocationTarget(
             targetType: 'sinkingFund',
             targetId: 'sf1',
             targetName: 'Vacation',
@@ -217,13 +217,13 @@ void main() {
         'opportunity fund with targetPaise=0 absorbs all remaining surplus',
         () {
           final rules = [
-            AllocationRule(
+            const AllocationRule(
               priority: 1,
               targetType: 'emergencyFund',
               allocationType: 'fixed',
               amountPaise: 3000,
             ),
-            AllocationRule(
+            const AllocationRule(
               priority: 2,
               targetType: 'opportunityFund',
               allocationType: 'fixed',
@@ -231,13 +231,13 @@ void main() {
             ),
           ];
           final targets = {
-            'emergencyFund:null': AllocationTarget(
+            'emergencyFund:null': const AllocationTarget(
               targetType: 'emergencyFund',
               targetName: 'EF',
               currentPaise: 0,
               targetPaise: 100000,
             ),
-            'opportunityFund:null': AllocationTarget(
+            'opportunityFund:null': const AllocationTarget(
               targetType: 'opportunityFund',
               targetName: 'Opp Fund',
               currentPaise: 0,
@@ -261,7 +261,7 @@ void main() {
         'returns AllocationAdvice list with allocatedPaise and remainingToTarget',
         () {
           final rules = [
-            AllocationRule(
+            const AllocationRule(
               priority: 1,
               targetType: 'emergencyFund',
               allocationType: 'fixed',
@@ -269,7 +269,7 @@ void main() {
             ),
           ];
           final targets = {
-            'emergencyFund:null': AllocationTarget(
+            'emergencyFund:null': const AllocationTarget(
               targetType: 'emergencyFund',
               targetName: 'EF',
               currentPaise: 90000,
@@ -307,13 +307,13 @@ void main() {
         'all surplus consumed: sum of allocatedPaise equals original surplus',
         () {
           final rules = [
-            AllocationRule(
+            const AllocationRule(
               priority: 1,
               targetType: 'emergencyFund',
               allocationType: 'fixed',
               amountPaise: 6000,
             ),
-            AllocationRule(
+            const AllocationRule(
               priority: 2,
               targetType: 'sinkingFund',
               targetId: 'sf1',
@@ -322,13 +322,13 @@ void main() {
             ),
           ];
           final targets = {
-            'emergencyFund:null': AllocationTarget(
+            'emergencyFund:null': const AllocationTarget(
               targetType: 'emergencyFund',
               targetName: 'EF',
               currentPaise: 0,
               targetPaise: 100000,
             ),
-            'sinkingFund:sf1': AllocationTarget(
+            'sinkingFund:sf1': const AllocationTarget(
               targetType: 'sinkingFund',
               targetId: 'sf1',
               targetName: 'Trip',
