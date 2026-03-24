@@ -18,11 +18,8 @@ Widget _buildApp({required PlanningHealthData health}) {
     ],
     child: MaterialApp(
       theme: AppTheme.light(),
-      home: Scaffold(
-        body: const FinancialHealthSummaryCard(
-          familyId: _familyId,
-          userId: _userId,
-        ),
+      home: const Scaffold(
+        body: FinancialHealthSummaryCard(familyId: _familyId, userId: _userId),
       ),
     ),
   );
