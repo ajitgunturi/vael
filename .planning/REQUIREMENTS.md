@@ -89,10 +89,10 @@ Requirements for the financial planning extension (Phases 6-8). Each maps to roa
 
 ### Savings Rate
 
-- [ ] **RATE-01**: User can see monthly savings rate: (income - expenses) / income as percentage
-- [ ] **RATE-02**: 12-month trend line displayed with health bands (green >= 20%, amber 10-20%, red < 10%)
+- [x] **RATE-01**: User can see monthly savings rate: (income - expenses) / income as percentage
+- [x] **RATE-02**: 12-month trend line displayed with health bands (green >= 20%, amber 10-20%, red < 10%)
 - [x] **RATE-03**: Historical monthly metrics stored for trend computation (requires GAP C10 balance snapshot resolution)
-- [ ] **RATE-04**: Current month rate shown even with insufficient history for trend
+- [x] **RATE-04**: Current month rate shown even with insufficient history for trend
 
 ### Opportunity Fund
 
@@ -212,10 +212,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SINK-02 | Phase 10 | Complete |
 | SINK-03 | Phase 10 | Pending |
 | SINK-04 | Phase 10 | Pending |
-| RATE-01 | Phase 10 | Pending |
-| RATE-02 | Phase 10 | Pending |
+| RATE-01 | Phase 10 | Complete |
+| RATE-02 | Phase 10 | Complete |
 | RATE-03 | Phase 10 | Complete |
-| RATE-04 | Phase 10 | Pending |
+| RATE-04 | Phase 10 | Complete |
 | NAV-04 | Phase 10 | Pending |
 | FLOW-01 | Phase 11 | Pending |
 | FLOW-02 | Phase 11 | Pending |
