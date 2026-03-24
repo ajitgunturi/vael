@@ -51,6 +51,15 @@ Widget _buildApp() {
       budgetSummaryProvider(budgetKey).overrideWith((_) async => const []),
       // Goals
       goalListProvider(_familyId).overrideWith((_) => Stream.value(const [])),
+      sinkingFundGoalsProvider(
+        _familyId,
+      ).overrideWith((_) => Stream.value(const [])),
+      investmentGoalsProvider(
+        _familyId,
+      ).overrideWith((_) => Stream.value(const [])),
+      purchaseGoalsProvider(
+        _familyId,
+      ).overrideWith((_) => Stream.value(const [])),
     ],
     child: MaterialApp(
       theme: AppTheme.light(),
@@ -113,7 +122,10 @@ void main() {
       await tester.pumpAndSettle();
 
       await tester.tap(find.text('Goals').first);
-      await tester.pumpAndSettle();
+      // Use pump instead of pumpAndSettle because GoalListScreen
+      // TabController animation keeps the ticker running.
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
 
       expect(find.text('Goals'), findsWidgets);
     });
