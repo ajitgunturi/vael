@@ -3,9 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:vael/core/database/database.dart';
+import 'package:vael/core/financial/milestone_engine.dart';
+import 'package:vael/core/providers/session_providers.dart';
 import 'package:vael/features/goals/providers/goal_providers.dart';
 import 'package:vael/features/goals/screens/goal_list_screen.dart';
 import 'package:vael/features/goals/widgets/sinking_fund_card.dart';
+import 'package:vael/features/planning/providers/milestone_provider.dart';
+import 'package:vael/features/planning/widgets/milestone_card.dart';
 import 'package:vael/shared/theme/app_theme.dart';
 
 const _familyId = 'fam_goals';
@@ -39,10 +43,22 @@ Goal _fakeGoal({
   );
 }
 
+const _userId = 'user_goals';
+
+class _TestSessionNotifier extends SessionUserIdNotifier {
+  _TestSessionNotifier(this._initial);
+  final String? _initial;
+
+  @override
+  String? build() => _initial;
+}
+
 Widget _buildApp({
   List<Goal> sinkingFunds = const [],
   List<Goal> investments = const [],
   List<Goal> purchases = const [],
+  List<MilestoneDisplayItem> milestones = const [],
+  String? userId = _userId,
 }) {
   return ProviderScope(
     overrides: [
@@ -55,6 +71,10 @@ Widget _buildApp({
       purchaseGoalsProvider(
         _familyId,
       ).overrideWith((_) => Stream.value(purchases)),
+      milestoneListProvider.overrideWith(
+        (ref, params) => Stream.value(milestones),
+      ),
+      sessionUserIdProvider.overrideWith(() => _TestSessionNotifier(userId)),
     ],
     child: MaterialApp(
       theme: AppTheme.light(),
@@ -65,17 +85,19 @@ Widget _buildApp({
 
 void main() {
   group('GoalListScreen', () {
-    testWidgets('renders 3 tabs: Sinking Funds, Investments, Purchases', (
-      tester,
-    ) async {
-      await tester.pumpWidget(_buildApp());
-      await tester.pump();
+    testWidgets(
+      'renders 4 tabs: Sinking Funds, Investments, Purchases, Milestones',
+      (tester) async {
+        await tester.pumpWidget(_buildApp());
+        await tester.pump();
 
-      expect(find.byType(TabBar), findsOneWidget);
-      expect(find.text('Sinking Funds'), findsOneWidget);
-      expect(find.text('Investments'), findsOneWidget);
-      expect(find.text('Purchases'), findsOneWidget);
-    });
+        expect(find.byType(TabBar), findsOneWidget);
+        expect(find.text('Sinking Funds'), findsOneWidget);
+        expect(find.text('Investments'), findsOneWidget);
+        expect(find.text('Purchases'), findsOneWidget);
+        expect(find.text('Milestones'), findsOneWidget);
+      },
+    );
 
     testWidgets('Sinking Funds tab is selected by default (index 0)', (
       tester,
@@ -194,6 +216,47 @@ void main() {
       expect(find.text('Completed (1)'), findsOneWidget);
       // Completed fund should be hidden inside collapsed ExpansionTile
       expect(find.text('Done Fund'), findsNothing);
+    });
+
+    testWidgets('Milestones tab shows empty state when no milestones', (
+      tester,
+    ) async {
+      await tester.pumpWidget(_buildApp());
+      await tester.pump();
+
+      await tester.tap(find.text('Milestones'));
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+      await tester.pump();
+
+      expect(find.text('No milestones yet'), findsOneWidget);
+    });
+
+    testWidgets('Milestones tab shows MilestoneCard when milestones exist', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _buildApp(
+          milestones: [
+            MilestoneDisplayItem(
+              age: 40,
+              targetAmountPaise: 50000000,
+              projectedAmountPaise: 45000000,
+              status: MilestoneStatus.onTrack,
+              isCustomTarget: false,
+              isPast: false,
+            ),
+          ],
+        ),
+      );
+      await tester.pump();
+
+      await tester.tap(find.text('Milestones'));
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+      await tester.pump();
+
+      expect(find.byType(MilestoneCard), findsOneWidget);
     });
   });
 }
