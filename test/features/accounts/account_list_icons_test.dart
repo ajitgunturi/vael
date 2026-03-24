@@ -26,6 +26,9 @@ Account _fakeAccount({
     userId: 'user_1',
     deletedAt: null,
     isEmergencyFund: false,
+    isOpportunityFund: false,
+    opportunityFundTargetPaise: null,
+    minimumBalancePaise: null,
   );
 }
 

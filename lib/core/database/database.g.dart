@@ -882,6 +882,42 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _isOpportunityFundMeta = const VerificationMeta(
+    'isOpportunityFund',
+  );
+  @override
+  late final GeneratedColumn<bool> isOpportunityFund = GeneratedColumn<bool>(
+    'is_opportunity_fund',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_opportunity_fund" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _opportunityFundTargetPaiseMeta =
+      const VerificationMeta('opportunityFundTargetPaise');
+  @override
+  late final GeneratedColumn<int> opportunityFundTargetPaise =
+      GeneratedColumn<int>(
+        'opportunity_fund_target_paise',
+        aliasedName,
+        true,
+        type: DriftSqlType.int,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _minimumBalancePaiseMeta =
+      const VerificationMeta('minimumBalancePaise');
+  @override
+  late final GeneratedColumn<int> minimumBalancePaise = GeneratedColumn<int>(
+    'minimum_balance_paise',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -897,6 +933,9 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
     deletedAt,
     liquidityTier,
     isEmergencyFund,
+    isOpportunityFund,
+    opportunityFundTargetPaise,
+    minimumBalancePaise,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1011,6 +1050,33 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
         ),
       );
     }
+    if (data.containsKey('is_opportunity_fund')) {
+      context.handle(
+        _isOpportunityFundMeta,
+        isOpportunityFund.isAcceptableOrUnknown(
+          data['is_opportunity_fund']!,
+          _isOpportunityFundMeta,
+        ),
+      );
+    }
+    if (data.containsKey('opportunity_fund_target_paise')) {
+      context.handle(
+        _opportunityFundTargetPaiseMeta,
+        opportunityFundTargetPaise.isAcceptableOrUnknown(
+          data['opportunity_fund_target_paise']!,
+          _opportunityFundTargetPaiseMeta,
+        ),
+      );
+    }
+    if (data.containsKey('minimum_balance_paise')) {
+      context.handle(
+        _minimumBalancePaiseMeta,
+        minimumBalancePaise.isAcceptableOrUnknown(
+          data['minimum_balance_paise']!,
+          _minimumBalancePaiseMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -1072,6 +1138,18 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
         DriftSqlType.bool,
         data['${effectivePrefix}is_emergency_fund'],
       )!,
+      isOpportunityFund: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_opportunity_fund'],
+      )!,
+      opportunityFundTargetPaise: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}opportunity_fund_target_paise'],
+      ),
+      minimumBalancePaise: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}minimum_balance_paise'],
+      ),
     );
   }
 
@@ -1095,6 +1173,9 @@ class Account extends DataClass implements Insertable<Account> {
   final DateTime? deletedAt;
   final String? liquidityTier;
   final bool isEmergencyFund;
+  final bool isOpportunityFund;
+  final int? opportunityFundTargetPaise;
+  final int? minimumBalancePaise;
   const Account({
     required this.id,
     required this.name,
@@ -1109,6 +1190,9 @@ class Account extends DataClass implements Insertable<Account> {
     this.deletedAt,
     this.liquidityTier,
     required this.isEmergencyFund,
+    required this.isOpportunityFund,
+    this.opportunityFundTargetPaise,
+    this.minimumBalancePaise,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1132,6 +1216,15 @@ class Account extends DataClass implements Insertable<Account> {
       map['liquidity_tier'] = Variable<String>(liquidityTier);
     }
     map['is_emergency_fund'] = Variable<bool>(isEmergencyFund);
+    map['is_opportunity_fund'] = Variable<bool>(isOpportunityFund);
+    if (!nullToAbsent || opportunityFundTargetPaise != null) {
+      map['opportunity_fund_target_paise'] = Variable<int>(
+        opportunityFundTargetPaise,
+      );
+    }
+    if (!nullToAbsent || minimumBalancePaise != null) {
+      map['minimum_balance_paise'] = Variable<int>(minimumBalancePaise);
+    }
     return map;
   }
 
@@ -1156,6 +1249,14 @@ class Account extends DataClass implements Insertable<Account> {
           ? const Value.absent()
           : Value(liquidityTier),
       isEmergencyFund: Value(isEmergencyFund),
+      isOpportunityFund: Value(isOpportunityFund),
+      opportunityFundTargetPaise:
+          opportunityFundTargetPaise == null && nullToAbsent
+          ? const Value.absent()
+          : Value(opportunityFundTargetPaise),
+      minimumBalancePaise: minimumBalancePaise == null && nullToAbsent
+          ? const Value.absent()
+          : Value(minimumBalancePaise),
     );
   }
 
@@ -1178,6 +1279,13 @@ class Account extends DataClass implements Insertable<Account> {
       deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
       liquidityTier: serializer.fromJson<String?>(json['liquidityTier']),
       isEmergencyFund: serializer.fromJson<bool>(json['isEmergencyFund']),
+      isOpportunityFund: serializer.fromJson<bool>(json['isOpportunityFund']),
+      opportunityFundTargetPaise: serializer.fromJson<int?>(
+        json['opportunityFundTargetPaise'],
+      ),
+      minimumBalancePaise: serializer.fromJson<int?>(
+        json['minimumBalancePaise'],
+      ),
     );
   }
   @override
@@ -1197,6 +1305,11 @@ class Account extends DataClass implements Insertable<Account> {
       'deletedAt': serializer.toJson<DateTime?>(deletedAt),
       'liquidityTier': serializer.toJson<String?>(liquidityTier),
       'isEmergencyFund': serializer.toJson<bool>(isEmergencyFund),
+      'isOpportunityFund': serializer.toJson<bool>(isOpportunityFund),
+      'opportunityFundTargetPaise': serializer.toJson<int?>(
+        opportunityFundTargetPaise,
+      ),
+      'minimumBalancePaise': serializer.toJson<int?>(minimumBalancePaise),
     };
   }
 
@@ -1214,6 +1327,9 @@ class Account extends DataClass implements Insertable<Account> {
     Value<DateTime?> deletedAt = const Value.absent(),
     Value<String?> liquidityTier = const Value.absent(),
     bool? isEmergencyFund,
+    bool? isOpportunityFund,
+    Value<int?> opportunityFundTargetPaise = const Value.absent(),
+    Value<int?> minimumBalancePaise = const Value.absent(),
   }) => Account(
     id: id ?? this.id,
     name: name ?? this.name,
@@ -1230,6 +1346,13 @@ class Account extends DataClass implements Insertable<Account> {
         ? liquidityTier.value
         : this.liquidityTier,
     isEmergencyFund: isEmergencyFund ?? this.isEmergencyFund,
+    isOpportunityFund: isOpportunityFund ?? this.isOpportunityFund,
+    opportunityFundTargetPaise: opportunityFundTargetPaise.present
+        ? opportunityFundTargetPaise.value
+        : this.opportunityFundTargetPaise,
+    minimumBalancePaise: minimumBalancePaise.present
+        ? minimumBalancePaise.value
+        : this.minimumBalancePaise,
   );
   Account copyWithCompanion(AccountsCompanion data) {
     return Account(
@@ -1256,6 +1379,15 @@ class Account extends DataClass implements Insertable<Account> {
       isEmergencyFund: data.isEmergencyFund.present
           ? data.isEmergencyFund.value
           : this.isEmergencyFund,
+      isOpportunityFund: data.isOpportunityFund.present
+          ? data.isOpportunityFund.value
+          : this.isOpportunityFund,
+      opportunityFundTargetPaise: data.opportunityFundTargetPaise.present
+          ? data.opportunityFundTargetPaise.value
+          : this.opportunityFundTargetPaise,
+      minimumBalancePaise: data.minimumBalancePaise.present
+          ? data.minimumBalancePaise.value
+          : this.minimumBalancePaise,
     );
   }
 
@@ -1274,7 +1406,10 @@ class Account extends DataClass implements Insertable<Account> {
           ..write('userId: $userId, ')
           ..write('deletedAt: $deletedAt, ')
           ..write('liquidityTier: $liquidityTier, ')
-          ..write('isEmergencyFund: $isEmergencyFund')
+          ..write('isEmergencyFund: $isEmergencyFund, ')
+          ..write('isOpportunityFund: $isOpportunityFund, ')
+          ..write('opportunityFundTargetPaise: $opportunityFundTargetPaise, ')
+          ..write('minimumBalancePaise: $minimumBalancePaise')
           ..write(')'))
         .toString();
   }
@@ -1294,6 +1429,9 @@ class Account extends DataClass implements Insertable<Account> {
     deletedAt,
     liquidityTier,
     isEmergencyFund,
+    isOpportunityFund,
+    opportunityFundTargetPaise,
+    minimumBalancePaise,
   );
   @override
   bool operator ==(Object other) =>
@@ -1311,7 +1449,10 @@ class Account extends DataClass implements Insertable<Account> {
           other.userId == this.userId &&
           other.deletedAt == this.deletedAt &&
           other.liquidityTier == this.liquidityTier &&
-          other.isEmergencyFund == this.isEmergencyFund);
+          other.isEmergencyFund == this.isEmergencyFund &&
+          other.isOpportunityFund == this.isOpportunityFund &&
+          other.opportunityFundTargetPaise == this.opportunityFundTargetPaise &&
+          other.minimumBalancePaise == this.minimumBalancePaise);
 }
 
 class AccountsCompanion extends UpdateCompanion<Account> {
@@ -1328,6 +1469,9 @@ class AccountsCompanion extends UpdateCompanion<Account> {
   final Value<DateTime?> deletedAt;
   final Value<String?> liquidityTier;
   final Value<bool> isEmergencyFund;
+  final Value<bool> isOpportunityFund;
+  final Value<int?> opportunityFundTargetPaise;
+  final Value<int?> minimumBalancePaise;
   final Value<int> rowid;
   const AccountsCompanion({
     this.id = const Value.absent(),
@@ -1343,6 +1487,9 @@ class AccountsCompanion extends UpdateCompanion<Account> {
     this.deletedAt = const Value.absent(),
     this.liquidityTier = const Value.absent(),
     this.isEmergencyFund = const Value.absent(),
+    this.isOpportunityFund = const Value.absent(),
+    this.opportunityFundTargetPaise = const Value.absent(),
+    this.minimumBalancePaise = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   AccountsCompanion.insert({
@@ -1359,6 +1506,9 @@ class AccountsCompanion extends UpdateCompanion<Account> {
     this.deletedAt = const Value.absent(),
     this.liquidityTier = const Value.absent(),
     this.isEmergencyFund = const Value.absent(),
+    this.isOpportunityFund = const Value.absent(),
+    this.opportunityFundTargetPaise = const Value.absent(),
+    this.minimumBalancePaise = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        name = Value(name),
@@ -1381,6 +1531,9 @@ class AccountsCompanion extends UpdateCompanion<Account> {
     Expression<DateTime>? deletedAt,
     Expression<String>? liquidityTier,
     Expression<bool>? isEmergencyFund,
+    Expression<bool>? isOpportunityFund,
+    Expression<int>? opportunityFundTargetPaise,
+    Expression<int>? minimumBalancePaise,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -1397,6 +1550,11 @@ class AccountsCompanion extends UpdateCompanion<Account> {
       if (deletedAt != null) 'deleted_at': deletedAt,
       if (liquidityTier != null) 'liquidity_tier': liquidityTier,
       if (isEmergencyFund != null) 'is_emergency_fund': isEmergencyFund,
+      if (isOpportunityFund != null) 'is_opportunity_fund': isOpportunityFund,
+      if (opportunityFundTargetPaise != null)
+        'opportunity_fund_target_paise': opportunityFundTargetPaise,
+      if (minimumBalancePaise != null)
+        'minimum_balance_paise': minimumBalancePaise,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -1415,6 +1573,9 @@ class AccountsCompanion extends UpdateCompanion<Account> {
     Value<DateTime?>? deletedAt,
     Value<String?>? liquidityTier,
     Value<bool>? isEmergencyFund,
+    Value<bool>? isOpportunityFund,
+    Value<int?>? opportunityFundTargetPaise,
+    Value<int?>? minimumBalancePaise,
     Value<int>? rowid,
   }) {
     return AccountsCompanion(
@@ -1431,6 +1592,10 @@ class AccountsCompanion extends UpdateCompanion<Account> {
       deletedAt: deletedAt ?? this.deletedAt,
       liquidityTier: liquidityTier ?? this.liquidityTier,
       isEmergencyFund: isEmergencyFund ?? this.isEmergencyFund,
+      isOpportunityFund: isOpportunityFund ?? this.isOpportunityFund,
+      opportunityFundTargetPaise:
+          opportunityFundTargetPaise ?? this.opportunityFundTargetPaise,
+      minimumBalancePaise: minimumBalancePaise ?? this.minimumBalancePaise,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -1477,6 +1642,17 @@ class AccountsCompanion extends UpdateCompanion<Account> {
     if (isEmergencyFund.present) {
       map['is_emergency_fund'] = Variable<bool>(isEmergencyFund.value);
     }
+    if (isOpportunityFund.present) {
+      map['is_opportunity_fund'] = Variable<bool>(isOpportunityFund.value);
+    }
+    if (opportunityFundTargetPaise.present) {
+      map['opportunity_fund_target_paise'] = Variable<int>(
+        opportunityFundTargetPaise.value,
+      );
+    }
+    if (minimumBalancePaise.present) {
+      map['minimum_balance_paise'] = Variable<int>(minimumBalancePaise.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -1499,6 +1675,9 @@ class AccountsCompanion extends UpdateCompanion<Account> {
           ..write('deletedAt: $deletedAt, ')
           ..write('liquidityTier: $liquidityTier, ')
           ..write('isEmergencyFund: $isEmergencyFund, ')
+          ..write('isOpportunityFund: $isOpportunityFund, ')
+          ..write('opportunityFundTargetPaise: $opportunityFundTargetPaise, ')
+          ..write('minimumBalancePaise: $minimumBalancePaise, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -11116,6 +11295,691 @@ class MonthlyMetricsCompanion extends UpdateCompanion<MonthlyMetric> {
   }
 }
 
+class $SavingsAllocationRulesTable extends SavingsAllocationRules
+    with TableInfo<$SavingsAllocationRulesTable, SavingsAllocationRule> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SavingsAllocationRulesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _familyIdMeta = const VerificationMeta(
+    'familyId',
+  );
+  @override
+  late final GeneratedColumn<String> familyId = GeneratedColumn<String>(
+    'family_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES families (id)',
+    ),
+  );
+  static const VerificationMeta _priorityMeta = const VerificationMeta(
+    'priority',
+  );
+  @override
+  late final GeneratedColumn<int> priority = GeneratedColumn<int>(
+    'priority',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _targetTypeMeta = const VerificationMeta(
+    'targetType',
+  );
+  @override
+  late final GeneratedColumn<String> targetType = GeneratedColumn<String>(
+    'target_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _targetIdMeta = const VerificationMeta(
+    'targetId',
+  );
+  @override
+  late final GeneratedColumn<String> targetId = GeneratedColumn<String>(
+    'target_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _allocationTypeMeta = const VerificationMeta(
+    'allocationType',
+  );
+  @override
+  late final GeneratedColumn<String> allocationType = GeneratedColumn<String>(
+    'allocation_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _amountPaiseMeta = const VerificationMeta(
+    'amountPaise',
+  );
+  @override
+  late final GeneratedColumn<int> amountPaise = GeneratedColumn<int>(
+    'amount_paise',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _percentageBpMeta = const VerificationMeta(
+    'percentageBp',
+  );
+  @override
+  late final GeneratedColumn<int> percentageBp = GeneratedColumn<int>(
+    'percentage_bp',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _isActiveMeta = const VerificationMeta(
+    'isActive',
+  );
+  @override
+  late final GeneratedColumn<bool> isActive = GeneratedColumn<bool>(
+    'is_active',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_active" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> deletedAt = GeneratedColumn<DateTime>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    familyId,
+    priority,
+    targetType,
+    targetId,
+    allocationType,
+    amountPaise,
+    percentageBp,
+    isActive,
+    createdAt,
+    deletedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'savings_allocation_rules';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<SavingsAllocationRule> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('family_id')) {
+      context.handle(
+        _familyIdMeta,
+        familyId.isAcceptableOrUnknown(data['family_id']!, _familyIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_familyIdMeta);
+    }
+    if (data.containsKey('priority')) {
+      context.handle(
+        _priorityMeta,
+        priority.isAcceptableOrUnknown(data['priority']!, _priorityMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_priorityMeta);
+    }
+    if (data.containsKey('target_type')) {
+      context.handle(
+        _targetTypeMeta,
+        targetType.isAcceptableOrUnknown(data['target_type']!, _targetTypeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_targetTypeMeta);
+    }
+    if (data.containsKey('target_id')) {
+      context.handle(
+        _targetIdMeta,
+        targetId.isAcceptableOrUnknown(data['target_id']!, _targetIdMeta),
+      );
+    }
+    if (data.containsKey('allocation_type')) {
+      context.handle(
+        _allocationTypeMeta,
+        allocationType.isAcceptableOrUnknown(
+          data['allocation_type']!,
+          _allocationTypeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_allocationTypeMeta);
+    }
+    if (data.containsKey('amount_paise')) {
+      context.handle(
+        _amountPaiseMeta,
+        amountPaise.isAcceptableOrUnknown(
+          data['amount_paise']!,
+          _amountPaiseMeta,
+        ),
+      );
+    }
+    if (data.containsKey('percentage_bp')) {
+      context.handle(
+        _percentageBpMeta,
+        percentageBp.isAcceptableOrUnknown(
+          data['percentage_bp']!,
+          _percentageBpMeta,
+        ),
+      );
+    }
+    if (data.containsKey('is_active')) {
+      context.handle(
+        _isActiveMeta,
+        isActive.isAcceptableOrUnknown(data['is_active']!, _isActiveMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('deleted_at')) {
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  SavingsAllocationRule map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SavingsAllocationRule(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      familyId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}family_id'],
+      )!,
+      priority: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}priority'],
+      )!,
+      targetType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}target_type'],
+      )!,
+      targetId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}target_id'],
+      ),
+      allocationType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}allocation_type'],
+      )!,
+      amountPaise: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}amount_paise'],
+      ),
+      percentageBp: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}percentage_bp'],
+      ),
+      isActive: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_active'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}deleted_at'],
+      ),
+    );
+  }
+
+  @override
+  $SavingsAllocationRulesTable createAlias(String alias) {
+    return $SavingsAllocationRulesTable(attachedDatabase, alias);
+  }
+}
+
+class SavingsAllocationRule extends DataClass
+    implements Insertable<SavingsAllocationRule> {
+  final String id;
+  final String familyId;
+  final int priority;
+  final String targetType;
+  final String? targetId;
+  final String allocationType;
+  final int? amountPaise;
+  final int? percentageBp;
+  final bool isActive;
+  final DateTime createdAt;
+  final DateTime? deletedAt;
+  const SavingsAllocationRule({
+    required this.id,
+    required this.familyId,
+    required this.priority,
+    required this.targetType,
+    this.targetId,
+    required this.allocationType,
+    this.amountPaise,
+    this.percentageBp,
+    required this.isActive,
+    required this.createdAt,
+    this.deletedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['family_id'] = Variable<String>(familyId);
+    map['priority'] = Variable<int>(priority);
+    map['target_type'] = Variable<String>(targetType);
+    if (!nullToAbsent || targetId != null) {
+      map['target_id'] = Variable<String>(targetId);
+    }
+    map['allocation_type'] = Variable<String>(allocationType);
+    if (!nullToAbsent || amountPaise != null) {
+      map['amount_paise'] = Variable<int>(amountPaise);
+    }
+    if (!nullToAbsent || percentageBp != null) {
+      map['percentage_bp'] = Variable<int>(percentageBp);
+    }
+    map['is_active'] = Variable<bool>(isActive);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt);
+    }
+    return map;
+  }
+
+  SavingsAllocationRulesCompanion toCompanion(bool nullToAbsent) {
+    return SavingsAllocationRulesCompanion(
+      id: Value(id),
+      familyId: Value(familyId),
+      priority: Value(priority),
+      targetType: Value(targetType),
+      targetId: targetId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(targetId),
+      allocationType: Value(allocationType),
+      amountPaise: amountPaise == null && nullToAbsent
+          ? const Value.absent()
+          : Value(amountPaise),
+      percentageBp: percentageBp == null && nullToAbsent
+          ? const Value.absent()
+          : Value(percentageBp),
+      isActive: Value(isActive),
+      createdAt: Value(createdAt),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
+    );
+  }
+
+  factory SavingsAllocationRule.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SavingsAllocationRule(
+      id: serializer.fromJson<String>(json['id']),
+      familyId: serializer.fromJson<String>(json['familyId']),
+      priority: serializer.fromJson<int>(json['priority']),
+      targetType: serializer.fromJson<String>(json['targetType']),
+      targetId: serializer.fromJson<String?>(json['targetId']),
+      allocationType: serializer.fromJson<String>(json['allocationType']),
+      amountPaise: serializer.fromJson<int?>(json['amountPaise']),
+      percentageBp: serializer.fromJson<int?>(json['percentageBp']),
+      isActive: serializer.fromJson<bool>(json['isActive']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'familyId': serializer.toJson<String>(familyId),
+      'priority': serializer.toJson<int>(priority),
+      'targetType': serializer.toJson<String>(targetType),
+      'targetId': serializer.toJson<String?>(targetId),
+      'allocationType': serializer.toJson<String>(allocationType),
+      'amountPaise': serializer.toJson<int?>(amountPaise),
+      'percentageBp': serializer.toJson<int?>(percentageBp),
+      'isActive': serializer.toJson<bool>(isActive),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'deletedAt': serializer.toJson<DateTime?>(deletedAt),
+    };
+  }
+
+  SavingsAllocationRule copyWith({
+    String? id,
+    String? familyId,
+    int? priority,
+    String? targetType,
+    Value<String?> targetId = const Value.absent(),
+    String? allocationType,
+    Value<int?> amountPaise = const Value.absent(),
+    Value<int?> percentageBp = const Value.absent(),
+    bool? isActive,
+    DateTime? createdAt,
+    Value<DateTime?> deletedAt = const Value.absent(),
+  }) => SavingsAllocationRule(
+    id: id ?? this.id,
+    familyId: familyId ?? this.familyId,
+    priority: priority ?? this.priority,
+    targetType: targetType ?? this.targetType,
+    targetId: targetId.present ? targetId.value : this.targetId,
+    allocationType: allocationType ?? this.allocationType,
+    amountPaise: amountPaise.present ? amountPaise.value : this.amountPaise,
+    percentageBp: percentageBp.present ? percentageBp.value : this.percentageBp,
+    isActive: isActive ?? this.isActive,
+    createdAt: createdAt ?? this.createdAt,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
+  );
+  SavingsAllocationRule copyWithCompanion(
+    SavingsAllocationRulesCompanion data,
+  ) {
+    return SavingsAllocationRule(
+      id: data.id.present ? data.id.value : this.id,
+      familyId: data.familyId.present ? data.familyId.value : this.familyId,
+      priority: data.priority.present ? data.priority.value : this.priority,
+      targetType: data.targetType.present
+          ? data.targetType.value
+          : this.targetType,
+      targetId: data.targetId.present ? data.targetId.value : this.targetId,
+      allocationType: data.allocationType.present
+          ? data.allocationType.value
+          : this.allocationType,
+      amountPaise: data.amountPaise.present
+          ? data.amountPaise.value
+          : this.amountPaise,
+      percentageBp: data.percentageBp.present
+          ? data.percentageBp.value
+          : this.percentageBp,
+      isActive: data.isActive.present ? data.isActive.value : this.isActive,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SavingsAllocationRule(')
+          ..write('id: $id, ')
+          ..write('familyId: $familyId, ')
+          ..write('priority: $priority, ')
+          ..write('targetType: $targetType, ')
+          ..write('targetId: $targetId, ')
+          ..write('allocationType: $allocationType, ')
+          ..write('amountPaise: $amountPaise, ')
+          ..write('percentageBp: $percentageBp, ')
+          ..write('isActive: $isActive, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('deletedAt: $deletedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    familyId,
+    priority,
+    targetType,
+    targetId,
+    allocationType,
+    amountPaise,
+    percentageBp,
+    isActive,
+    createdAt,
+    deletedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SavingsAllocationRule &&
+          other.id == this.id &&
+          other.familyId == this.familyId &&
+          other.priority == this.priority &&
+          other.targetType == this.targetType &&
+          other.targetId == this.targetId &&
+          other.allocationType == this.allocationType &&
+          other.amountPaise == this.amountPaise &&
+          other.percentageBp == this.percentageBp &&
+          other.isActive == this.isActive &&
+          other.createdAt == this.createdAt &&
+          other.deletedAt == this.deletedAt);
+}
+
+class SavingsAllocationRulesCompanion
+    extends UpdateCompanion<SavingsAllocationRule> {
+  final Value<String> id;
+  final Value<String> familyId;
+  final Value<int> priority;
+  final Value<String> targetType;
+  final Value<String?> targetId;
+  final Value<String> allocationType;
+  final Value<int?> amountPaise;
+  final Value<int?> percentageBp;
+  final Value<bool> isActive;
+  final Value<DateTime> createdAt;
+  final Value<DateTime?> deletedAt;
+  final Value<int> rowid;
+  const SavingsAllocationRulesCompanion({
+    this.id = const Value.absent(),
+    this.familyId = const Value.absent(),
+    this.priority = const Value.absent(),
+    this.targetType = const Value.absent(),
+    this.targetId = const Value.absent(),
+    this.allocationType = const Value.absent(),
+    this.amountPaise = const Value.absent(),
+    this.percentageBp = const Value.absent(),
+    this.isActive = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  SavingsAllocationRulesCompanion.insert({
+    required String id,
+    required String familyId,
+    required int priority,
+    required String targetType,
+    this.targetId = const Value.absent(),
+    required String allocationType,
+    this.amountPaise = const Value.absent(),
+    this.percentageBp = const Value.absent(),
+    this.isActive = const Value.absent(),
+    required DateTime createdAt,
+    this.deletedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       familyId = Value(familyId),
+       priority = Value(priority),
+       targetType = Value(targetType),
+       allocationType = Value(allocationType),
+       createdAt = Value(createdAt);
+  static Insertable<SavingsAllocationRule> custom({
+    Expression<String>? id,
+    Expression<String>? familyId,
+    Expression<int>? priority,
+    Expression<String>? targetType,
+    Expression<String>? targetId,
+    Expression<String>? allocationType,
+    Expression<int>? amountPaise,
+    Expression<int>? percentageBp,
+    Expression<bool>? isActive,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? deletedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (familyId != null) 'family_id': familyId,
+      if (priority != null) 'priority': priority,
+      if (targetType != null) 'target_type': targetType,
+      if (targetId != null) 'target_id': targetId,
+      if (allocationType != null) 'allocation_type': allocationType,
+      if (amountPaise != null) 'amount_paise': amountPaise,
+      if (percentageBp != null) 'percentage_bp': percentageBp,
+      if (isActive != null) 'is_active': isActive,
+      if (createdAt != null) 'created_at': createdAt,
+      if (deletedAt != null) 'deleted_at': deletedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  SavingsAllocationRulesCompanion copyWith({
+    Value<String>? id,
+    Value<String>? familyId,
+    Value<int>? priority,
+    Value<String>? targetType,
+    Value<String?>? targetId,
+    Value<String>? allocationType,
+    Value<int?>? amountPaise,
+    Value<int?>? percentageBp,
+    Value<bool>? isActive,
+    Value<DateTime>? createdAt,
+    Value<DateTime?>? deletedAt,
+    Value<int>? rowid,
+  }) {
+    return SavingsAllocationRulesCompanion(
+      id: id ?? this.id,
+      familyId: familyId ?? this.familyId,
+      priority: priority ?? this.priority,
+      targetType: targetType ?? this.targetType,
+      targetId: targetId ?? this.targetId,
+      allocationType: allocationType ?? this.allocationType,
+      amountPaise: amountPaise ?? this.amountPaise,
+      percentageBp: percentageBp ?? this.percentageBp,
+      isActive: isActive ?? this.isActive,
+      createdAt: createdAt ?? this.createdAt,
+      deletedAt: deletedAt ?? this.deletedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (familyId.present) {
+      map['family_id'] = Variable<String>(familyId.value);
+    }
+    if (priority.present) {
+      map['priority'] = Variable<int>(priority.value);
+    }
+    if (targetType.present) {
+      map['target_type'] = Variable<String>(targetType.value);
+    }
+    if (targetId.present) {
+      map['target_id'] = Variable<String>(targetId.value);
+    }
+    if (allocationType.present) {
+      map['allocation_type'] = Variable<String>(allocationType.value);
+    }
+    if (amountPaise.present) {
+      map['amount_paise'] = Variable<int>(amountPaise.value);
+    }
+    if (percentageBp.present) {
+      map['percentage_bp'] = Variable<int>(percentageBp.value);
+    }
+    if (isActive.present) {
+      map['is_active'] = Variable<bool>(isActive.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SavingsAllocationRulesCompanion(')
+          ..write('id: $id, ')
+          ..write('familyId: $familyId, ')
+          ..write('priority: $priority, ')
+          ..write('targetType: $targetType, ')
+          ..write('targetId: $targetId, ')
+          ..write('allocationType: $allocationType, ')
+          ..write('amountPaise: $amountPaise, ')
+          ..write('percentageBp: $percentageBp, ')
+          ..write('isActive: $isActive, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $SyncChangelogTable extends SyncChangelog
     with TableInfo<$SyncChangelogTable, SyncChangelogData> {
   @override
@@ -12049,6 +12913,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $AllocationTargetsTable(this);
   late final $DecisionsTable decisions = $DecisionsTable(this);
   late final $MonthlyMetricsTable monthlyMetrics = $MonthlyMetricsTable(this);
+  late final $SavingsAllocationRulesTable savingsAllocationRules =
+      $SavingsAllocationRulesTable(this);
   late final $SyncChangelogTable syncChangelog = $SyncChangelogTable(this);
   late final $SyncStateTableTable syncStateTable = $SyncStateTableTable(this);
   @override
@@ -12074,6 +12940,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     allocationTargets,
     decisions,
     monthlyMetrics,
+    savingsAllocationRules,
     syncChangelog,
     syncStateTable,
   ];
@@ -12404,6 +13271,34 @@ final class $$FamiliesTableReferences
     ).filter((f) => f.familyId.id.sqlEquals($_itemColumn<String>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_monthlyMetricsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<
+    $SavingsAllocationRulesTable,
+    List<SavingsAllocationRule>
+  >
+  _savingsAllocationRulesRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.savingsAllocationRules,
+        aliasName: $_aliasNameGenerator(
+          db.families.id,
+          db.savingsAllocationRules.familyId,
+        ),
+      );
+
+  $$SavingsAllocationRulesTableProcessedTableManager
+  get savingsAllocationRulesRefs {
+    final manager = $$SavingsAllocationRulesTableTableManager(
+      $_db,
+      $_db.savingsAllocationRules,
+    ).filter((f) => f.familyId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _savingsAllocationRulesRefsTable($_db),
+    );
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -12836,6 +13731,32 @@ class $$FamiliesTableFilterComposer
                 $removeJoinBuilderFromRootComposer,
           ),
     );
+    return f(composer);
+  }
+
+  Expression<bool> savingsAllocationRulesRefs(
+    Expression<bool> Function($$SavingsAllocationRulesTableFilterComposer f) f,
+  ) {
+    final $$SavingsAllocationRulesTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.savingsAllocationRules,
+          getReferencedColumn: (t) => t.familyId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$SavingsAllocationRulesTableFilterComposer(
+                $db: $db,
+                $table: $db.savingsAllocationRules,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
     return f(composer);
   }
 }
@@ -13294,6 +14215,32 @@ class $$FamiliesTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> savingsAllocationRulesRefs<T extends Object>(
+    Expression<T> Function($$SavingsAllocationRulesTableAnnotationComposer a) f,
+  ) {
+    final $$SavingsAllocationRulesTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.savingsAllocationRules,
+          getReferencedColumn: (t) => t.familyId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$SavingsAllocationRulesTableAnnotationComposer(
+                $db: $db,
+                $table: $db.savingsAllocationRules,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$FamiliesTableTableManager
@@ -13326,6 +14273,7 @@ class $$FamiliesTableTableManager
             bool recurringRulesRefs,
             bool decisionsRefs,
             bool monthlyMetricsRefs,
+            bool savingsAllocationRulesRefs,
           })
         > {
   $$FamiliesTableTableManager(_$AppDatabase db, $FamiliesTable table)
@@ -13393,6 +14341,7 @@ class $$FamiliesTableTableManager
                 recurringRulesRefs = false,
                 decisionsRefs = false,
                 monthlyMetricsRefs = false,
+                savingsAllocationRulesRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -13413,6 +14362,7 @@ class $$FamiliesTableTableManager
                     if (recurringRulesRefs) db.recurringRules,
                     if (decisionsRefs) db.decisions,
                     if (monthlyMetricsRefs) db.monthlyMetrics,
+                    if (savingsAllocationRulesRefs) db.savingsAllocationRules,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
@@ -13745,6 +14695,27 @@ class $$FamiliesTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (savingsAllocationRulesRefs)
+                        await $_getPrefetchedData<
+                          Family,
+                          $FamiliesTable,
+                          SavingsAllocationRule
+                        >(
+                          currentTable: table,
+                          referencedTable: $$FamiliesTableReferences
+                              ._savingsAllocationRulesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$FamiliesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).savingsAllocationRulesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.familyId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -13782,6 +14753,7 @@ typedef $$FamiliesTableProcessedTableManager =
         bool recurringRulesRefs,
         bool decisionsRefs,
         bool monthlyMetricsRefs,
+        bool savingsAllocationRulesRefs,
       })
     >;
 typedef $$UsersTableCreateCompanionBuilder =
@@ -14215,6 +15187,9 @@ typedef $$AccountsTableCreateCompanionBuilder =
       Value<DateTime?> deletedAt,
       Value<String?> liquidityTier,
       Value<bool> isEmergencyFund,
+      Value<bool> isOpportunityFund,
+      Value<int?> opportunityFundTargetPaise,
+      Value<int?> minimumBalancePaise,
       Value<int> rowid,
     });
 typedef $$AccountsTableUpdateCompanionBuilder =
@@ -14232,6 +15207,9 @@ typedef $$AccountsTableUpdateCompanionBuilder =
       Value<DateTime?> deletedAt,
       Value<String?> liquidityTier,
       Value<bool> isEmergencyFund,
+      Value<bool> isOpportunityFund,
+      Value<int?> opportunityFundTargetPaise,
+      Value<int?> minimumBalancePaise,
       Value<int> rowid,
     });
 
@@ -14422,6 +15400,21 @@ class $$AccountsTableFilterComposer
 
   ColumnFilters<bool> get isEmergencyFund => $composableBuilder(
     column: $table.isEmergencyFund,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isOpportunityFund => $composableBuilder(
+    column: $table.isOpportunityFund,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get opportunityFundTargetPaise => $composableBuilder(
+    column: $table.opportunityFundTargetPaise,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get minimumBalancePaise => $composableBuilder(
+    column: $table.minimumBalancePaise,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -14636,6 +15629,21 @@ class $$AccountsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get isOpportunityFund => $composableBuilder(
+    column: $table.isOpportunityFund,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get opportunityFundTargetPaise => $composableBuilder(
+    column: $table.opportunityFundTargetPaise,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get minimumBalancePaise => $composableBuilder(
+    column: $table.minimumBalancePaise,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$FamiliesTableOrderingComposer get familyId {
     final $$FamiliesTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -14732,6 +15740,21 @@ class $$AccountsTableAnnotationComposer
 
   GeneratedColumn<bool> get isEmergencyFund => $composableBuilder(
     column: $table.isEmergencyFund,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isOpportunityFund => $composableBuilder(
+    column: $table.isOpportunityFund,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get opportunityFundTargetPaise => $composableBuilder(
+    column: $table.opportunityFundTargetPaise,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get minimumBalancePaise => $composableBuilder(
+    column: $table.minimumBalancePaise,
     builder: (column) => column,
   );
 
@@ -14931,6 +15954,9 @@ class $$AccountsTableTableManager
                 Value<DateTime?> deletedAt = const Value.absent(),
                 Value<String?> liquidityTier = const Value.absent(),
                 Value<bool> isEmergencyFund = const Value.absent(),
+                Value<bool> isOpportunityFund = const Value.absent(),
+                Value<int?> opportunityFundTargetPaise = const Value.absent(),
+                Value<int?> minimumBalancePaise = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => AccountsCompanion(
                 id: id,
@@ -14946,6 +15972,9 @@ class $$AccountsTableTableManager
                 deletedAt: deletedAt,
                 liquidityTier: liquidityTier,
                 isEmergencyFund: isEmergencyFund,
+                isOpportunityFund: isOpportunityFund,
+                opportunityFundTargetPaise: opportunityFundTargetPaise,
+                minimumBalancePaise: minimumBalancePaise,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -14963,6 +15992,9 @@ class $$AccountsTableTableManager
                 Value<DateTime?> deletedAt = const Value.absent(),
                 Value<String?> liquidityTier = const Value.absent(),
                 Value<bool> isEmergencyFund = const Value.absent(),
+                Value<bool> isOpportunityFund = const Value.absent(),
+                Value<int?> opportunityFundTargetPaise = const Value.absent(),
+                Value<int?> minimumBalancePaise = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => AccountsCompanion.insert(
                 id: id,
@@ -14978,6 +16010,9 @@ class $$AccountsTableTableManager
                 deletedAt: deletedAt,
                 liquidityTier: liquidityTier,
                 isEmergencyFund: isEmergencyFund,
+                isOpportunityFund: isOpportunityFund,
+                opportunityFundTargetPaise: opportunityFundTargetPaise,
+                minimumBalancePaise: minimumBalancePaise,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -23261,6 +24296,472 @@ typedef $$MonthlyMetricsTableProcessedTableManager =
       MonthlyMetric,
       PrefetchHooks Function({bool familyId})
     >;
+typedef $$SavingsAllocationRulesTableCreateCompanionBuilder =
+    SavingsAllocationRulesCompanion Function({
+      required String id,
+      required String familyId,
+      required int priority,
+      required String targetType,
+      Value<String?> targetId,
+      required String allocationType,
+      Value<int?> amountPaise,
+      Value<int?> percentageBp,
+      Value<bool> isActive,
+      required DateTime createdAt,
+      Value<DateTime?> deletedAt,
+      Value<int> rowid,
+    });
+typedef $$SavingsAllocationRulesTableUpdateCompanionBuilder =
+    SavingsAllocationRulesCompanion Function({
+      Value<String> id,
+      Value<String> familyId,
+      Value<int> priority,
+      Value<String> targetType,
+      Value<String?> targetId,
+      Value<String> allocationType,
+      Value<int?> amountPaise,
+      Value<int?> percentageBp,
+      Value<bool> isActive,
+      Value<DateTime> createdAt,
+      Value<DateTime?> deletedAt,
+      Value<int> rowid,
+    });
+
+final class $$SavingsAllocationRulesTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $SavingsAllocationRulesTable,
+          SavingsAllocationRule
+        > {
+  $$SavingsAllocationRulesTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $FamiliesTable _familyIdTable(_$AppDatabase db) =>
+      db.families.createAlias(
+        $_aliasNameGenerator(
+          db.savingsAllocationRules.familyId,
+          db.families.id,
+        ),
+      );
+
+  $$FamiliesTableProcessedTableManager get familyId {
+    final $_column = $_itemColumn<String>('family_id')!;
+
+    final manager = $$FamiliesTableTableManager(
+      $_db,
+      $_db.families,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_familyIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$SavingsAllocationRulesTableFilterComposer
+    extends Composer<_$AppDatabase, $SavingsAllocationRulesTable> {
+  $$SavingsAllocationRulesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get priority => $composableBuilder(
+    column: $table.priority,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get targetType => $composableBuilder(
+    column: $table.targetType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get targetId => $composableBuilder(
+    column: $table.targetId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get allocationType => $composableBuilder(
+    column: $table.allocationType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get amountPaise => $composableBuilder(
+    column: $table.amountPaise,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get percentageBp => $composableBuilder(
+    column: $table.percentageBp,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isActive => $composableBuilder(
+    column: $table.isActive,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$FamiliesTableFilterComposer get familyId {
+    final $$FamiliesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.familyId,
+      referencedTable: $db.families,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$FamiliesTableFilterComposer(
+            $db: $db,
+            $table: $db.families,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$SavingsAllocationRulesTableOrderingComposer
+    extends Composer<_$AppDatabase, $SavingsAllocationRulesTable> {
+  $$SavingsAllocationRulesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get priority => $composableBuilder(
+    column: $table.priority,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get targetType => $composableBuilder(
+    column: $table.targetType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get targetId => $composableBuilder(
+    column: $table.targetId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get allocationType => $composableBuilder(
+    column: $table.allocationType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get amountPaise => $composableBuilder(
+    column: $table.amountPaise,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get percentageBp => $composableBuilder(
+    column: $table.percentageBp,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isActive => $composableBuilder(
+    column: $table.isActive,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$FamiliesTableOrderingComposer get familyId {
+    final $$FamiliesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.familyId,
+      referencedTable: $db.families,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$FamiliesTableOrderingComposer(
+            $db: $db,
+            $table: $db.families,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$SavingsAllocationRulesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SavingsAllocationRulesTable> {
+  $$SavingsAllocationRulesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get priority =>
+      $composableBuilder(column: $table.priority, builder: (column) => column);
+
+  GeneratedColumn<String> get targetType => $composableBuilder(
+    column: $table.targetType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get targetId =>
+      $composableBuilder(column: $table.targetId, builder: (column) => column);
+
+  GeneratedColumn<String> get allocationType => $composableBuilder(
+    column: $table.allocationType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get amountPaise => $composableBuilder(
+    column: $table.amountPaise,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get percentageBp => $composableBuilder(
+    column: $table.percentageBp,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isActive =>
+      $composableBuilder(column: $table.isActive, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
+
+  $$FamiliesTableAnnotationComposer get familyId {
+    final $$FamiliesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.familyId,
+      referencedTable: $db.families,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$FamiliesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.families,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$SavingsAllocationRulesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SavingsAllocationRulesTable,
+          SavingsAllocationRule,
+          $$SavingsAllocationRulesTableFilterComposer,
+          $$SavingsAllocationRulesTableOrderingComposer,
+          $$SavingsAllocationRulesTableAnnotationComposer,
+          $$SavingsAllocationRulesTableCreateCompanionBuilder,
+          $$SavingsAllocationRulesTableUpdateCompanionBuilder,
+          (SavingsAllocationRule, $$SavingsAllocationRulesTableReferences),
+          SavingsAllocationRule,
+          PrefetchHooks Function({bool familyId})
+        > {
+  $$SavingsAllocationRulesTableTableManager(
+    _$AppDatabase db,
+    $SavingsAllocationRulesTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SavingsAllocationRulesTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$SavingsAllocationRulesTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$SavingsAllocationRulesTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> familyId = const Value.absent(),
+                Value<int> priority = const Value.absent(),
+                Value<String> targetType = const Value.absent(),
+                Value<String?> targetId = const Value.absent(),
+                Value<String> allocationType = const Value.absent(),
+                Value<int?> amountPaise = const Value.absent(),
+                Value<int?> percentageBp = const Value.absent(),
+                Value<bool> isActive = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => SavingsAllocationRulesCompanion(
+                id: id,
+                familyId: familyId,
+                priority: priority,
+                targetType: targetType,
+                targetId: targetId,
+                allocationType: allocationType,
+                amountPaise: amountPaise,
+                percentageBp: percentageBp,
+                isActive: isActive,
+                createdAt: createdAt,
+                deletedAt: deletedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String familyId,
+                required int priority,
+                required String targetType,
+                Value<String?> targetId = const Value.absent(),
+                required String allocationType,
+                Value<int?> amountPaise = const Value.absent(),
+                Value<int?> percentageBp = const Value.absent(),
+                Value<bool> isActive = const Value.absent(),
+                required DateTime createdAt,
+                Value<DateTime?> deletedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => SavingsAllocationRulesCompanion.insert(
+                id: id,
+                familyId: familyId,
+                priority: priority,
+                targetType: targetType,
+                targetId: targetId,
+                allocationType: allocationType,
+                amountPaise: amountPaise,
+                percentageBp: percentageBp,
+                isActive: isActive,
+                createdAt: createdAt,
+                deletedAt: deletedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$SavingsAllocationRulesTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({familyId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (familyId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.familyId,
+                                referencedTable:
+                                    $$SavingsAllocationRulesTableReferences
+                                        ._familyIdTable(db),
+                                referencedColumn:
+                                    $$SavingsAllocationRulesTableReferences
+                                        ._familyIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$SavingsAllocationRulesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SavingsAllocationRulesTable,
+      SavingsAllocationRule,
+      $$SavingsAllocationRulesTableFilterComposer,
+      $$SavingsAllocationRulesTableOrderingComposer,
+      $$SavingsAllocationRulesTableAnnotationComposer,
+      $$SavingsAllocationRulesTableCreateCompanionBuilder,
+      $$SavingsAllocationRulesTableUpdateCompanionBuilder,
+      (SavingsAllocationRule, $$SavingsAllocationRulesTableReferences),
+      SavingsAllocationRule,
+      PrefetchHooks Function({bool familyId})
+    >;
 typedef $$SyncChangelogTableCreateCompanionBuilder =
     SyncChangelogCompanion Function({
       Value<int> id,
@@ -23774,6 +25275,11 @@ class $AppDatabaseManager {
       $$DecisionsTableTableManager(_db, _db.decisions);
   $$MonthlyMetricsTableTableManager get monthlyMetrics =>
       $$MonthlyMetricsTableTableManager(_db, _db.monthlyMetrics);
+  $$SavingsAllocationRulesTableTableManager get savingsAllocationRules =>
+      $$SavingsAllocationRulesTableTableManager(
+        _db,
+        _db.savingsAllocationRules,
+      );
   $$SyncChangelogTableTableManager get syncChangelog =>
       $$SyncChangelogTableTableManager(_db, _db.syncChangelog);
   $$SyncStateTableTableTableManager get syncStateTable =>

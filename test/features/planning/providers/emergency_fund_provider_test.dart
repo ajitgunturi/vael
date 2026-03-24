@@ -30,6 +30,9 @@ Account _account({
     userId: _userId,
     liquidityTier: liquidityTier,
     isEmergencyFund: isEmergencyFund,
+    isOpportunityFund: false,
+    opportunityFundTargetPaise: null,
+    minimumBalancePaise: null,
   );
 }
 

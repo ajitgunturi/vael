@@ -71,6 +71,9 @@ Account _account({required String id, String visibility = 'shared'}) {
     deletedAt: null,
     liquidityTier: null,
     isEmergencyFund: false,
+    isOpportunityFund: false,
+    opportunityFundTargetPaise: null,
+    minimumBalancePaise: null,
   );
 }
 

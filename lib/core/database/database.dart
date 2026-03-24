@@ -16,6 +16,7 @@ import 'tables/life_profiles.dart';
 import 'tables/loan_details.dart';
 import 'tables/net_worth_milestones.dart';
 import 'tables/recurring_rules.dart';
+import 'tables/savings_allocation_rules.dart';
 import 'tables/sync_changelog.dart';
 import 'tables/sync_state.dart';
 import 'tables/transactions.dart';
@@ -43,6 +44,7 @@ part 'database.g.dart';
     AllocationTargets,
     Decisions,
     MonthlyMetrics,
+    SavingsAllocationRules,
     SyncChangelog,
     SyncStateTable,
   ],
@@ -51,7 +53,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e);
 
   @override
-  int get schemaVersion => 13;
+  int get schemaVersion => 14;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -95,6 +97,13 @@ class AppDatabase extends _$AppDatabase {
       if (from < 13) {
         await m.createTable(monthlyMetrics);
         await m.addColumn(goals, goals.sinkingFundSubType);
+      }
+      // v13 -> v14: savings allocation rules table + opportunity fund / threshold columns on accounts
+      if (from < 14) {
+        await m.createTable(savingsAllocationRules);
+        await m.addColumn(accounts, accounts.isOpportunityFund);
+        await m.addColumn(accounts, accounts.opportunityFundTargetPaise);
+        await m.addColumn(accounts, accounts.minimumBalancePaise);
       }
     },
     beforeOpen: (details) async {
