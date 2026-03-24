@@ -78,7 +78,7 @@ Requirements for the financial planning extension (Phases 6-8). Each maps to roa
 - [x] **FLOW-01**: User can see day-by-day income/expense map for any month based on recurring rules and known upcoming expenses
 - [x] **FLOW-02**: Running balance computed daily showing when balance dips below configurable threshold
 - [x] **FLOW-03**: Threshold alerts flag dates where running balance goes negative or below minimum
-- [ ] **FLOW-04**: Tapping an income/expense item navigates to the source recurring rule or transaction
+- [x] **FLOW-04**: Tapping an income/expense item navigates to the source recurring rule or transaction
 
 ### Savings Allocation
 
@@ -220,7 +220,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FLOW-01 | Phase 11 | Complete |
 | FLOW-02 | Phase 11 | Complete |
 | FLOW-03 | Phase 11 | Complete |
-| FLOW-04 | Phase 11 | Pending |
+| FLOW-04 | Phase 11 | Complete |
 | SAVE-01 | Phase 11 | Complete |
 | SAVE-02 | Phase 11 | Complete |
 | SAVE-03 | Phase 11 | Complete |
