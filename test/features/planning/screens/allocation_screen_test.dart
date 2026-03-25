@@ -26,37 +26,6 @@ final _mockCurrentAllocation = <AssetClass, int>{
 final _emptyAllocation = <AssetClass, int>{};
 
 void main() {
-  Widget buildApp({
-    Map<AssetClass, int>? currentAlloc,
-    bool hasLifeProfile = true,
-  }) {
-    final alloc = currentAlloc ?? _mockCurrentAllocation;
-
-    return ProviderScope(
-      overrides: [
-        // Override current allocation stream to avoid drift DB.
-        currentAllocationProvider.overrideWith((ref, params) {
-          return Stream.value(alloc);
-        }),
-        // Override life profile provider.
-        lifeProfileProvider.overrideWith((ref, params) {
-          if (!hasLifeProfile) return Stream.value(null);
-          // Not straightforward to create a drift LifeProfile in tests,
-          // so we return null and handle the "no profile" case.
-          return Stream.value(null);
-        }),
-        // Override custom targets (empty).
-        customAllocationTargetsProvider.overrideWith((ref, id) {
-          return Stream.value([]);
-        }),
-      ],
-      child: MaterialApp(
-        theme: AppTheme.light(),
-        home: const AllocationScreen(familyId: _familyId, userId: _userId),
-      ),
-    );
-  }
-
   /// Builds app with holdings and profile = null (shows no-profile view).
   Widget buildAppWithHoldingsNoProfile() {
     return ProviderScope(

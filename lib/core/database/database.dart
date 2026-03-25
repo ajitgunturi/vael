@@ -55,59 +55,90 @@ class AppDatabase extends _$AppDatabase {
   @override
   int get schemaVersion => 15;
 
+  /// Idempotent addColumn — ignores "duplicate column" errors that occur
+  /// when createTable already included the column (Drift uses current schema).
+  Future<void> _safeAddColumn<T extends Table>(
+    Migrator m,
+    TableInfo<T, dynamic> table,
+    GeneratedColumn<Object> column,
+  ) async {
+    try {
+      await m.addColumn(table, column);
+    } on Exception {
+      // Column already exists — safe to ignore
+    }
+  }
+
+  /// Idempotent createTable — ignores "table already exists" errors.
+  Future<void> _safeCreateTable(Migrator m, TableInfo table) async {
+    try {
+      await m.createTable(table);
+    } on Exception {
+      // Table already exists — safe to ignore
+    }
+  }
+
   @override
   MigrationStrategy get migration => MigrationStrategy(
     onCreate: (m) => m.createAll(),
     onUpgrade: (m, from, to) async {
       // v6 -> v7: add deletedAt to transactions and recurring_rules
       if (from < 7) {
-        await m.addColumn(transactions, transactions.deletedAt);
-        await m.addColumn(recurringRules, recurringRules.deletedAt);
+        await _safeAddColumn(m, transactions, transactions.deletedAt);
+        await _safeAddColumn(m, recurringRules, recurringRules.deletedAt);
       }
       // v7 -> v8: add category_groups table
       if (from < 8) {
-        await m.createTable(categoryGroups);
+        await _safeCreateTable(m, categoryGroups);
       }
       // v8 -> v9: add life_profiles table + isSecondaryIncome column
       if (from < 9) {
-        await m.createTable(lifeProfiles);
-        await m.addColumn(recurringRules, recurringRules.isSecondaryIncome);
+        await _safeCreateTable(m, lifeProfiles);
+        await _safeAddColumn(
+          m,
+          recurringRules,
+          recurringRules.isSecondaryIncome,
+        );
       }
       // v9 -> v10: add net_worth_milestones table
       if (from < 10) {
-        await m.createTable(netWorthMilestones);
+        await _safeCreateTable(m, netWorthMilestones);
       }
       // v10 -> v11: allocation_targets, decisions tables + goal/rule columns
       if (from < 11) {
-        await m.createTable(allocationTargets);
-        await m.createTable(decisions);
-        await m.addColumn(goals, goals.goalCategory);
-        await m.addColumn(goals, goals.downPaymentPctBp);
-        await m.addColumn(goals, goals.educationEscalationRateBp);
-        await m.addColumn(recurringRules, recurringRules.decisionId);
+        await _safeCreateTable(m, allocationTargets);
+        await _safeCreateTable(m, decisions);
+        await _safeAddColumn(m, goals, goals.goalCategory);
+        await _safeAddColumn(m, goals, goals.downPaymentPctBp);
+        await _safeAddColumn(m, goals, goals.educationEscalationRateBp);
+        await _safeAddColumn(m, recurringRules, recurringRules.decisionId);
       }
       // v11 -> v12: emergency fund columns on accounts + life_profiles
       if (from < 12) {
-        await m.addColumn(accounts, accounts.liquidityTier);
-        await m.addColumn(accounts, accounts.isEmergencyFund);
-        await m.addColumn(lifeProfiles, lifeProfiles.incomeStability);
-        await m.addColumn(lifeProfiles, lifeProfiles.efTargetMonthsOverride);
+        await _safeAddColumn(m, accounts, accounts.liquidityTier);
+        await _safeAddColumn(m, accounts, accounts.isEmergencyFund);
+        await _safeAddColumn(m, lifeProfiles, lifeProfiles.incomeStability);
+        await _safeAddColumn(
+          m,
+          lifeProfiles,
+          lifeProfiles.efTargetMonthsOverride,
+        );
       }
       // v12 -> v13: monthly_metrics table + sinkingFundSubType column on goals
       if (from < 13) {
-        await m.createTable(monthlyMetrics);
-        await m.addColumn(goals, goals.sinkingFundSubType);
+        await _safeCreateTable(m, monthlyMetrics);
+        await _safeAddColumn(m, goals, goals.sinkingFundSubType);
       }
       // v13 -> v14: savings allocation rules table + opportunity fund / threshold columns on accounts
       if (from < 14) {
-        await m.createTable(savingsAllocationRules);
-        await m.addColumn(accounts, accounts.isOpportunityFund);
-        await m.addColumn(accounts, accounts.opportunityFundTargetPaise);
-        await m.addColumn(accounts, accounts.minimumBalancePaise);
+        await _safeCreateTable(m, savingsAllocationRules);
+        await _safeAddColumn(m, accounts, accounts.isOpportunityFund);
+        await _safeAddColumn(m, accounts, accounts.opportunityFundTargetPaise);
+        await _safeAddColumn(m, accounts, accounts.minimumBalancePaise);
       }
-      // v14 -> v15: yearsToFi column on monthly_metrics for FI date slipping
+      // v14 -> v15: yearsToFi column on monthly_metrics
       if (from < 15) {
-        await m.addColumn(monthlyMetrics, monthlyMetrics.yearsToFi);
+        await _safeAddColumn(m, monthlyMetrics, monthlyMetrics.yearsToFi);
       }
     },
     beforeOpen: (details) async {

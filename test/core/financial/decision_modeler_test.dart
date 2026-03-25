@@ -1,8 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:vael/core/financial/decision_modeler.dart';
-import 'package:vael/core/financial/fi_calculator.dart';
-import 'package:vael/core/financial/indian_tax_constants.dart';
 import 'package:vael/core/models/enums.dart';
 
 void main() {

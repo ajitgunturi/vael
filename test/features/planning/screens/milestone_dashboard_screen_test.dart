@@ -6,7 +6,6 @@ import 'package:vael/core/financial/milestone_engine.dart';
 import 'package:vael/features/planning/providers/milestone_provider.dart';
 import 'package:vael/features/planning/screens/milestone_dashboard_screen.dart';
 import 'package:vael/features/planning/widgets/milestone_card.dart';
-import 'package:vael/features/planning/widgets/milestone_edit_sheet.dart';
 import 'package:vael/shared/theme/app_theme.dart';
 import 'package:vael/shared/widgets/empty_state.dart';
 

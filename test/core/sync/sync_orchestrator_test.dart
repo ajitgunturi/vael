@@ -1,5 +1,4 @@
-import 'dart:typed_data';
-
+import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vael/core/crypto/aes_gcm.dart';
@@ -169,7 +168,9 @@ void main() {
 
       await orchestrator.push();
 
-      // Device B pulls — operations are now applied to db2 directly
+      // Suppress drift warning — two databases is intentional here to
+      // simulate two separate devices syncing via the same cloud store.
+      driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
       final db2 = AppDatabase(NativeDatabase.memory());
 
       // Seed required family FK for device B's DB
@@ -214,6 +215,7 @@ void main() {
       expect(txns.map((t) => t.id), contains('txn-001'));
 
       await db2.close();
+      driftRuntimeOptions.dontWarnAboutMultipleDatabases = false;
     });
 
     test('createSnapshot uploads encrypted DB bytes', () async {

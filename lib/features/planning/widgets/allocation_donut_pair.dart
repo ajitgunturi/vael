@@ -38,33 +38,39 @@ class _AllocationDonutPairState extends State<AllocationDonutPair> {
     final currentBpMap = _currentToBpMap();
     final targetBpMap = _targetToBpMap();
 
-    final children = [
-      Expanded(
-        child: _DonutChart(
-          label: 'Current',
-          bpMap: currentBpMap,
-          touchedIndex: _touchedCurrentIndex,
-          onTouched: (i) => setState(() => _touchedCurrentIndex = i),
-          valuePaiseMap: widget.currentAllocation,
-        ),
-      ),
-      SizedBox(
-        width: isCompact ? 0 : Spacing.md,
-        height: isCompact ? Spacing.md : 0,
-      ),
-      Expanded(
-        child: _DonutChart(
-          label: 'Target',
-          bpMap: targetBpMap,
-          touchedIndex: _touchedTargetIndex,
-          onTouched: (i) => setState(() => _touchedTargetIndex = i),
-        ),
-      ),
-    ];
+    final currentChart = _DonutChart(
+      label: 'Current',
+      bpMap: currentBpMap,
+      touchedIndex: _touchedCurrentIndex,
+      onTouched: (i) => setState(() => _touchedCurrentIndex = i),
+      valuePaiseMap: widget.currentAllocation,
+    );
+    final targetChart = _DonutChart(
+      label: 'Target',
+      bpMap: targetBpMap,
+      touchedIndex: _touchedTargetIndex,
+      onTouched: (i) => setState(() => _touchedTargetIndex = i),
+    );
 
-    return isCompact
-        ? Column(mainAxisSize: MainAxisSize.min, children: children)
-        : Row(crossAxisAlignment: CrossAxisAlignment.start, children: children);
+    if (isCompact) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          currentChart,
+          const SizedBox(height: Spacing.md),
+          targetChart,
+        ],
+      );
+    }
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(child: currentChart),
+        const SizedBox(width: Spacing.md),
+        Expanded(child: targetChart),
+      ],
+    );
   }
 
   Map<AssetClass, int> _currentToBpMap() {

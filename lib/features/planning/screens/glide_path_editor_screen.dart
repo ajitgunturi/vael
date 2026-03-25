@@ -145,8 +145,6 @@ class _GlidePathEditorScreenState extends ConsumerState<GlidePathEditorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     // Load custom targets from DB to pre-fill table.
     final customAsync = ref.watch(
       customAllocationTargetsProvider(widget.lifeProfileId),

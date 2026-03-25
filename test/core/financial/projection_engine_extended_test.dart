@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vael/core/financial/income_growth_engine.dart';
 import 'package:vael/core/financial/projection_engine.dart';

@@ -167,12 +167,14 @@ Plans:
   3. Settings screen has "Financial Planning" section with links to Life Profile, Allocation, EF Setup, Cash Tiers, Savings Rules, Opportunity Fund
   4. Every new screen has empty-state with navigable CTA when prerequisites are missing
   5. Navigation integration tests pass at 3 breakpoints (400dp, 750dp, 1200dp) with minimum 32 tests and cross-feature round-trip verification
-**Plans**: 3 plans
+**Plans**: 5 plans
 
 Plans:
-- [ ] 13-01-PLAN.md -- InsightsEngine TDD + alert providers + Settings Financial Planning reorganization (NAV-03)
-- [ ] 13-02-PLAN.md -- Alert UI on planning dashboard + empty states with navigable CTAs on all planning screens (NAV-01, NAV-08)
-- [ ] 13-03-PLAN.md -- Navigation integration tests at 3 breakpoints with cross-feature round-trip verification (NAV-09, NAV-10)
+- [x] 13-01-PLAN.md -- InsightsEngine TDD + alert providers + Settings Financial Planning reorganization (NAV-03)
+- [x] 13-02-PLAN.md -- Alert UI on planning dashboard + empty states with navigable CTAs on all planning screens (NAV-01, NAV-08)
+- [x] 13-03-PLAN.md -- Navigation integration tests at 3 breakpoints with cross-feature round-trip verification (NAV-09, NAV-10)
+- [ ] 13-04-PLAN.md -- Gap closure: Wire allocationOffTarget and sinkingFundUnderfunded into insightsProvider (INSIGHT-02, INSIGHT-04)
+- [ ] 13-05-PLAN.md -- Gap closure: Fix 400dp phone breakpoint overflow and update REQUIREMENTS.md traceability (NAV-09, NAV-10)
 
 ## Progress
 
@@ -189,4 +191,4 @@ Note: Phases 9-10-11 (cash management track) depend on Phase 6 but not on Phases
 | 10. Sinking Funds & Savings Rate | 4/4 | Complete    | 2026-03-24 |
 | 11. Cash Flow & Savings Allocation | 4/4 | Complete    | 2026-03-24 |
 | 12. Planning Dashboard & Lifetime Timeline | 3/3 | Complete    | 2026-03-24 |
-| 13. Planning Insights & Integration Polish | 2/3 | In Progress|  |
+| 13. Planning Insights & Integration Polish | 3/5 | In Progress |  |

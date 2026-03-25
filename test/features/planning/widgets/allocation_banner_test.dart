@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:vael/core/financial/allocation_engine.dart';
 import 'package:vael/core/models/enums.dart';
 import 'package:vael/features/planning/providers/allocation_provider.dart';
 import 'package:vael/features/planning/widgets/allocation_banner.dart';

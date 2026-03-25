@@ -136,6 +136,14 @@ void main() {
         find.widgetWithText(TextFormField, 'Bucket Name'),
         'Retirement MFs',
       );
+      await tester.enterText(
+        find.widgetWithText(TextFormField, 'Invested Amount'),
+        '100000',
+      );
+      await tester.enterText(
+        find.widgetWithText(TextFormField, 'Current Value'),
+        '120000',
+      );
       await settle(tester);
 
       // Drag up to reveal Save button (off-screen on iPhone)
