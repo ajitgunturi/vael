@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vael — Family Finance, Fully Private</title>
+  <meta name="description" content="Vael gives families complete ownership of their financial life — a single, private, transparent view across every member, account, and goal.">
+  <meta name="theme-color" content="#2D5A27">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+  <link rel="stylesheet" href="shared.css">
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="logo">
+        <span class="logo-text"><span>V</span>ael</span>
+      </a>
+      <div class="nav-right">
+        <div class="nav-links">
+          <a href="#principles">Principles</a>
+          <a href="#features">Features</a>
+          <a href="#security">Security</a>
+          <a href="https://github.com/ajitgunturi/vael" target="_blank" rel="noopener">GitHub</a>
+        </div>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <span class="icon-sun">☀️</span>
+          <span class="icon-moon">🌙</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Zero-knowledge &middot; Local-first &middot; Family-owned
+      </div>
+      <h1>Your family's finances.<br><em>Nobody else's business.</em></h1>
+      <p>A single, private view across every family member, account, and goal. No servers. No subscriptions. No one can read your data — not even us.</p>
+      <a href="https://github.com/ajitgunturi/vael" class="hero-cta" target="_blank" rel="noopener">
+        View on GitHub
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+
+      <!-- Architecture diagram -->
+      <div class="arch-diagram">
+        <div class="arch-row">
+          <div class="arch-box highlight">UI Layer</div>
+          <div class="arch-box highlight">Business Logic</div>
+          <div class="arch-box highlight">Crypto Engine</div>
+        </div>
+        <div class="arch-arrow">&#8595;</div>
+        <div class="arch-row">
+          <div class="arch-box" style="min-width: 320px;">Local SQLite &middot; Encrypted at rest (SQLCipher)</div>
+        </div>
+        <div class="arch-arrow">&#8595; <span style="font-size: 11px; color: var(--blue);">&nbsp;AES-256-GCM encrypted</span></div>
+        <div class="arch-row">
+          <div class="arch-box blue">Google Drive (opaque ciphertext only)</div>
+        </div>
+        <div class="arch-label">Zero-knowledge sync — Google stores encrypted blobs it cannot read</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Principles -->
+  <section id="principles">
+    <div class="container">
+      <div class="section-label">Governing Principles</div>
+      <div class="section-title">Built on five non-negotiable rules</div>
+      <div class="section-subtitle">When any two conflict, the one listed first wins. Privacy always comes first.</div>
+      <div class="principles-grid">
+        <div class="principle-card">
+          <div class="principle-icon" style="background: var(--accent-soft);">🔒</div>
+          <h3>1. Privacy is non-negotiable</h3>
+          <p>Data never leaves your device unencrypted. No telemetry, no analytics, no server-side processing. Big tech is storage, never audience.</p>
+        </div>
+        <div class="principle-card">
+          <div class="principle-icon" style="background: var(--green-soft);">👨‍👩‍👧‍👦</div>
+          <h3>2. Family unit, individual boundaries</h3>
+          <p>Shared budgets and combined net worth at the family level. But every member controls what they share. Selective visibility is first-class.</p>
+        </div>
+        <div class="principle-card">
+          <div class="principle-icon" style="background: var(--blue-soft);">🧮</div>
+          <h3>3. Deterministic over intelligent</h3>
+          <p>Financial calculations use math and rules, not models. No AI/ML — on-device or cloud. PMT, FV, amortization — not predictions.</p>
+        </div>
+        <div class="principle-card">
+          <div class="principle-icon" style="background: rgba(212, 168, 67, 0.10);">🇮🇳</div>
+          <h3>4. India-native, globally coherent</h3>
+          <p>Built for Indian banking formats, loan structures, and tax patterns. But extensible to other regions without rewrites.</p>
+        </div>
+        <div class="principle-card">
+          <div class="principle-icon" style="background: var(--blue-soft);">💸</div>
+          <h3>5. Self-contained, zero-cost</h3>
+          <p>No backend servers. No subscriptions. No recurring fees. The app works fully offline. Your cost is zero beyond the device you own.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section id="features" style="background: var(--bg-secondary);">
+    <div class="container">
+      <div class="section-label">Capabilities</div>
+      <div class="section-title">Everything a family needs</div>
+      <div class="section-subtitle">Manual entry by design — no bank API connections means the trust boundary stays at your device.</div>
+      <div class="features-grid">
+        <div class="feature-item">
+          <h3>🏦 Multi-Account Tracking</h3>
+          <p>Savings, current, credit cards, wallets, fixed deposits — all in one view with real-time balances.</p>
+        </div>
+        <div class="feature-item">
+          <h3>💰 Budgets &amp; Goals</h3>
+          <p>Category-based monthly budgets with rollover. Goal tracking with projected completion dates.</p>
+        </div>
+        <div class="feature-item">
+          <h3>📊 Net Worth Dashboard</h3>
+          <p>Family-wide financial snapshot. Assets, liabilities, and trends updated on every transaction.</p>
+        </div>
+        <div class="feature-item">
+          <h3>📈 Investment Tracking</h3>
+          <p>Mutual funds, stocks, PPF, EPF — track holdings with manual or statement-based updates.</p>
+        </div>
+        <div class="feature-item">
+          <h3>🏠 Loan Management</h3>
+          <p>EMI schedules, prepayment modeling, and amortization tables. Flat-rate and reducing balance support.</p>
+        </div>
+        <div class="feature-item">
+          <h3>🔄 Multi-Device Sync</h3>
+          <p>Encrypted sync across all family devices via your own Google Drive. No server required.</p>
+        </div>
+        <div class="feature-item">
+          <h3>🗂️ Statement Import</h3>
+          <p>CSV import for HDFC, SBI, ICICI, and other Indian banks. Parse and categorize in seconds.</p>
+        </div>
+        <div class="feature-item">
+          <h3>🔐 Biometric Lock</h3>
+          <p>Face ID, Touch ID, or passcode lock. Family passphrase for encryption key derivation.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Security -->
+  <section id="security" class="security-section">
+    <div class="container">
+      <div class="section-label">Security Architecture</div>
+      <div class="section-title">Zero-knowledge by design</div>
+      <div class="section-subtitle">Your data is encrypted before it ever leaves your device. Even if Google scanned every file, they'd see only random noise.</div>
+      <div class="security-grid">
+        <ul class="security-list">
+          <li>
+            <div class="icon">🔑</div>
+            <div>
+              <h4>AES-256-GCM Encryption</h4>
+              <p>Every piece of financial data encrypted with authenticated encryption before cloud sync.</p>
+            </div>
+          </li>
+          <li>
+            <div class="icon">🧬</div>
+            <div>
+              <h4>PBKDF2 Key Derivation</h4>
+              <p>Family Encryption Key derived from your passphrase with 100,000 iterations of PBKDF2-SHA256.</p>
+            </div>
+          </li>
+          <li>
+            <div class="icon">🗄️</div>
+            <div>
+              <h4>SQLCipher at Rest</h4>
+              <p>Local database encrypted with SQLCipher. Data is protected even if someone accesses your device storage.</p>
+            </div>
+          </li>
+          <li>
+            <div class="icon">👻</div>
+            <div>
+              <h4>Opaque Cloud Storage</h4>
+              <p>File names on Drive are random hashes. No semantic leakage — no <code>budget.json</code> or <code>salary.csv</code>.</p>
+            </div>
+          </li>
+          <li>
+            <div class="icon">🚫</div>
+            <div>
+              <h4>No Attack Surface</h4>
+              <p>Zero backend servers, APIs, or network endpoints. Nothing to breach because there's nothing to attack.</p>
+            </div>
+          </li>
+        </ul>
+        <div class="security-code">
+          <span class="comment">// What Google Drive sees:</span><br>
+          <span class="key">folder</span>: <span class="val">"a8f3e..."</span><br>
+          <span class="key">├──</span> <span class="val">c7d2a91f.bin</span> <span class="comment">// 2.3 KB</span><br>
+          <span class="key">├──</span> <span class="val">e1b4f08a.bin</span> <span class="comment">// 1.1 KB</span><br>
+          <span class="key">├──</span> <span class="val">9a3c7d2e.bin</span> <span class="comment">// 4.7 KB</span><br>
+          <span class="key">└──</span> <span class="val">f8e2b1a0.bin</span> <span class="comment">// 0.8 KB</span><br><br>
+          <span class="comment">// What your family sees:</span><br>
+          <span class="key">Dashboard</span><br>
+          <span class="key">├──</span> Net Worth: <span class="val">₹24,85,000</span><br>
+          <span class="key">├──</span> This Month: <span class="val">₹1,42,300 spent</span><br>
+          <span class="key">├──</span> Budget: <span class="val">82% on track</span><br>
+          <span class="key">└──</span> Goals: <span class="val">3 active</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Platforms -->
+  <section style="text-align: center;">
+    <div class="container">
+      <div class="section-label">Platform Support</div>
+      <div class="section-title">One codebase. Every device.</div>
+      <div class="section-subtitle" style="margin: 0 auto;">Built with Flutter for a native experience on every platform your family uses.</div>
+      <div class="platform-pills">
+        <div class="platform-pill"><span class="emoji">📱</span> iOS 16+</div>
+        <div class="platform-pill"><span class="emoji">🤖</span> Android 8+</div>
+        <div class="platform-pill"><span class="emoji">💻</span> macOS 13+</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="section-title">Open source. Self-hosted. Yours.</div>
+      <div class="section-subtitle">Vael is free, open source, and built for families who believe their financial data belongs to them alone.</div>
+      <a href="https://github.com/ajitgunturi/vael" class="cta-btn" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        View on GitHub
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-left">&copy; 2026 Ajit Gunturi. Built in Bangalore, India.</div>
+      <div class="footer-links">
+        <a href="./privacy.html">Privacy Policy</a>
+        <a href="./terms.html">Terms of Service</a>
+        <a href="https://github.com/ajitgunturi/vael" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      const toggle = document.getElementById('themeToggle');
+      const stored = localStorage.getItem('vael-theme');
+      if (stored) {
+        document.documentElement.setAttribute('data-theme', stored);
+      }
+      toggle.addEventListener('click', function() {
+        const current = document.documentElement.getAttribute('data-theme');
+        let next;
+        if (current === 'dark') {
+          next = 'light';
+        } else if (current === 'light') {
+          next = 'dark';
+        } else {
+          // No explicit theme set, check system preference
+          next = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'light' : 'dark';
+        }
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('vael-theme', next);
+      });
+    })();
+  </script>
+
+</body>
+</html>

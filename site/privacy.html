@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy — Vael</title>
+  <meta name="description" content="Vael privacy policy. Zero-knowledge, local-first — we don't collect, store, or process your financial data.">
+  <meta name="theme-color" content="#2D5A27">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+  <link rel="stylesheet" href="shared.css">
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav>
+    <div class="nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-text"><span>V</span>ael</span>
+      </a>
+      <div class="nav-right">
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="./privacy.html">Privacy</a>
+          <a href="./terms.html">Terms</a>
+          <a href="https://github.com/ajitgunturi/vael" target="_blank" rel="noopener">GitHub</a>
+        </div>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <span class="icon-sun">☀️</span>
+          <span class="icon-moon">🌙</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="legal-content">
+    <h1 class="page-title">Privacy Policy</h1>
+
+    <div class="page-meta">
+      <div class="meta-item"><span class="meta-label">Effective Date:</span> April 1, 2026</div>
+      <div class="meta-item"><span class="meta-label">Last Updated:</span> March 25, 2026</div>
+    </div>
+
+    <p><strong>Vael — Family Finance Manager</strong><br>
+    Vael is built by Ajit Gunturi ("I", "me", "my"). This policy explains what data Vael handles, where it lives, and what we can and cannot see.</p>
+
+    <blockquote>Your financial data never leaves your device unencrypted. We cannot read it. We do not collect it. We have no servers that store it.</blockquote>
+
+    <hr>
+
+    <h2>1. Data That Stays on Your Device</h2>
+    <p>All financial data you enter into Vael is stored <strong>exclusively on your device</strong> in an encrypted local database. This includes:</p>
+    <ul>
+      <li>Account names and balances</li>
+      <li>Transactions, budgets, and goals</li>
+      <li>Investment holdings and loan details</li>
+      <li>Life profile and planning parameters</li>
+      <li>Recurring rules and allocation settings</li>
+      <li>Net worth milestones and financial decisions</li>
+    </ul>
+    <p><strong>We have zero access to this data.</strong> There is no server, no analytics pipeline, and no telemetry that transmits your financial information to us or any third party.</p>
+
+    <hr>
+
+    <h2>2. Optional Cloud Backup (Google Drive)</h2>
+    <p>If you choose to enable cloud sync, Vael uses <strong>your own Google Drive</strong> as an encrypted storage transport.</p>
+
+    <h3>What happens:</h3>
+    <ul>
+      <li>All data is encrypted <strong>on your device</strong> using AES-256-GCM before upload</li>
+      <li>Encryption uses a Family Encryption Key (FEK) derived from your passphrase via PBKDF2 (100,000 iterations)</li>
+      <li>Files uploaded to Drive are indistinguishable from random data — file names are opaque hashes, not human-readable</li>
+      <li>Google acts only as storage — it cannot read, infer, or profile your financial data</li>
+    </ul>
+
+    <h3>What we can see: <strong>Nothing.</strong></h3>
+    <ul>
+      <li>We do not have access to your Google Drive</li>
+      <li>We do not store your passphrase, encryption keys, or Google credentials</li>
+      <li>We do not operate any server that participates in the sync process</li>
+    </ul>
+
+    <h3>What Google can see:</h3>
+    <ul>
+      <li>That you use a Google Drive app (Vael) to store encrypted files</li>
+      <li>File sizes and timestamps of encrypted blobs</li>
+      <li>Google <strong>cannot</strong> read the contents of these files</li>
+    </ul>
+
+    <p>You can disable cloud sync at any time. Vael works fully offline.</p>
+
+    <hr>
+
+    <h2>3. Google Sign-In</h2>
+    <p>Vael uses Google Sign-In solely to authenticate your identity for Google Drive access. We receive:</p>
+    <ul>
+      <li>Your Google email address</li>
+      <li>Your display name</li>
+      <li>A Drive-scoped OAuth token (limited to the Vael app folder)</li>
+    </ul>
+    <p>We do <strong>not</strong> receive or store your Google password. The OAuth token is stored locally on your device and is never transmitted to our servers (we have none).</p>
+
+    <hr>
+
+    <h2>4. Data We Do Not Collect</h2>
+    <p>Vael does <strong>not</strong> collect, transmit, or store:</p>
+    <ul>
+      <li>Usage analytics or telemetry</li>
+      <li>Crash reports (unless you explicitly choose to send one via the in-app feedback tool)</li>
+      <li>Device identifiers, advertising IDs, or fingerprints</li>
+      <li>Location data</li>
+      <li>Contacts, photos, or any data outside of what you manually enter</li>
+      <li>Financial data in any form accessible to us</li>
+    </ul>
+
+    <hr>
+
+    <h2>5. Crash Reports and Feedback</h2>
+    <p>Vael includes an in-app feedback tool that lets you report bugs or request features.</p>
+
+    <h3>When you submit feedback:</h3>
+    <ul>
+      <li>You choose what to include — description text you write, and optionally a sanitized crash log</li>
+      <li>Crash logs contain <strong>only technical stack traces</strong> (function names, line numbers, error messages) — never your financial data, account names, balances, or transaction details</li>
+      <li>You review the exact content before sending</li>
+      <li>Feedback is sent to our support email and stored only for the purpose of fixing bugs</li>
+    </ul>
+
+    <h3>When you do not submit feedback:</h3>
+    <ul>
+      <li>No crash data, diagnostic data, or usage data is collected or transmitted — ever</li>
+    </ul>
+
+    <hr>
+
+    <h2>6. Data Sharing</h2>
+    <p>We do not share your data with anyone. Specifically:</p>
+    <ul>
+      <li><strong>No advertising partners.</strong> Vael has no ads.</li>
+      <li><strong>No analytics providers.</strong> No Firebase Analytics, Mixpanel, Amplitude, or equivalent.</li>
+      <li><strong>No data brokers.</strong> Your financial data has zero commercial value to us because we never possess it.</li>
+      <li><strong>No government disclosure.</strong> We cannot comply with data requests for data we do not have.</li>
+    </ul>
+
+    <hr>
+
+    <h2>7. Data Stored on Your Device</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Storage Location</th>
+          <th>Encrypted</th>
+          <th>Accessible to Us</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Financial data (accounts, transactions, budgets, goals)</td>
+          <td>Device SQLite database</td>
+          <td>Yes (AES-256)</td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td>Passphrase-derived keys</td>
+          <td>Device secure storage (Keychain/Keystore)</td>
+          <td>Yes</td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td>Google OAuth token</td>
+          <td>Device secure storage</td>
+          <td>Yes</td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td>Cloud backup data</td>
+          <td>Your Google Drive</td>
+          <td>Yes (AES-256-GCM)</td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td>App preferences (theme, display settings)</td>
+          <td>Device local storage</td>
+          <td>No</td>
+          <td>No</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <hr>
+
+    <h2>8. Children's Privacy</h2>
+    <p>Vael is a family finance tool designed for use by adults. We do not knowingly collect data from children under 13. Since we do not collect any user data, this concern is structurally eliminated.</p>
+
+    <hr>
+
+    <h2>9. Data Retention and Deletion</h2>
+    <ul>
+      <li><strong>Your data, your control.</strong> All data lives on your device. Delete the app and the data is gone.</li>
+      <li><strong>Cloud backups:</strong> Delete the Vael folder from your Google Drive to remove all cloud copies. Since files are encrypted with your passphrase, they are permanently unreadable without it.</li>
+      <li><strong>No server-side retention.</strong> We have no servers storing your data, so there is nothing for us to retain or delete.</li>
+    </ul>
+
+    <hr>
+
+    <h2>10. Security</h2>
+    <ul>
+      <li><strong>Encryption at rest:</strong> AES-256 via SQLCipher for the local database</li>
+      <li><strong>Encryption in transit:</strong> AES-256-GCM for all cloud sync data, plus TLS for the Google Drive API connection</li>
+      <li><strong>Key derivation:</strong> PBKDF2 with 100,000 iterations, SHA-256, random salt</li>
+      <li><strong>Key storage:</strong> Platform secure storage (iOS Keychain / Android Keystore)</li>
+      <li><strong>No remote attack surface:</strong> Vael has no backend servers, APIs, or network endpoints that could be compromised</li>
+    </ul>
+
+    <hr>
+
+    <h2>11. Changes to This Policy</h2>
+    <p>We will update this policy if our data practices change. Material changes will be communicated via an in-app notice. The "Last Updated" date at the top reflects the most recent revision.</p>
+    <p>Since Vael's architecture is fundamentally local-first and zero-knowledge, changes are unlikely to be material.</p>
+
+    <hr>
+
+    <h2>12. Contact Us</h2>
+    <p>If you have questions about this privacy policy or Vael's data practices:</p>
+    <ul>
+      <li><strong>Email:</strong> <a href="mailto:biotech.tureens0k@icloud.com">biotech.tureens0k@icloud.com</a></li>
+      <li><strong>Bug Reports:</strong> Use the in-app feedback tool (Settings > Help & Feedback)</li>
+      <li><strong>GitHub:</strong> <a href="https://github.com/ajitgunturi/vael">github.com/ajitgunturi/vael</a></li>
+    </ul>
+
+    <hr>
+
+    <p style="margin-top: 48px; padding-top: 32px; border-top: 1px solid var(--border);">
+      <strong>Summary:</strong> Vael is a zero-knowledge, local-first application. Your financial data is yours alone. We built it this way on purpose.
+    </p>
+
+    <p style="margin-top: 24px; font-size: 13px; color: var(--text-secondary);">
+      Ajit Gunturi<br>
+      Bangalore, India
+    </p>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-left">&copy; 2026 Ajit Gunturi. Built in Bangalore, India.</div>
+      <div class="footer-links">
+        <a href="./privacy.html">Privacy Policy</a>
+        <a href="./terms.html">Terms of Service</a>
+        <a href="https://github.com/ajitgunturi/vael" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      const toggle = document.getElementById('themeToggle');
+      const stored = localStorage.getItem('vael-theme');
+      if (stored) {
+        document.documentElement.setAttribute('data-theme', stored);
+      }
+      toggle.addEventListener('click', function() {
+        const current = document.documentElement.getAttribute('data-theme');
+        let next;
+        if (current === 'dark') {
+          next = 'light';
+        } else if (current === 'light') {
+          next = 'dark';
+        } else {
+          next = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'light' : 'dark';
+        }
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('vael-theme', next);
+      });
+    })();
+  </script>
+
+</body>
+</html>

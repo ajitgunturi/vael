@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terms of Service — Vael</title>
+  <meta name="description" content="Vael Terms of Service. Open-source, free, zero-knowledge family finance app.">
+  <meta name="theme-color" content="#2D5A27">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+  <link rel="stylesheet" href="shared.css">
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav>
+    <div class="nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-text"><span>V</span>ael</span>
+      </a>
+      <div class="nav-right">
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="./privacy.html">Privacy</a>
+          <a href="./terms.html">Terms</a>
+          <a href="https://github.com/ajitgunturi/vael" target="_blank" rel="noopener">GitHub</a>
+        </div>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <span class="icon-sun">☀️</span>
+          <span class="icon-moon">🌙</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="legal-content">
+    <h1 class="page-title">Terms of Service</h1>
+
+    <div class="page-meta">
+      <div class="meta-item"><span class="meta-label">Effective Date:</span> April 1, 2026</div>
+      <div class="meta-item"><span class="meta-label">Last Updated:</span> March 25, 2026</div>
+    </div>
+
+    <p><strong>Vael — Family Finance Manager</strong><br>
+    These Terms of Service govern your use of Vael, a free, open-source family finance application developed by Ajit Gunturi. By using Vael, you agree to these terms.</p>
+
+    <hr>
+
+    <h2>1. Overview of Vael</h2>
+    <p>Vael is a free, open-source application designed to help families manage their finances together. Key characteristics:</p>
+    <ul>
+      <li><strong>Zero-knowledge architecture:</strong> All financial data is encrypted on your device before any transmission</li>
+      <li><strong>Local-first:</strong> The app works fully offline. No servers store your data</li>
+      <li><strong>Optional cloud sync:</strong> You can enable encrypted sync to your own Google Drive</li>
+      <li><strong>No subscriptions:</strong> Vael is completely free. No recurring fees, no premium tiers, no ad-supported features</li>
+      <li><strong>Open source:</strong> Licensed under the GNU Affero General Public License v3 (AGPL-3.0). Source code is publicly available</li>
+    </ul>
+
+    <hr>
+
+    <h2>2. License and Intellectual Property</h2>
+    <p>Vael is distributed under the <strong>GNU Affero General Public License v3 (AGPL-3.0)</strong>. This means:</p>
+    <ul>
+      <li>You may use, modify, and distribute Vael for any purpose</li>
+      <li>If you modify Vael and distribute it, you must share your modifications under the same AGPL-3.0 license</li>
+      <li>You must provide source code access to all users of your modified version</li>
+      <li>You must include the original copyright notice and license text</li>
+    </ul>
+    <p>For the complete license terms, visit <a href="https://www.gnu.org/licenses/agpl-3.0.html">https://www.gnu.org/licenses/agpl-3.0.html</a> or refer to the LICENSE file in the repository.</p>
+
+    <hr>
+
+    <h2>3. Data Privacy and Security</h2>
+    <p>See our <a href="./privacy.html">Privacy Policy</a> for complete details. In summary:</p>
+    <ul>
+      <li><strong>Your data is yours:</strong> All financial information stays on your device, encrypted</li>
+      <li><strong>We cannot access it:</strong> No servers, no telemetry, no analytics</li>
+      <li><strong>Google Drive sync:</strong> Data is encrypted with AES-256-GCM before leaving your device. Google cannot read it</li>
+      <li><strong>Passphrase responsibility:</strong> You are responsible for your encryption passphrase. If lost, data cannot be recovered</li>
+      <li><strong>Secure storage:</strong> Encryption keys are stored in platform secure storage (iOS Keychain / Android Keystore)</li>
+    </ul>
+
+    <hr>
+
+    <h2>4. Cloud Backup and Google Drive</h2>
+    <p>Cloud sync is optional. If enabled:</p>
+    <ul>
+      <li>Vael stores encrypted data in <strong>your own Google Drive account</strong></li>
+      <li>We do not have access to your Google Drive, encryption keys, or authentication credentials</li>
+      <li>You can disable cloud sync at any time; existing encrypted files remain on Drive until you delete them</li>
+      <li>Encryption key derivation uses PBKDF2 with 100,000 iterations. The strength of your passphrase determines security</li>
+      <li>If you forget your passphrase, encrypted data cannot be recovered</li>
+    </ul>
+
+    <hr>
+
+    <h2>5. Google Sign-In</h2>
+    <p>Vael uses Google Sign-In only to authenticate you for Google Drive access. We:</p>
+    <ul>
+      <li>Do not store your Google password</li>
+      <li>Do not store long-lived authentication credentials on our servers (we have none)</li>
+      <li>Receive only your email, display name, and a Drive-scoped OAuth token</li>
+      <li>Store the OAuth token locally on your device only</li>
+    </ul>
+
+    <hr>
+
+    <h2>6. No Financial Advice</h2>
+    <p><strong>Vael is a tracking and planning tool only. It does not provide financial advice.</strong></p>
+    <p>Vael helps you:</p>
+    <ul>
+      <li>Track accounts, transactions, budgets, and goals</li>
+      <li>Calculate financial metrics (net worth, spending trends, loan amortization)</li>
+      <li>Plan for future scenarios using deterministic math (not predictions)</li>
+    </ul>
+    <p>Vael does not:</p>
+    <ul>
+      <li>Recommend investments, insurance, or financial products</li>
+      <li>Predict future market behavior or returns</li>
+      <li>Provide tax or legal advice</li>
+      <li>Use artificial intelligence, machine learning, or statistical models to guide decisions</li>
+    </ul>
+    <p><strong>Always consult qualified financial, tax, or legal professionals before making significant financial decisions.</strong></p>
+
+    <hr>
+
+    <h2>7. No Cost, No Subscriptions</h2>
+    <p>Vael is completely free to use:</p>
+    <ul>
+      <li>No subscription fees</li>
+      <li>No recurring charges</li>
+      <li>No premium tiers or in-app purchases</li>
+      <li>No ads</li>
+      <li>No data monetization</li>
+    </ul>
+    <p>You pay for the device and internet connection you use. Google Drive storage (if you enable sync) follows Google's standard pricing.</p>
+
+    <hr>
+
+    <h2>8. Encryption and Passphrases</h2>
+    <p><strong>You are responsible for your passphrase.</strong></p>
+    <ul>
+      <li>Your passphrase is used to derive the encryption key via PBKDF2-SHA256</li>
+      <li>We do not store, transmit, or log your passphrase</li>
+      <li>If you forget your passphrase, encrypted data becomes permanently inaccessible</li>
+      <li>Choose a strong, memorable passphrase. Write it down and store it securely</li>
+      <li>Do not share your passphrase with anyone, including Vael support</li>
+    </ul>
+
+    <hr>
+
+    <h2>9. Acceptable Use</h2>
+    <p>You agree to use Vael only for lawful purposes:</p>
+    <ul>
+      <li>Do not use Vael to facilitate illegal activities or money laundering</li>
+      <li>Do not attempt to reverse-engineer, decompile, or hack Vael</li>
+      <li>Do not use Vael to attack, disrupt, or harm other systems or users</li>
+      <li>Do not modify Vael and misrepresent it as official Vael software without complying with AGPL-3.0</li>
+      <li>Do not distribute Vael with hidden modifications or malicious code</li>
+    </ul>
+
+    <hr>
+
+    <h2>10. Liability Disclaimer</h2>
+    <p><strong>Vael is provided "as is" without any warranty.</strong></p>
+    <p>To the fullest extent permitted by law:</p>
+    <ul>
+      <li>We disclaim all express and implied warranties, including merchantability, fitness for a particular purpose, and non-infringement</li>
+      <li>We are not liable for any direct, indirect, incidental, special, consequential, or punitive damages arising from your use or inability to use Vael</li>
+      <li>This includes loss of data, loss of income, business interruption, or personal injury, even if we were advised of the possibility</li>
+      <li>If your jurisdiction does not allow disclaimer of warranties or limitation of liability, we are not liable for damages exceeding the amount you paid us (zero)</li>
+    </ul>
+
+    <hr>
+
+    <h2>11. Data Loss and Recovery</h2>
+    <p><strong>Data stored on your device is your responsibility.</strong></p>
+    <ul>
+      <li>Vael uses SQLCipher to encrypt your local database, but storage corruption, device failure, or accidental deletion can cause data loss</li>
+      <li>We recommend regular backups to Google Drive if cloud sync is enabled</li>
+      <li>If you lose your device or delete the app, local data is lost unless you have cloud backups</li>
+      <li>We cannot recover lost data for you</li>
+      <li>If you lose your passphrase, encrypted cloud backups become inaccessible</li>
+    </ul>
+
+    <hr>
+
+    <h2>12. Security and Vulnerabilities</h2>
+    <p>Vael is open source. Security is community responsibility:</p>
+    <ul>
+      <li>If you discover a vulnerability, please report it responsibly via email to <a href="mailto:fedora.toffee-4z@icloud.com">fedora.toffee-4z@icloud.com</a></li>
+      <li>Do not publicly disclose vulnerabilities before we have time to address them</li>
+      <li>We will credit you in security announcements if you wish</li>
+      <li>Since Vael is open source, any user can review code for security issues</li>
+    </ul>
+
+    <hr>
+
+    <h2>13. Third-Party Services</h2>
+    <p>If you enable cloud sync, Vael integrates with:</p>
+    <ul>
+      <li><strong>Google Drive:</strong> Governed by <a href="https://policies.google.com/terms" target="_blank">Google's Terms of Service</a></li>
+      <li><strong>Google Sign-In:</strong> Governed by <a href="https://policies.google.com/terms" target="_blank">Google's Terms of Service</a></li>
+    </ul>
+    <p>We are not responsible for Google's practices. Review Google's privacy policy at <a href="https://policies.google.com/privacy" target="_blank">https://policies.google.com/privacy</a>.</p>
+
+    <hr>
+
+    <h2>14. Changes to Terms</h2>
+    <p>We may update these terms at any time. Continued use of Vael after updates constitutes acceptance of new terms. We will announce material changes via an in-app notice and update the "Last Updated" date.</p>
+
+    <hr>
+
+    <h2>15. Termination</h2>
+    <p>Your right to use Vael cannot be revoked. Since Vael is open source and requires no account:</p>
+    <ul>
+      <li>You may download, install, and use Vael indefinitely</li>
+      <li>You may compile the source code and create modified versions under AGPL-3.0</li>
+      <li>You may continue using a version you already have, even if we discontinue the project</li>
+      <li>If you violate these terms, we may request you stop distribution of a modified version</li>
+    </ul>
+
+    <hr>
+
+    <h2>16. Severability</h2>
+    <p>If any provision of these terms is found to be unenforceable, the remaining provisions remain in full force.</p>
+
+    <hr>
+
+    <h2>17. Governing Law</h2>
+    <p>These terms are governed by the laws of India (Bangalore, Karnataka). Any disputes shall be resolved in the courts of Bangalore.</p>
+
+    <hr>
+
+    <h2>18. Contact and Support</h2>
+    <p>For questions about these terms or Vael:</p>
+    <ul>
+      <li><strong>Email:</strong> <a href="mailto:biotech.tureens0k@icloud.com">biotech.tureens0k@icloud.com</a></li>
+      <li><strong>Bug Reports:</strong> Use the in-app feedback tool or <a href="https://github.com/ajitgunturi/vael" target="_blank">GitHub issues</a></li>
+      <li><strong>Security Issues:</strong> <a href="mailto:fedora.toffee-4z@icloud.com">fedora.toffee-4z@icloud.com</a></li>
+      <li><strong>GitHub:</strong> <a href="https://github.com/ajitgunturi/vael">github.com/ajitgunturi/vael</a></li>
+    </ul>
+
+    <hr>
+
+    <p style="margin-top: 48px; padding-top: 32px; border-top: 1px solid var(--border);">
+      <strong>Summary:</strong> Vael is a free, open-source, zero-knowledge family finance app. No subscriptions, no ads, no servers. Your data is yours. You are responsible for your passphrase. It is a tracking tool, not financial advice.
+    </p>
+
+    <p style="margin-top: 24px; font-size: 13px; color: var(--text-secondary);">
+      Ajit Gunturi<br>
+      Bangalore, India
+    </p>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-left">&copy; 2026 Ajit Gunturi. Built in Bangalore, India.</div>
+      <div class="footer-links">
+        <a href="./privacy.html">Privacy Policy</a>
+        <a href="./terms.html">Terms of Service</a>
+        <a href="https://github.com/ajitgunturi/vael" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      const toggle = document.getElementById('themeToggle');
+      const stored = localStorage.getItem('vael-theme');
+      if (stored) {
+        document.documentElement.setAttribute('data-theme', stored);
+      }
+      toggle.addEventListener('click', function() {
+        const current = document.documentElement.getAttribute('data-theme');
+        let next;
+        if (current === 'dark') {
+          next = 'light';
+        } else if (current === 'light') {
+          next = 'dark';
+        } else {
+          next = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'light' : 'dark';
+        }
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('vael-theme', next);
+      });
+    })();
+  </script>
+
+</body>
+</html>
