@@ -215,6 +215,21 @@ nav {
   :root:not([data-theme]) .theme-toggle .icon-moon { display: none; }
 }
 
+/* ── Logo Variant Swapping ── */
+[data-theme="light"] .logo-dark-img,
+:root:not([data-theme]) .logo-dark-img { display: none; }
+
+[data-theme="light"] .logo-light-img,
+:root:not([data-theme]) .logo-light-img { display: inline; }
+
+[data-theme="dark"] .logo-light-img { display: none; }
+[data-theme="dark"] .logo-dark-img { display: inline; }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .logo-dark-img { display: inline; }
+  :root:not([data-theme]) .logo-light-img { display: none; }
+}
+
 /* ── Sections ── */
 section { padding: 100px 24px; }
 .container { max-width: 1100px; margin: 0 auto; }
