@@ -8,6 +8,16 @@ import '../../../core/sync/manifest.dart';
 import '../../../core/sync/sync_orchestrator.dart';
 import '../../../shared/theme/spacing.dart';
 import '../../../shared/theme/theme_mode_provider.dart';
+import '../../planning/providers/life_profile_provider.dart';
+import '../../planning/screens/allocation_screen.dart';
+import '../../planning/screens/decision_modeler_screen.dart';
+import '../../planning/screens/emergency_fund_screen.dart';
+import '../../planning/screens/fi_calculator_screen.dart';
+import '../../planning/screens/life_profile_wizard_screen.dart';
+import '../../planning/screens/milestone_dashboard_screen.dart';
+import '../../planning/screens/opportunity_fund_screen.dart';
+import '../../planning/screens/savings_allocation_screen.dart';
+import '../../cashflow/screens/cash_flow_screen.dart';
 import 'category_management_screen.dart';
 import 'family_backup_screen.dart';
 import 'passphrase_setup_screen.dart';
@@ -60,6 +70,91 @@ class SettingsScreen extends ConsumerWidget {
             onTap: () => _openPassphrase(context),
           ),
           const Divider(),
+          const Padding(
+            padding: EdgeInsets.only(left: 16, top: 8, bottom: 4),
+            child: Text(
+              'Financial Planning',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: Colors.grey,
+              ),
+            ),
+          ),
+          // 6 tiles in locked setup-flow order
+          _SettingsTile(
+            icon: Icons.person_outline,
+            title: 'Life Profile',
+            subtitle: 'Age, retirement, risk & growth rates',
+            onTap: () => _openLifeProfile(context, ref),
+          ),
+          _SettingsTile(
+            icon: Icons.shield_outlined,
+            title: 'Emergency Fund',
+            subtitle: 'Safety net coverage and cash tiers',
+            onTap: () => _openEmergencyFund(context),
+          ),
+          _SettingsTile(
+            icon: Icons.water_drop,
+            title: 'Cash Tiers',
+            subtitle: 'Liquidity tier assignment',
+            onTap: () => _openCashTiers(context),
+          ),
+          _SettingsTile(
+            icon: Icons.account_balance_wallet,
+            title: 'Savings Allocation Rules',
+            subtitle: 'Prioritized surplus distribution',
+            onTap: () => _openSavingsAllocation(context),
+          ),
+          _SettingsTile(
+            icon: Icons.savings,
+            title: 'Opportunity Fund',
+            subtitle: 'Designate and track opportunity fund',
+            onTap: () => _openOpportunityFund(context),
+          ),
+          _SettingsTile(
+            icon: Icons.calendar_month,
+            title: 'Cash Flow',
+            subtitle: 'Day-by-day income & expense map',
+            onTap: () => _openCashFlow(context),
+          ),
+          const Divider(),
+          const Padding(
+            padding: EdgeInsets.only(left: 16, top: 8, bottom: 4),
+            child: Text(
+              'Planning Tools',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: Colors.grey,
+              ),
+            ),
+          ),
+          _SettingsTile(
+            icon: Icons.pie_chart_outline,
+            title: 'Allocation Targets',
+            subtitle: 'Asset allocation and glide paths',
+            onTap: () => _openAllocation(context),
+          ),
+          _SettingsTile(
+            icon: Icons.calculate_outlined,
+            title: 'FI Calculator',
+            subtitle: 'Financial independence number & timeline',
+            onTap: () => _openFiCalculator(context, ref),
+          ),
+          _SettingsTile(
+            icon: Icons.flag_outlined,
+            title: 'Milestones',
+            subtitle: 'Net worth targets by decade',
+            onTap: () => _openMilestones(context, ref),
+          ),
+          _SettingsTile(
+            icon: Icons.compare_arrows,
+            title: 'Decision Modeler',
+            subtitle: 'Model life decisions and their financial impact',
+            onTap: () => _openDecisionModeler(context),
+          ),
+          const Divider(),
           _ThemeModeTile(ref: ref),
           const Divider(),
           _SettingsTile(
@@ -71,6 +166,95 @@ class SettingsScreen extends ConsumerWidget {
           const Divider(),
           const _AppInfoSection(),
         ],
+      ),
+    );
+  }
+
+  void _openLifeProfile(BuildContext context, WidgetRef ref) {
+    // Read current profile to determine edit vs create mode.
+    final profileAsync = ref.read(
+      lifeProfileProvider((userId: userId, familyId: familyId)),
+    );
+    final existing = profileAsync.whenOrNull(data: (p) => p);
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => LifeProfileWizardScreen(
+          userId: userId,
+          familyId: familyId,
+          existingProfile: existing,
+        ),
+      ),
+    );
+  }
+
+  void _openFiCalculator(BuildContext context, WidgetRef ref) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => FiCalculatorScreen(familyId: familyId, userId: userId),
+      ),
+    );
+  }
+
+  void _openMilestones(BuildContext context, WidgetRef ref) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) =>
+            MilestoneDashboardScreen(familyId: familyId, userId: userId),
+      ),
+    );
+  }
+
+  void _openAllocation(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => AllocationScreen(familyId: familyId, userId: userId),
+      ),
+    );
+  }
+
+  void _openDecisionModeler(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) =>
+            DecisionModelerScreen(familyId: familyId, userId: userId),
+      ),
+    );
+  }
+
+  void _openCashTiers(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => EmergencyFundScreen(familyId: familyId, userId: userId),
+      ),
+    );
+  }
+
+  void _openCashFlow(BuildContext context) {
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const CashFlowScreen()));
+  }
+
+  void _openEmergencyFund(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => EmergencyFundScreen(familyId: familyId, userId: userId),
+      ),
+    );
+  }
+
+  void _openSavingsAllocation(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => SavingsAllocationScreen(familyId: familyId),
+      ),
+    );
+  }
+
+  void _openOpportunityFund(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => OpportunityFundScreen(familyId: familyId),
       ),
     );
   }

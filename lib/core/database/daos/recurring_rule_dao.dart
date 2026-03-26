@@ -66,4 +66,19 @@ class RecurringRuleDao extends DatabaseAccessor<AppDatabase>
   Future<int> deleteRule(String id) {
     return (delete(recurringRules)..where((r) => r.id.equals(id))).go();
   }
+
+  /// Watch secondary income rules for a user within a family.
+  Stream<List<RecurringRule>> watchSecondaryIncome(
+    String userId,
+    String familyId,
+  ) {
+    return (select(recurringRules)..where(
+          (r) =>
+              r.userId.equals(userId) &
+              r.familyId.equals(familyId) &
+              r.isSecondaryIncome.equals(true) &
+              r.deletedAt.isNull(),
+        ))
+        .watch();
+  }
 }

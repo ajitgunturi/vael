@@ -12,6 +12,7 @@ import '../database/daos/account_dao.dart';
 import '../database/daos/audit_log_dao.dart';
 import '../database/daos/balance_snapshot_dao.dart';
 import '../database/daos/budget_dao.dart';
+import '../database/daos/savings_allocation_rule_dao.dart';
 import '../database/daos/sync_changelog_dao.dart';
 
 const _dbKeyStorageKey = 'vael_db_encryption_key';
@@ -90,4 +91,11 @@ final balanceSnapshotDaoProvider = Provider<BalanceSnapshotDao>((ref) {
 /// Derives a [SyncChangelogDao] from the database.
 final syncChangelogDaoProvider = Provider<SyncChangelogDao>((ref) {
   return SyncChangelogDao(ref.watch(databaseProvider));
+});
+
+/// Derives a [SavingsAllocationRuleDao] from the database.
+final savingsAllocationRuleDaoProvider = Provider<SavingsAllocationRuleDao>((
+  ref,
+) {
+  return SavingsAllocationRuleDao(ref.watch(databaseProvider));
 });

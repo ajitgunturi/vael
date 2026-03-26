@@ -75,7 +75,7 @@ void main() {
 
       // Verify Material 3 widgets are present and rendering
       expect(find.byType(Card), findsWidgets);
-      expect(find.byType(Chip), findsOneWidget); // Savings rate badge
+      expect(find.byType(ActionChip), findsOneWidget); // Savings rate badge
 
       // FilledButton.tonal (quick actions) should render
       expect(find.byType(FilledButton), findsWidgets);

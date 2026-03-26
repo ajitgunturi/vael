@@ -18,6 +18,14 @@ class Goals extends Table {
   TextColumn get linkedAccountId =>
       text().nullable().references(Accounts, #id)();
   TextColumn get familyId => text().references(Families, #id)();
+  TextColumn get goalCategory =>
+      text().withDefault(const Constant('investmentGoal'))();
+  IntColumn get downPaymentPctBp =>
+      integer().nullable()(); // basis points, null = not a purchase
+  IntColumn get educationEscalationRateBp =>
+      integer().nullable()(); // basis points, null = not education
+  TextColumn get sinkingFundSubType =>
+      text().nullable()(); // SinkingFundSubType.name or null
   DateTimeColumn get createdAt => dateTime()();
 
   @override

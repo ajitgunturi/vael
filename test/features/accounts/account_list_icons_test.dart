@@ -25,6 +25,10 @@ Account _fakeAccount({
     familyId: 'fam_a',
     userId: 'user_1',
     deletedAt: null,
+    isEmergencyFund: false,
+    isOpportunityFund: false,
+    opportunityFundTargetPaise: null,
+    minimumBalancePaise: null,
   );
 }
 

@@ -23,6 +23,7 @@ class RecurringRule {
   final DateTime? lastExecutedDate;
   final double annualEscalationRate; // e.g. 0.10 for 10%
   final String? categoryId;
+  final DateTime? deletedAt;
 
   const RecurringRule({
     required this.id,
@@ -39,6 +40,7 @@ class RecurringRule {
     this.lastExecutedDate,
     this.annualEscalationRate = 0,
     this.categoryId,
+    this.deletedAt,
   });
 }
 

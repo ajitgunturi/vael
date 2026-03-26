@@ -33,6 +33,29 @@ class GoalDao extends DatabaseAccessor<AppDatabase> with _$GoalDaoMixin {
         .get();
   }
 
+  /// Watches goals filtered by [category] within [familyId], ordered by priority.
+  Stream<List<Goal>> watchByCategory(String familyId, String category) =>
+      (select(goals)
+            ..where(
+              (g) =>
+                  g.familyId.equals(familyId) & g.goalCategory.equals(category),
+            )
+            ..orderBy([(g) => OrderingTerm.asc(g.priority)]))
+          .watch();
+
+  /// Watches goals filtered by multiple [categories] within [familyId], ordered by priority.
+  Stream<List<Goal>> watchByCategories(
+    String familyId,
+    List<String> categories,
+  ) =>
+      (select(goals)
+            ..where(
+              (g) =>
+                  g.familyId.equals(familyId) & g.goalCategory.isIn(categories),
+            )
+            ..orderBy([(g) => OrderingTerm.asc(g.priority)]))
+          .watch();
+
   /// Inserts a new goal.
   Future<int> insertGoal(GoalsCompanion entry) {
     return into(goals).insert(entry);

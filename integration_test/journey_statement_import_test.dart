@@ -32,6 +32,17 @@ void main() {
     await settle(tester);
   }
 
+  /// Seeds an account and selects it in the dropdown so Preview is enabled.
+  Future<void> selectAccount(WidgetTester tester) async {
+    await seedAccount(db, id: 'acc-1', name: 'Savings HDFC', type: 'savings', balance: 10000000);
+    await pumpImportScreen(tester);
+    // Tap the account dropdown and select
+    await tester.tap(find.byType(DropdownButtonFormField<String>));
+    await settle(tester);
+    await tester.tap(find.text('Savings HDFC').last);
+    await settle(tester);
+  }
+
   // HDFC-format CSV fixture
   const hdfcCsv = '''Date,Narration,Value Dat,Debit Amount,Credit Amount,Chq/Ref Number,Closing Balance
 01/03/2025,SWIGGY FOOD ORDER,01/03/2025,450.00,,REF001,99550.00
@@ -65,7 +76,7 @@ void main() {
 
     testWidgets('should parse HDFC CSV and show review step', (tester) async {
       await seedTestFamily(db);
-      await pumpImportScreen(tester);
+      await selectAccount(tester);
 
       // Enter HDFC CSV
       await tester.enterText(find.byType(TextField), hdfcCsv);
@@ -84,7 +95,7 @@ void main() {
 
     testWidgets('should display parsed transactions in review', (tester) async {
       await seedTestFamily(db);
-      await pumpImportScreen(tester);
+      await selectAccount(tester);
 
       await tester.enterText(find.byType(TextField), hdfcCsv);
       await tester.tap(find.text('Preview'));
@@ -103,7 +114,7 @@ void main() {
 
     testWidgets('should show all transactions selected by default', (tester) async {
       await seedTestFamily(db);
-      await pumpImportScreen(tester);
+      await selectAccount(tester);
 
       await tester.enterText(find.byType(TextField), hdfcCsv);
       await tester.tap(find.text('Preview'));
@@ -121,7 +132,7 @@ void main() {
 
     testWidgets('should allow deselecting transactions', (tester) async {
       await seedTestFamily(db);
-      await pumpImportScreen(tester);
+      await selectAccount(tester);
 
       await tester.enterText(find.byType(TextField), hdfcCsv);
       await tester.tap(find.text('Preview'));
@@ -137,7 +148,7 @@ void main() {
 
     testWidgets('should go back to input step via Back button', (tester) async {
       await seedTestFamily(db);
-      await pumpImportScreen(tester);
+      await selectAccount(tester);
 
       await tester.enterText(find.byType(TextField), hdfcCsv);
       await tester.tap(find.text('Preview'));
@@ -152,7 +163,7 @@ void main() {
 
     testWidgets('should parse generic CSV format', (tester) async {
       await seedTestFamily(db);
-      await pumpImportScreen(tester);
+      await selectAccount(tester);
 
       await tester.enterText(find.byType(TextField), genericCsv);
       await tester.tap(find.text('Preview'));
@@ -166,6 +177,7 @@ void main() {
 
     testWidgets('should commit import and show snackbar', (tester) async {
       await seedTestFamily(db);
+      await seedAccount(db, id: 'acc-1', name: 'Savings HDFC', type: 'savings', balance: 10000000);
       // Wrap in a Navigator so pop() works cleanly
       await tester.pumpWidget(
         ProviderScope(
@@ -180,6 +192,12 @@ void main() {
           ),
         ),
       );
+      await settle(tester);
+
+      // Select account
+      await tester.tap(find.byType(DropdownButtonFormField<String>));
+      await settle(tester);
+      await tester.tap(find.text('Savings HDFC').last);
       await settle(tester);
 
       await tester.enterText(find.byType(TextField), hdfcCsv);
@@ -208,7 +226,7 @@ void main() {
 
     testWidgets('should disable import button when none selected', (tester) async {
       await seedTestFamily(db);
-      await pumpImportScreen(tester);
+      await selectAccount(tester);
 
       await tester.enterText(find.byType(TextField), genericCsv);
       await tester.tap(find.text('Preview'));

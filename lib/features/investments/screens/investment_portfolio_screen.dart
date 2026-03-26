@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/database/database.dart';
 import '../../../core/financial/investment_valuation.dart';
+import '../../../core/providers/session_providers.dart';
 import '../../../shared/theme/color_tokens.dart' show ColorTokens;
 import '../../../shared/utils/formatters.dart';
+import '../../planning/widgets/allocation_banner.dart';
 import '../providers/investment_providers.dart';
 import 'investment_form_screen.dart';
 
@@ -17,6 +19,7 @@ class InvestmentPortfolioScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final holdingsAsync = ref.watch(investmentHoldingsProvider(familyId));
+    final userId = ref.watch(sessionUserIdProvider) ?? '';
 
     return Scaffold(
       appBar: AppBar(title: const Text('Investments')),
@@ -31,7 +34,11 @@ class InvestmentPortfolioScreen extends ConsumerWidget {
       body: holdingsAsync.when(
         data: (holdings) => holdings.isEmpty
             ? const _EmptyBody()
-            : _PortfolioList(holdings: holdings),
+            : _PortfolioList(
+                holdings: holdings,
+                familyId: familyId,
+                userId: userId,
+              ),
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Error: $e')),
       ),
@@ -60,9 +67,15 @@ class _EmptyBody extends StatelessWidget {
 }
 
 class _PortfolioList extends StatelessWidget {
-  const _PortfolioList({required this.holdings});
+  const _PortfolioList({
+    required this.holdings,
+    required this.familyId,
+    required this.userId,
+  });
 
   final List<InvestmentHolding> holdings;
+  final String familyId;
+  final String userId;
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +92,15 @@ class _PortfolioList extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.only(bottom: 80),
       children: [
+        // NAV-07: Allocation banner at top of portfolio
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: AllocationBanner(
+            familyId: familyId,
+            userId: userId,
+            userAge: 30, // Default; banner will use provider for actual age
+          ),
+        ),
         PortfolioSummaryCard(
           summary: PortfolioSummary(
             totalInvested: totalInvested,

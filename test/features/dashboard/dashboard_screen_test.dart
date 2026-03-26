@@ -5,6 +5,7 @@ import 'package:vael/core/database/database.dart';
 import 'package:vael/core/financial/dashboard_aggregation.dart';
 import 'package:vael/features/dashboard/providers/dashboard_providers.dart';
 import 'package:vael/features/dashboard/screens/dashboard_screen.dart';
+import 'package:vael/features/planning/providers/planning_health_providers.dart';
 import 'package:vael/shared/theme/app_theme.dart';
 
 DashboardData _makeData({
@@ -49,6 +50,7 @@ Goal _fakeGoal({
     status: status,
     linkedAccountId: null,
     familyId: 'fam_a',
+    goalCategory: 'investmentGoal',
     createdAt: DateTime(2025),
   );
 }
@@ -63,6 +65,10 @@ void main() {
       overrides: [
         dashboardDataProvider('fam_a').overrideWith((_) => Stream.value(data)),
         dashboardScopeProvider.overrideWith(DashboardScopeNotifier.new),
+        planningHealthProvider((
+          familyId: 'fam_a',
+          userId: 'user_a',
+        )).overrideWith((_) async => const PlanningHealthData()),
       ],
       child: MaterialApp(
         theme: AppTheme.light(),
@@ -154,6 +160,14 @@ void main() {
       ];
 
       await tester.pumpWidget(buildTestApp(data: _makeData(), goals: goals));
+      await tester.pumpAndSettle();
+
+      // Goals may be off-screen; scroll to them
+      await tester.scrollUntilVisible(
+        find.text('Goals'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
       await tester.pumpAndSettle();
 
       expect(find.text('Goals'), findsOneWidget);

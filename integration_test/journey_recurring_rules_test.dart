@@ -139,12 +139,24 @@ void main() {
 
     testWidgets('should fill form and save successfully', (tester) async {
       await seedTestFamily(db);
+      // Seed an account so the account dropdown has a selectable value
+      await seedAccount(db, id: 'acc-1', name: 'Savings HDFC', type: 'savings', balance: 10000000);
       await pumpRecurringForm(tester);
 
       await tester.enterText(
         find.widgetWithText(TextFormField, 'Name'),
         'Monthly Rent',
       );
+      await tester.enterText(
+        find.widgetWithText(TextFormField, 'Amount'),
+        '25000',
+      );
+      await settle(tester);
+
+      // Select the account from dropdown
+      await tester.tap(find.byType(DropdownButtonFormField<String>));
+      await settle(tester);
+      await tester.tap(find.text('Savings HDFC').last);
       await settle(tester);
 
       // Drag up to reveal Create Rule button (off-screen on iPhone)

@@ -11,6 +11,10 @@ import '../../projections/screens/projection_screen.dart';
 import '../../recurring/screens/recurring_rules_screen.dart';
 import '../../transactions/screens/transaction_form_screen.dart';
 import '../providers/dashboard_providers.dart';
+import '../widgets/financial_health_summary_card.dart';
+import '../../planning/screens/cash_flow_health_screen.dart';
+import '../../planning/screens/lifetime_timeline_screen.dart';
+import 'savings_rate_detail_screen.dart';
 
 /// Main dashboard showing net worth hero, monthly tiles, quick actions,
 /// savings rate badge, goals, and scope toggle.
@@ -101,6 +105,8 @@ class _DashboardBody extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(Spacing.md),
       children: [
+        FinancialHealthSummaryCard(familyId: familyId, userId: userId),
+        const SizedBox(height: Spacing.md),
         _HeroNetWorthCard(
           netWorth: data.netWorth,
           onTap: onNavigateToTab != null ? () => onNavigateToTab!(1) : null,
@@ -111,7 +117,7 @@ class _DashboardBody extends StatelessWidget {
           onNavigateToTab: onNavigateToTab,
         ),
         const SizedBox(height: Spacing.md),
-        _SavingsRateBadge(rate: data.savingsRate),
+        _SavingsRateBadge(rate: data.savingsRate, familyId: familyId),
         const SizedBox(height: Spacing.md),
         _QuickActionsRow(
           familyId: familyId,
@@ -264,10 +270,12 @@ class _CompactTile extends StatelessWidget {
 }
 
 /// Savings rate badge — green >= 20%, amber 10-20%, red < 10%.
+/// Tappable: navigates to [SavingsRateDetailScreen].
 class _SavingsRateBadge extends StatelessWidget {
-  const _SavingsRateBadge({required this.rate});
+  const _SavingsRateBadge({required this.rate, required this.familyId});
 
   final double rate;
+  final String familyId;
 
   @override
   Widget build(BuildContext context) {
@@ -283,13 +291,18 @@ class _SavingsRateBadge extends StatelessWidget {
 
     return Align(
       alignment: Alignment.centerLeft,
-      child: Chip(
+      child: ActionChip(
         label: Text(
           'Savings Rate: ${rate.toStringAsFixed(0)}%',
           style: TextStyle(color: chipColor, fontWeight: FontWeight.w600),
         ),
         side: BorderSide(color: chipColor),
         backgroundColor: chipColor.withValues(alpha: 0.1),
+        onPressed: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => SavingsRateDetailScreen(familyId: familyId),
+          ),
+        ),
       ),
     );
   }
@@ -378,6 +391,40 @@ class _QuickActionsRow extends StatelessWidget {
             icon: const Icon(Icons.trending_up),
             label: const Text('60-Month Projection'),
           ),
+        ),
+        const SizedBox(height: Spacing.sm),
+        Row(
+          children: [
+            Expanded(
+              child: FilledButton.tonalIcon(
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => CashFlowHealthScreen(
+                      familyId: familyId,
+                      userId: userId,
+                    ),
+                  ),
+                ),
+                icon: const Icon(Icons.waterfall_chart),
+                label: const Text('Cash Flow'),
+              ),
+            ),
+            const SizedBox(width: Spacing.sm),
+            Expanded(
+              child: FilledButton.tonalIcon(
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => LifetimeTimelineScreen(
+                      familyId: familyId,
+                      userId: userId,
+                    ),
+                  ),
+                ),
+                icon: const Icon(Icons.timeline),
+                label: const Text('Life Plan'),
+              ),
+            ),
+          ],
         ),
       ],
     );

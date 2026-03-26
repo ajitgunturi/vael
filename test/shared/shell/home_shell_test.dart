@@ -8,6 +8,7 @@ import 'package:vael/features/accounts/providers/account_ui_providers.dart';
 import 'package:vael/features/budgets/providers/budget_providers.dart';
 import 'package:vael/features/dashboard/providers/dashboard_providers.dart';
 import 'package:vael/features/goals/providers/goal_providers.dart';
+import 'package:vael/features/planning/providers/planning_health_providers.dart';
 import 'package:vael/shared/layout/adaptive_scaffold.dart';
 import 'package:vael/shared/shell/home_shell.dart';
 import 'package:vael/shared/theme/app_theme.dart';
@@ -39,6 +40,10 @@ Widget _buildApp() {
         _familyId,
       ).overrideWith((_) => Stream.value(_emptyDashboard)),
       dashboardScopeProvider.overrideWith(DashboardScopeNotifier.new),
+      planningHealthProvider((
+        familyId: _familyId,
+        userId: _userId,
+      )).overrideWith((_) async => const PlanningHealthData()),
       // Accounts
       groupedAccountsProvider(
         _familyId,
@@ -51,6 +56,15 @@ Widget _buildApp() {
       budgetSummaryProvider(budgetKey).overrideWith((_) async => const []),
       // Goals
       goalListProvider(_familyId).overrideWith((_) => Stream.value(const [])),
+      sinkingFundGoalsProvider(
+        _familyId,
+      ).overrideWith((_) => Stream.value(const [])),
+      investmentGoalsProvider(
+        _familyId,
+      ).overrideWith((_) => Stream.value(const [])),
+      purchaseGoalsProvider(
+        _familyId,
+      ).overrideWith((_) => Stream.value(const [])),
     ],
     child: MaterialApp(
       theme: AppTheme.light(),
@@ -113,7 +127,10 @@ void main() {
       await tester.pumpAndSettle();
 
       await tester.tap(find.text('Goals').first);
-      await tester.pumpAndSettle();
+      // Use pump instead of pumpAndSettle because GoalListScreen
+      // TabController animation keeps the ticker running.
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
 
       expect(find.text('Goals'), findsWidgets);
     });

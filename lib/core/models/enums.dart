@@ -57,3 +57,43 @@ enum UserRole { admin, member }
 
 /// Tracks progress state of a financial goal.
 enum GoalStatus { active, onTrack, atRisk, completed }
+
+/// Broad asset class for allocation targeting.
+enum AssetClass { equity, debt, gold, cash }
+
+/// Category of a financial goal.
+enum GoalCategory { investmentGoal, purchase, retirement, sinkingFund }
+
+/// Sub-type classification for sinking fund goals.
+enum SinkingFundSubType {
+  tax,
+  carMaintenance,
+  travel,
+  medical,
+  insurance,
+  gifts,
+  homeRepair,
+  techUpgrade,
+  custom,
+}
+
+/// Type of financial decision being modeled.
+enum DecisionType {
+  jobChange,
+  salaryNegotiation,
+  majorPurchase,
+  investmentWithdrawal,
+  rentalChange,
+  custom,
+}
+
+/// Liquidity classification for cash management.
+enum LiquidityTier { instant, shortTerm, longTerm }
+
+/// Income stability classification for EF target defaults.
+enum IncomeStability {
+  salariedStable,
+  salariedVariable,
+  freelance,
+  selfEmployed,
+}

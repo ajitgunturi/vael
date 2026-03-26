@@ -175,6 +175,11 @@ class ProjectionEngine {
       final savings = totalIncome - totalExpenses;
       runningNW += savings;
 
+      assert(
+        runningNW.abs() < (1 << 53),
+        'Precision overflow: runningNW=$runningNW exceeds 2^53 at month $m',
+      );
+
       snapshots.add(
         ProjectionSnapshot(
           month: m,
@@ -212,6 +217,52 @@ class ProjectionEngine {
       pessimistic: projectFromCashFlows(
         startingNetWorth: startingNetWorth,
         cashFlows: cashFlows,
+        investmentReturnRate: math.max(0, baseReturnRate - 0.02),
+        horizonMonths: horizonMonths,
+      ),
+    );
+  }
+
+  /// Three scenarios with INCOME GROWTH spread (not just return rate spread).
+  ///
+  /// Unlike [threeScenariosCashFlow] which only spreads investment return rate,
+  /// this method also spreads income growth: optimistic gets baseGrowth + 2%,
+  /// pessimistic gets baseGrowth - 2% (clamped to 0).
+  ///
+  /// [buildIncomeFlows] is a function that takes a growth rate override and
+  /// returns the cash flows for that scenario. This avoids coupling the
+  /// projection engine to IncomeGrowthEngine.
+  static ThreeScenarioResult threeScenariosCashFlowWithIncomeSpread({
+    required int startingNetWorth,
+    required List<ProjectionCashFlow> Function(double incomeGrowthRate)
+    buildIncomeFlows,
+    required List<ProjectionCashFlow> expenseFlows,
+    required double baseIncomeGrowthRate,
+    double baseReturnRate = 0.10,
+    int horizonMonths = 60,
+  }) {
+    return ThreeScenarioResult(
+      optimistic: projectFromCashFlows(
+        startingNetWorth: startingNetWorth,
+        cashFlows: [
+          ...buildIncomeFlows(baseIncomeGrowthRate + 0.02),
+          ...expenseFlows,
+        ],
+        investmentReturnRate: baseReturnRate + 0.02,
+        horizonMonths: horizonMonths,
+      ),
+      base: projectFromCashFlows(
+        startingNetWorth: startingNetWorth,
+        cashFlows: [...buildIncomeFlows(baseIncomeGrowthRate), ...expenseFlows],
+        investmentReturnRate: baseReturnRate,
+        horizonMonths: horizonMonths,
+      ),
+      pessimistic: projectFromCashFlows(
+        startingNetWorth: startingNetWorth,
+        cashFlows: [
+          ...buildIncomeFlows(math.max(0, baseIncomeGrowthRate - 0.02)),
+          ...expenseFlows,
+        ],
         investmentReturnRate: math.max(0, baseReturnRate - 0.02),
         horizonMonths: horizonMonths,
       ),

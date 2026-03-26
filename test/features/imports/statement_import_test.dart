@@ -15,6 +15,8 @@ Account _fakeAccount() => const Account(
   sharedWithFamily: true,
   familyId: 'f1',
   userId: 'u1',
+  isEmergencyFund: false,
+  isOpportunityFund: false,
 );
 
 void main() {
